@@ -1,0 +1,113 @@
+[
+    {
+        "id": 18692,
+        "name": "ドラえもん",
+        "name_cn": "哆啦A梦",
+        "air_date": "",
+        "weekDayJP": 5,
+        "weekDayCN": 0,
+        "timeJP": "1800",
+        "timeCN": "",
+        "image": "http://lain.bgm.tv/pic/cover/g/b4/4f/18692_E04qh.jpg",
+        "sites": [],
+        "eps": [
+            {
+                "type": 0,
+                "sort": 719,
+                "name": "本周停更",
+                "airdate": "2022-08-07"
+            },
+            {
+                "type": 0,
+                "sort": 719,
+                "name": "本周停更",
+                "airdate": "2022-08-14"
+            },
+            {
+                "type": 0,
+                "sort": 719,
+                "name": "本周停更",
+                "airdate": "2022-08-21"
+            }
+        ]
+    },
+    {
+        "id": 192976,
+        "name": "むさしの！",
+        "name_cn": "武藏野！",
+        "air_date": "",
+        "weekDayJP": 6,
+        "weekDayCN": 0,
+        "timeJP": "2230",
+        "timeCN": "",
+        "image": "http://lain.bgm.tv/pic/cover/g/4a/82/192976_Lg5FJ.jpg",
+        "sites": [],
+        "eps": [
+            {
+                "id": 1115899,
+                "type": 0,
+                "sort": 6,
+                "name": "番外宇宙編",
+                "name_cn": "番外宇宙篇",
+                "airdate": "2022-08-06",
+                "status": "Air"
+            },
+            {
+                "id": 1115900,
+                "type": 0,
+                "sort": 7,
+                "name": "",
+                "name_cn": "",
+                "airdate": "2022-08-13",
+                "status": "Air"
+            },
+            {
+                "id": 1115901,
+                "type": 0,
+                "sort": 8,
+                "name": "",
+                "name_cn": "",
+                "airdate": "2022-08-20",
+                "status": "NA"
+            }
+        ]
+    },
+    {
+        "id": 253047,
+        "name": "連盟空軍航空魔法音楽隊 ルミナスウィッチーズ",
+        "name_cn": "联盟空军航空魔法音乐队 光辉魔女",
+        "air_date": "",
+        "weekDayJP": 0,
+        "weekDayCN": 0,
+        "timeJP": "2000",
+        "timeCN": "",
+        "image": "http://lain.bgm.tv/pic/cover/g/08/d9/253047_3M6D9.jpg",
+        "sites": [],
+        "eps": [
+            {
+                "id": 1109155,
+                "type": 0,
+                "sort": 6,
+                "name": "夢色コントレイル",
+                "name_cn": "梦幻的尾迹",
+                "airdate": "2022-08-07",
+                "status": "Air"
+            },
+            {
+                "id": 1109156,
+                "type": 0,
+                "sort": 7,
+                "name": "",
+                "name_cn": "太阳的理由",
+                "airdate": "2022-08-21",
+                "status": "NA"
+            },
+            {
+                "type": 0,
+                "sort": 7,
+                "name": "本周停更",
+                "airdate": "2022-08-14"
+            }
+        ]
+    }
+]
