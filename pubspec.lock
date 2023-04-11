@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
+  auto_size_text:
+    dependency: "direct main"
+    description:
+      name: auto_size_text
+      sha256: "3f5261cd3fb5f2a9ab4e2fc3fba84fd9fcaac8821f20a1d4e71f557521b22599"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -78,6 +86,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  flutter_riverpod:
+    dependency: "direct main"
+    description:
+      name: flutter_riverpod
+      sha256: "812dfbb87af51e73e68ea038bcfd1c732078d6838d3388d03283db7dec0d1e5f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -148,7 +164,7 @@ packages:
     source: hosted
     version: "1.8.2"
   riverpod:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: riverpod
       sha256: "77ab3bcd084bb19fa8717a526217787c725d7f5be938404c7839cd760fdf6ae5"
@@ -234,3 +250,4 @@ packages:
     version: "2.1.4"
 sdks:
   dart: ">=2.18.5 <3.0.0"
+  flutter: ">=3.0.0"
