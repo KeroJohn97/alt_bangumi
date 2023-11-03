@@ -1,6 +1,10 @@
 class HttpConstant {
-  static const host = '';
+  static const hostName = 'bgm.tv';
+  static const host = 'https://$hostName';
+  static const host_2 = 'https://bangumi.tv';
 
+  // jsDelivr
+  static const hostCDN = 'https://cdn.jsdelivr.net';
   // bgm api 域名
   static const String apiHost = 'https://api.bgm.tv';
   // bgm 新 api 域名

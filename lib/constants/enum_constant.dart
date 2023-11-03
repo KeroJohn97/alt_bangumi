@@ -24,3 +24,29 @@ extension HomeIndexEnumExtension on HomeIndexEnum {
     }
   }
 }
+
+enum NavigationEnum {
+  ranking,
+  entry,
+  indexing,
+  catalogue,
+  today,
+  journal,
+  tag,
+  ongoing,
+  info,
+  search,
+  stock,
+  wiki,
+  almanac,
+  timeline,
+  netabare,
+  localSMB,
+  bilibiliSync,
+  doubanSync,
+  associate,
+  backupCSV,
+  myCharacter,
+  myCatalogue,
+  clipboard,
+}
