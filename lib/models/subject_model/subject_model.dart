@@ -4,9 +4,9 @@ import 'package:equatable/equatable.dart';
 
 import '../collection_model.dart';
 import '../images_model.dart';
-import 'infobox.dart';
+import 'infobox_model.dart';
 import '../rating_model.dart';
-import 'tag.dart';
+import 'tag_model.dart';
 
 class SubjectModel extends Equatable {
   final String? date;
@@ -15,8 +15,8 @@ class SubjectModel extends Equatable {
   final String? summary;
   final String? name;
   final String? nameCn;
-  final List<Tag>? tags;
-  final List<Infobox>? infobox;
+  final List<TagModel>? tags;
+  final List<InfoboxModel>? infobox;
   final RatingModel? rating;
   final int? totalEpisodes;
   final CollectionModel? collection;
@@ -57,10 +57,10 @@ class SubjectModel extends Equatable {
         name: data['name'] as String?,
         nameCn: data['name_cn'] as String?,
         tags: (data['tags'] as List<dynamic>?)
-            ?.map((e) => Tag.fromMap(e as Map<String, dynamic>))
+            ?.map((e) => TagModel.fromMap(e as Map<String, dynamic>))
             .toList(),
         infobox: (data['infobox'] as List<dynamic>?)
-            ?.map((e) => Infobox.fromMap(e as Map<String, dynamic>))
+            ?.map((e) => InfoboxModel.fromMap(e as Map<String, dynamic>))
             .toList(),
         rating: data['rating'] == null
             ? null
@@ -117,8 +117,8 @@ class SubjectModel extends Equatable {
     String? summary,
     String? name,
     String? nameCn,
-    List<Tag>? tags,
-    List<Infobox>? infobox,
+    List<TagModel>? tags,
+    List<InfoboxModel>? infobox,
     RatingModel? rating,
     int? totalEpisodes,
     CollectionModel? collection,

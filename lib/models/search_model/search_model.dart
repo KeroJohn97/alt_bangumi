@@ -2,26 +2,26 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-import 'search_info.dart';
+import 'search_info_model.dart';
 
 class SearchModel extends Equatable {
   final int? results;
-  final List<SearchInfo>? searchList;
+  final List<SearchInfoModel>? searchInfoList;
   final String? keyword;
 
-  const SearchModel({this.results, this.searchList, this.keyword});
+  const SearchModel({this.results, this.searchInfoList, this.keyword});
 
   factory SearchModel.fromMap(Map<String, dynamic> data) => SearchModel(
         results: data['results'] as int?,
-        searchList: (data['list'] as List<dynamic>?)
-            ?.map((e) => SearchInfo.fromMap(e))
+        searchInfoList: (data['list'] as List<dynamic>?)
+            ?.map((e) => SearchInfoModel.fromMap(e))
             .toList(),
         keyword: data['keyword'],
       );
 
   Map<String, dynamic> toMap() => {
         'results': results,
-        'list': searchList?.map((e) => e.toMap()).toList(),
+        'list': searchInfoList?.map((e) => e.toMap()).toList(),
         'keyword': keyword,
       };
 
@@ -39,12 +39,12 @@ class SearchModel extends Equatable {
 
   SearchModel copyWith({
     int? results,
-    List<SearchInfo>? searchList,
+    List<SearchInfoModel>? searchInfoList,
     String? keyword,
   }) {
     return SearchModel(
       results: results ?? this.results,
-      searchList: searchList ?? this.searchList,
+      searchInfoList: searchInfoList ?? searchInfoList,
       keyword: keyword ?? this.keyword,
     );
   }
@@ -53,5 +53,5 @@ class SearchModel extends Equatable {
   bool get stringify => true;
 
   @override
-  List<Object?> get props => [results, searchList, keyword];
+  List<Object?> get props => [results, searchInfoList, keyword];
 }

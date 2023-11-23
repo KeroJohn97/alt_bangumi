@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-class Tag extends Equatable {
+class TagModel extends Equatable {
   final String? name;
   final int? count;
 
-  const Tag({this.name, this.count});
+  const TagModel({this.name, this.count});
 
-  factory Tag.fromMap(Map<String, dynamic> data) => Tag(
+  factory TagModel.fromMap(Map<String, dynamic> data) => TagModel(
         name: data['name'] as String?,
         count: data['count'] as int?,
       );
@@ -20,21 +20,21 @@ class Tag extends Equatable {
 
   /// `dart:convert`
   ///
-  /// Parses the string and returns the resulting Json object as [Tag].
-  factory Tag.fromJson(String data) {
-    return Tag.fromMap(json.decode(data) as Map<String, dynamic>);
+  /// Parses the string and returns the resulting Json object as [TagModel].
+  factory TagModel.fromJson(String data) {
+    return TagModel.fromMap(json.decode(data) as Map<String, dynamic>);
   }
 
   /// `dart:convert`
   ///
-  /// Converts [Tag] to a JSON string.
+  /// Converts [TagModel] to a JSON string.
   String toJson() => json.encode(toMap());
 
-  Tag copyWith({
+  TagModel copyWith({
     String? name,
     int? count,
   }) {
-    return Tag(
+    return TagModel(
       name: name ?? this.name,
       count: count ?? this.count,
     );

@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-import 'ep.dart';
-import 'site.dart';
+import 'ep_model.dart';
+import 'site_model.dart';
 
 class HomeSubjectModel extends Equatable {
   final String? id;
   final String? name;
-  final List<Site>? sites;
-  final List<Ep>? eps;
+  final List<SiteModel>? sites;
+  final List<EpModel>? eps;
 
   const HomeSubjectModel({this.id, this.name, this.sites, this.eps});
 
@@ -18,10 +18,10 @@ class HomeSubjectModel extends Equatable {
         id: data['id'] as String?,
         name: data['name'] as String?,
         sites: (data['sites'] as List<dynamic>?)
-            ?.map((e) => Site.fromMap(e as Map<String, dynamic>))
+            ?.map((e) => SiteModel.fromMap(e as Map<String, dynamic>))
             .toList(),
         eps: (data['eps'] as List<dynamic>?)
-            ?.map((e) => Ep.fromMap(e as Map<String, dynamic>))
+            ?.map((e) => EpModel.fromMap(e as Map<String, dynamic>))
             .toList(),
       );
 
@@ -47,8 +47,8 @@ class HomeSubjectModel extends Equatable {
   HomeSubjectModel copyWith({
     String? id,
     String? name,
-    List<Site>? sites,
-    List<Ep>? eps,
+    List<SiteModel>? sites,
+    List<EpModel>? eps,
   }) {
     return HomeSubjectModel(
       id: id ?? this.id,

@@ -497,7 +497,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           return const SliverToBoxAdapter(
                               child: Text('Result is null'));
                         }
-                        if (state.searchResult!.searchList?.isEmpty ?? true) {
+                        if (state.searchResult!.searchInfoList?.isEmpty ??
+                            true) {
                           return const SliverToBoxAdapter(
                             child: CustomEmptyWidget(),
                           );
@@ -506,10 +507,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           child: ListView.builder(
                             shrinkWrap: true,
                             itemCount:
-                                state.searchResult!.searchList?.length ?? 0,
+                                state.searchResult!.searchInfoList?.length ?? 0,
                             itemBuilder: (context, index) {
                               return SearchListCard(
-                                info: state.searchResult!.searchList![index],
+                                info:
+                                    state.searchResult!.searchInfoList![index],
                               );
                             },
                           ),

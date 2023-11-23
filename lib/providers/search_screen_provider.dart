@@ -108,7 +108,7 @@ class SearchScreenNotifier extends StateNotifier<SearchScreenState> {
   }
 
   void scrollMore(String keyword) async {
-    final current = state.searchResult?.searchList?.length ?? 0;
+    final current = state.searchResult?.searchInfoList?.length ?? 0;
     try {
       final result = await GlobalRepository.searchKeyword(
         keyword: keyword,
@@ -116,11 +116,12 @@ class SearchScreenNotifier extends StateNotifier<SearchScreenState> {
         filterOption: state.filterOption,
         start: current,
       );
-      if (result.searchList == null) return;
-      final combinedResult = state.searchResult?.searchList
-        ?..addAll(result.searchList!);
+      if (result.searchInfoList == null) return;
+      final combinedResult = state.searchResult?.searchInfoList
+        ?..addAll(result.searchInfoList!);
       state = state.copyWith(
-        searchResult: state.searchResult?.copyWith(searchList: combinedResult),
+        searchResult:
+            state.searchResult?.copyWith(searchInfoList: combinedResult),
       );
     } finally {}
   }

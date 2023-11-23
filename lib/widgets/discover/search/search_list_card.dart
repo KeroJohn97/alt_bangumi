@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../models/search_model/search_info.dart';
+import '../../../models/search_model/search_info_model.dart';
 import '../../custom_network_image_widget.dart';
 
 class SearchListCard extends StatelessWidget {
-  final SearchInfo info;
+  final SearchInfoModel info;
   const SearchListCard({super.key, required this.info});
 
   void _toggleFavorite() {

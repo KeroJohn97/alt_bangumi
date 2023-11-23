@@ -6,7 +6,7 @@ import '../collection_model.dart';
 import '../images_model.dart';
 import '../rating_model.dart';
 
-class SearchInfo extends Equatable {
+class SearchInfoModel extends Equatable {
   final int? id;
   final String? url;
   final int? type;
@@ -22,7 +22,7 @@ class SearchInfo extends Equatable {
   final ImagesModel? images;
   final CollectionModel? collection;
 
-  const SearchInfo({
+  const SearchInfoModel({
     this.id,
     this.url,
     this.type,
@@ -39,7 +39,7 @@ class SearchInfo extends Equatable {
     this.collection,
   });
 
-  factory SearchInfo.fromMap(Map<String, dynamic> data) => SearchInfo(
+  factory SearchInfoModel.fromMap(Map<String, dynamic> data) => SearchInfoModel(
         id: data['id'] as int?,
         url: data['url'] as String?,
         type: data['type'] as int?,
@@ -83,8 +83,8 @@ class SearchInfo extends Equatable {
   /// `dart:convert`
   ///
   /// Parses the string and returns the resulting Json object as [List].
-  factory SearchInfo.fromJson(String data) {
-    return SearchInfo.fromMap(json.decode(data) as Map<String, dynamic>);
+  factory SearchInfoModel.fromJson(String data) {
+    return SearchInfoModel.fromMap(json.decode(data) as Map<String, dynamic>);
   }
 
   /// `dart:convert`
@@ -92,7 +92,7 @@ class SearchInfo extends Equatable {
   /// Converts [List] to a JSON string.
   String toJson() => json.encode(toMap());
 
-  SearchInfo copyWith({
+  SearchInfoModel copyWith({
     int? id,
     String? url,
     int? type,
@@ -108,7 +108,7 @@ class SearchInfo extends Equatable {
     ImagesModel? images,
     CollectionModel? collection,
   }) {
-    return SearchInfo(
+    return SearchInfoModel(
       id: id ?? this.id,
       url: url ?? this.url,
       type: type ?? this.type,

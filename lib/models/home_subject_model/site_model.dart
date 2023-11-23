@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-class Site extends Equatable {
+class SiteModel extends Equatable {
   final String? site;
   final String? id;
   final int? sort;
 
-  const Site({this.site, this.id, this.sort});
+  const SiteModel({this.site, this.id, this.sort});
 
-  factory Site.fromMap(Map<String, dynamic> data) => Site(
+  factory SiteModel.fromMap(Map<String, dynamic> data) => SiteModel(
         site: data['site'] as String?,
         id: data['id'] as String?,
         sort: data['sort'] as int?,
@@ -23,22 +23,22 @@ class Site extends Equatable {
 
   /// `dart:convert`
   ///
-  /// Parses the string and returns the resulting Json object as [Site].
-  factory Site.fromJson(String data) {
-    return Site.fromMap(json.decode(data) as Map<String, dynamic>);
+  /// Parses the string and returns the resulting Json object as [SiteModel].
+  factory SiteModel.fromJson(String data) {
+    return SiteModel.fromMap(json.decode(data) as Map<String, dynamic>);
   }
 
   /// `dart:convert`
   ///
-  /// Converts [Site] to a JSON string.
+  /// Converts [SiteModel] to a JSON string.
   String toJson() => json.encode(toMap());
 
-  Site copyWith({
+  SiteModel copyWith({
     String? site,
     String? id,
     int? sort,
   }) {
-    return Site(
+    return SiteModel(
       site: site ?? this.site,
       id: id ?? this.id,
       sort: sort ?? this.sort,

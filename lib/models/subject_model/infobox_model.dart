@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-class Infobox extends Equatable {
+class InfoboxModel extends Equatable {
   final String? key;
   final dynamic value; // it's either String or List<Map<String, dynamic>>['v']
 
-  const Infobox({this.key, this.value});
+  const InfoboxModel({this.key, this.value});
 
-  factory Infobox.fromMap(Map<String, dynamic> data) => Infobox(
+  factory InfoboxModel.fromMap(Map<String, dynamic> data) => InfoboxModel(
         key: data['key'] as String?,
         value: data['value'],
       );
@@ -20,21 +20,21 @@ class Infobox extends Equatable {
 
   /// `dart:convert`
   ///
-  /// Parses the string and returns the resulting Json object as [Infobox].
-  factory Infobox.fromJson(String data) {
-    return Infobox.fromMap(json.decode(data) as Map<String, dynamic>);
+  /// Parses the string and returns the resulting Json object as [InfoboxModel].
+  factory InfoboxModel.fromJson(String data) {
+    return InfoboxModel.fromMap(json.decode(data) as Map<String, dynamic>);
   }
 
   /// `dart:convert`
   ///
-  /// Converts [Infobox] to a JSON string.
+  /// Converts [InfoboxModel] to a JSON string.
   String toJson() => json.encode(toMap());
 
-  Infobox copyWith({
+  InfoboxModel copyWith({
     String? key,
     dynamic value,
   }) {
-    return Infobox(
+    return InfoboxModel(
       key: key ?? this.key,
       value: value ?? this.value,
     );
