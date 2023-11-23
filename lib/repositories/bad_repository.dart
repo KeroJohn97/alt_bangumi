@@ -1,7 +1,5 @@
-import 'dart:developer';
-
-import 'package:flutter_bangumi/constants/http_constant.dart';
-import 'package:flutter_bangumi/helpers/http_helper.dart';
+import 'package:alt_bangumi/constants/http_constant.dart';
+import 'package:alt_bangumi/helpers/http_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final badRepositoryProvider = Provider<BadRepository>((ref) {
@@ -18,8 +16,8 @@ class BadRepository {
     // Use the firstMatch method to find the first match of the regex in the html string
     // Use the group method to access the captured group by index (1 in this case)
     final result = regex.firstMatch(html)?.groupCount;
-    log('Html: $html');
-    log('Result: $result');
+    // log('Html: $html');
+    // log('Result: $result');
     return result.toString();
   }
 }
