@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bangumi/helpers/sizing_helper.dart';
 
 class CustomIconButton extends StatelessWidget {
   final VoidCallback callback;
@@ -14,34 +13,32 @@ class CustomIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      width: 18.w,
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(30.0),
-            ),
-            child: IconButton(
-              onPressed: callback,
-              icon: Icon(
-                iconData,
-                color: Colors.white,
-              ),
-              color: Colors.black,
-            ),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(30.0),
           ),
-          GestureDetector(
-            onTap: callback,
-            child: Text(
-              labelText,
-              textAlign: TextAlign.center,
+          child: IconButton(
+            onPressed: callback,
+            icon: Icon(
+              iconData,
+              color: Colors.white,
             ),
+            color: Colors.black,
           ),
-        ],
-      ),
+        ),
+        GestureDetector(
+          onTap: callback,
+          child: Text(
+            labelText,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            style: const TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
     );
   }
 }
