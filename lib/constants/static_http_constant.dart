@@ -1,5 +1,5 @@
-import 'package:flutter_bangumi/constants/http_constant.dart';
-import 'package:flutter_bangumi/repositories/global_repository.dart';
+import 'package:alt_bangumi/constants/http_constant.dart';
+import 'package:alt_bangumi/repositories/global_repository.dart';
 
 class StaticHttpConstant {
   static String hostStatic =

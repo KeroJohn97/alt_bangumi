@@ -18,47 +18,51 @@ class HttpConstant {
   String apiAccessToken() => '$host/oauth/access_token';
 
   // 用户信息
-  String apiUserInfo(String userId) => '$apiHost/user/$userId';
+  static String apiUserInfo(String userId) => '$apiHost/user/$userId';
 
   // [POST] 用户收藏
   //
   // @query *cat 收藏类型: watching = 在看的动画与三次元条目 all_watching = 在看的动画三次元与书籍条目
   // @query ids 收藏条目ID: 批量查询收藏状态，将条目 ID 以半角逗号分隔，如 1,2,4,6
   // @query responseGroup 'medium' | 'small'
-  String apiUserCollection(String userId) => '$apiHost/user/$userId/collection';
+  static String apiUserCollection(String userId) =>
+      '$apiHost/user/$userId/collection';
 
   // 用户收藏概览
   //
   // @query  max_results 显示条数最多25
-  String apiUserCollections(String subjectType, String userId) =>
+  static String apiUserCollections(String subjectType, String userId) =>
       '$apiHost/user/$userId/collections/$subjectType';
 
   // 用户收藏统计
-  String apiUserCollectionsStatus(String userId) =>
+  static String apiUserCollectionsStatus(String userId) =>
       '$apiHost/user/$userId/collections/status';
 
   // 用户收视进度
   //
   // @query subject_id 条目ID 获取指定条目收视进度
-  String apiUserProgress(String userId) => '$apiHost/user/$userId/progress';
+  static String apiUserProgress(String userId) =>
+      '$apiHost/user/$userId/progress';
 
   // 条目信息
   //
   // @query responseGroup 返回数据大小: small, medium, large
-  String apiSubject(String subjectId) => '$apiHost/subject/$subjectId';
+  static String apiSubject(String subjectId) => '$apiV0/subjects/$subjectId';
 
   // 章节数据
-  String apiSubjectEp(String subjectId) => '$apiHost/subject/$subjectId/ep';
+  static String apiSubjectEp(String subjectId) =>
+      '$apiHost/subject/$subjectId/ep';
 
   // 每日放送
-  String apiCalendar() => '$apiHost/calendar';
+  static String apiCalendar() => '$apiHost/calendar';
 
   // 条目搜索
   //
   // @query type 条目类型: 1 = book, 2 = anime, 3 = music, 4 = game, 6 = real
   // @query start 开始条数
   // @query max_results 每页条数, 最多25
-  String apiSearch(String keywords) => '$apiHost/search/subject/$keywords';
+  static String apiSearch(String keywords) =>
+      '$apiHost/search/subject/$keywords';
 
   // [GET, POST] 更新收视进度
   // @param {*} id 章节ID
