@@ -1,9 +1,12 @@
 # flutter_bangumi
-
 An alternative bangumi mobile application project written in Flutter.
 
 ## Use Build Runner
 flutter packages pub run build_runner build
+
+## Solve Shader Compilation Jank
+https://docs.flutter.dev/perf/shader
+flutter run --profile --cache-sksl --purge-persistent-cache
 
 PowerBy
 

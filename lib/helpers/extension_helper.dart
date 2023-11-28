@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
@@ -8,8 +9,23 @@ extension StringExtension on String? {
     return this![0].toUpperCase() + this!.substring(1).toLowerCase();
   }
 
+  String? decode() {
+    if (this == null) return this;
+    return utf8.decode(this!.runes.toList());
+  }
+
   String? showHTML() {
     return parse(this).firstChild?.text;
+  }
+
+  String? ensureUrlScheme({String defaultScheme = 'https'}) {
+    if ((this?.isNotEmpty ?? false) && !this!.contains('http')) {
+      // If the URL doesn't contain a scheme, add the default scheme
+      return '$defaultScheme:$this';
+    } else {
+      // If the URL already has a scheme, return it as is
+      return this;
+    }
   }
 
   DateTime? toDateTime() {

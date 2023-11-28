@@ -145,6 +145,27 @@ extension SubjectOptionExtension on SearchScreenSubjectOption {
   toJson() {
     return name;
   }
+
+  displayName(BuildContext context) {
+    switch (this) {
+      case SearchScreenSubjectOption.entry:
+        return TextConstant.entry.getString(context);
+      case SearchScreenSubjectOption.anime:
+        return TextConstant.anime.getString(context);
+      case SearchScreenSubjectOption.book:
+        return TextConstant.book.getString(context);
+      case SearchScreenSubjectOption.music:
+        return TextConstant.music.getString(context);
+      case SearchScreenSubjectOption.game:
+        return TextConstant.game.getString(context);
+      case SearchScreenSubjectOption.real:
+        return TextConstant.real.getString(context);
+      case SearchScreenSubjectOption.character:
+        return TextConstant.character.getString(context);
+      case SearchScreenSubjectOption.user:
+        return TextConstant.user.getString(context);
+    }
+  }
 }
 
 enum SearchScreenFilterOption {
@@ -156,3 +177,42 @@ enum SearchScreenFilterOption {
 }
 
 enum SearchScreenResponseGroup { small, medium, large }
+
+enum SubjectRelationGroup {
+  character,
+  productionStaff,
+  relation,
+}
+
+enum CareerGroup {
+  producer,
+  mangaka,
+  artist,
+  seiyu,
+  writer,
+  illustrator,
+  actor,
+}
+
+extension CareerGroupExtension on CareerGroup {
+  String displayName(BuildContext context) {
+    switch (this) {
+      case CareerGroup.producer:
+        return TextConstant.producer.getString(context);
+      case CareerGroup.mangaka:
+        return TextConstant.mangaka.getString(context);
+      case CareerGroup.artist:
+        return TextConstant.artist.getString(context);
+      case CareerGroup.seiyu:
+        return TextConstant.seiyu.getString(context);
+      case CareerGroup.writer:
+        return TextConstant.writer.getString(context);
+      case CareerGroup.illustrator:
+        return TextConstant.illustrator.getString(context);
+      case CareerGroup.actor:
+        return TextConstant.actor.getString(context);
+    }
+  }
+}
+
+enum ImageSizeGroup { small, common, medium, large, grid }
