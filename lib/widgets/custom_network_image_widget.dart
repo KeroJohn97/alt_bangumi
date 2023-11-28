@@ -11,8 +11,8 @@ class CustomNetworkImageWidget extends StatefulWidget {
   final double? radius;
   final String? imageUrl;
   final ImageProvider? imageProvider;
+  final VoidCallback? onTap;
   final String? heroTag;
-  final bool enableTap;
   final Alignment alignment;
   final BoxFit boxFit;
 
@@ -25,8 +25,8 @@ class CustomNetworkImageWidget extends StatefulWidget {
     required this.radius,
     this.imageUrl,
     this.imageProvider,
+    this.onTap,
     this.heroTag,
-    this.enableTap = true,
     this.alignment = Alignment.center,
     this.boxFit = BoxFit.contain,
     this.scale = 1.0,
@@ -51,7 +51,11 @@ class _CustomNetworkImageWidgetState extends State<CustomNetworkImageWidget>
     required ImageProvider? imageProvider,
     required String heroTag,
   }) {
-    if (!widget.enableTap || imageProvider == null) return;
+    if (widget.onTap != null) {
+      widget.onTap!.call();
+      return;
+    }
+    if (imageProvider == null) return;
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => _CustomPhotoView(

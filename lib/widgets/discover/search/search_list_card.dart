@@ -37,10 +37,11 @@ class SearchListCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomNetworkImageWidget(
-              height: 18.h,
-              width: 28.w,
+              height: 150,
+              width: 100,
               imageUrl: info.images?.large,
               radius: 8.0,
+              boxFit: BoxFit.cover,
             ),
             Expanded(
               child: Container(
