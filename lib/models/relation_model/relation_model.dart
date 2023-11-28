@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:alt_bangumi/models/relation_model/actor_model.dart';
 import 'package:equatable/equatable.dart';
 
 import '../images_model.dart';
@@ -9,7 +10,7 @@ class RelationModel extends Equatable {
   final String? name;
   final String? nameCn;
   final String? relation;
-  final List<dynamic>? actors;
+  final List<ActorModel>? actors;
   final List<dynamic>? career;
   final int? type;
   final int? id;
@@ -33,7 +34,9 @@ class RelationModel extends Equatable {
       name: data['name'] as String?,
       nameCn: data['name_cn'] as String?,
       relation: data['relation'] as String?,
-      actors: data['actors'] as List<dynamic>?,
+      actors: (data['actors'] as List<dynamic>?)
+          ?.map((e) => ActorModel.fromMap(e as Map<String, dynamic>))
+          .toList(),
       career: data['career'] as List<dynamic>?,
       type: data['type'] as int?,
       id: data['id'] as int?,
@@ -68,7 +71,7 @@ class RelationModel extends Equatable {
     String? name,
     String? nameCn,
     String? relation,
-    List<dynamic>? actors,
+    List<ActorModel>? actors,
     List<dynamic>? career,
     int? type,
     int? id,
