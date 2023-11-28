@@ -1,22 +1,15 @@
-import 'dart:convert';
-
+import 'package:alt_bangumi/providers/discover_view_provider.dart';
 import 'package:alt_bangumi/screens/search/search_screen.dart';
-import 'package:alt_bangumi/widgets/custom_gif_widget.dart';
-import 'package:alt_bangumi/widgets/custom_loading_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:alt_bangumi/widgets/discover/home_subject_widget.dart';
 import 'package:alt_bangumi/constants/enum_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/screens/calendar/calendar_screen.dart';
-import 'package:alt_bangumi/widgets/discover/anime_card.dart';
 import 'package:alt_bangumi/widgets/discover/banner_widget.dart';
 import 'package:alt_bangumi/widgets/discover/icon_button.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../repositories/bad_repository.dart';
 
 class DiscoverView extends ConsumerStatefulWidget {
   const DiscoverView({super.key});
@@ -26,6 +19,19 @@ class DiscoverView extends ConsumerStatefulWidget {
 }
 
 class _DiscoverViewState extends ConsumerState<DiscoverView> {
+  late final AutoSizeGroup _mainAutoSizeGroup;
+  late final AutoSizeGroup _subAutoSizeGroup;
+
+  @override
+  void initState() {
+    super.initState();
+    _mainAutoSizeGroup = AutoSizeGroup();
+    _subAutoSizeGroup = AutoSizeGroup();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(discoverViewProvider.notifier).loadChannel();
+    });
+  }
+
   void _navigationCallback(NavigationEnum navigationEnum) {
     context.push(_getScreenRoute(navigationEnum));
   }
@@ -156,20 +162,18 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
     }
   }
 
-  Future<String?> _getOnlineUser() async {
-    final result = BadRepository.onlineUsers();
-    return result;
-  }
-
-  void _pushChannelScreen() {
-    // context.push(CalendarScreen.route);
-  }
-
   @override
   Widget build(BuildContext context) {
     final list = NavigationEnum.values
-        .where((element) =>
-            element.name.contains('t') || element.name.contains('search'))
+        .where(
+          (element) => [
+            NavigationEnum.today,
+            NavigationEnum.search,
+            NavigationEnum.ranking,
+            NavigationEnum.tag,
+            NavigationEnum.catalog,
+          ].contains(element),
+        )
         .toList();
     return Center(
       child: SingleChildScrollView(
@@ -219,67 +223,26 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
               //   ],
               // ),
             ),
-            Row(
-              children: [
-                FutureBuilder<String?>(
-                    future: _getOnlineUser(),
-                    builder: (context, snapshot) {
-                      return Text(
-                        '${TextConstant.online.toLowerCase().getString(context)} ${snapshot.data ?? ''}',
-                        textAlign: TextAlign.start,
-                      );
-                    }),
-              ],
-            ),
-            Row(
-              children: [
-                Text(TextConstant.anime.getString(context)),
-                const Spacer(),
-                TextButton(
-                  onPressed: _pushChannelScreen,
-                  child: Text('${TextConstant.channel.getString(context)} >'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10.0),
-            const CustomLoadingWidget(),
-            const SizedBox(height: 10.0),
-            GestureDetector(
-              onTap: () async {
-                const directoryPath = 'assets/images/bgm';
-                const filePrefix = 'gif_';
-                var assets = await rootBundle.loadString('AssetManifest.json');
-                Map json = jsonDecode(assets);
-                List<dynamic> fileList = json.keys
-                    .where((element) =>
-                        '$element'.startsWith('$directoryPath/$filePrefix'))
-                    .toList();
-                if (!mounted || fileList.isEmpty) return;
-                showDialog(
-                  context: context,
-                  builder: (context) => Dialog.fullscreen(
-                    child: CustomGifWidget(
-                      directoryPath: directoryPath,
-                      fileCount: fileList.length,
-                      filePrefix: filePrefix,
-                    ),
+            ...SearchScreenSubjectOption.values
+                .where(
+                  (element) => [
+                    SearchScreenSubjectOption.anime,
+                    SearchScreenSubjectOption.book,
+                    SearchScreenSubjectOption.game,
+                    SearchScreenSubjectOption.music,
+                    SearchScreenSubjectOption.real,
+                  ].contains(element),
+                )
+                .map(
+                  (e) => HomeSubjectWidget(
+                    mainAutoSizeGroup: _mainAutoSizeGroup,
+                    subAutoSizeGroup: _subAutoSizeGroup,
+                    subjectOption: e,
                   ),
-                );
-              },
-              child: const AnimeCard(
-                imageUrl:
-                    'http://lain.bgm.tv/r/400/pic/cover/l/a7/73/413741_dVC7f.jpg',
-                followers: '13989',
-                title: '陰陽師の異世界転生記',
-              ),
-            ),
+                )
+                .toList(),
             const SizedBox(height: 10.0),
-            const AnimeCard(
-              imageUrl:
-                  'http://lain.bgm.tv/r/400/pic/cover/l/13/c5/400602_ZI8Y9.jpg',
-              followers: '23432',
-              title: '葬送のフリーレン',
-            ),
+            const SizedBox(height: 10.0),
             const SizedBox(height: 10.0),
           ]),
         ),

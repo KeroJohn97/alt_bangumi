@@ -159,6 +159,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 
+  // TODO search screen: save with category option
   void _saveStorageResult({
     required SearchModel searchModel,
     required String keyword,
@@ -175,6 +176,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 
+  // TODO search screen: save with category option
   Future<SearchModel?> _getStorageResult(String keyword) async {
     final result = await StorageHelper.read(StorageHelperOption.searchResult);
     final List<dynamic> list = result == null ? [] : jsonDecode(result);

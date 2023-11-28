@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:alt_bangumi/constants/color_constant.dart';
-import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/screens/discover/discover_view.dart';
-import 'package:alt_bangumi/screens/favourite/favourite_view.dart';
-import 'package:alt_bangumi/screens/super_unfolded/super_unfolded_view.dart';
-import 'package:alt_bangumi/screens/time_capsules/time_capsules_view.dart';
-import 'package:alt_bangumi/screens/time_machine/time_machine_view.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,45 +18,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final currentIndex = ref.watch(homeIndexNotifier);
-    return ScaffoldCustomed(
+    return const ScaffoldCustomed(
       title: '',
-      body: IndexedStack(
-        index: currentIndex,
-        children: const [
-          DiscoverView(),
-          TimeCapsulesView(),
-          FavouriteView(),
-          SuperUnfoldedView(),
-          TimeMachineView(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (value) =>
-            ref.read(homeIndexNotifier.notifier).update((state) => value),
-        currentIndex: currentIndex,
-        items: [
-          _getBottomNavigationBarItem(
-            iconData: Icons.home_outlined,
-            label: HomeIndexEnum.discover.display(context),
-          ),
-          _getBottomNavigationBarItem(
-            iconData: Icons.access_time_outlined,
-            label: HomeIndexEnum.timeCapsules.display(context),
-          ),
-          _getBottomNavigationBarItem(
-            iconData: Icons.star_outline_outlined,
-            label: HomeIndexEnum.favourite.display(context),
-          ),
-          _getBottomNavigationBarItem(
-            iconData: Icons.chat_bubble_outline_outlined,
-            label: HomeIndexEnum.superUnfolded.display(context),
-          ),
-          _getBottomNavigationBarItem(
-            iconData: Icons.person_outlined,
-            label: HomeIndexEnum.timeMachine.display(context),
-          ),
-        ],
-      ),
+      body: DiscoverView(),
+      // IndexedStack(
+      //   index: currentIndex,
+      //   children: const [
+      //     DiscoverView(),
+      //     TimeCapsulesView(),
+      //     FavouriteView(),
+      //     SuperUnfoldedView(),
+      //     TimeMachineView(),
+      //   ],
+      // ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   onTap: (value) =>
+      //       ref.read(homeIndexNotifier.notifier).update((state) => value),
+      //   currentIndex: currentIndex,
+      //   items: [
+      //     _getBottomNavigationBarItem(
+      //       iconData: Icons.home_outlined,
+      //       label: HomeIndexEnum.discover.display(context),
+      //     ),
+      //     _getBottomNavigationBarItem(
+      //       iconData: Icons.access_time_outlined,
+      //       label: HomeIndexEnum.timeCapsules.display(context),
+      //     ),
+      //     _getBottomNavigationBarItem(
+      //       iconData: Icons.star_outline_outlined,
+      //       label: HomeIndexEnum.favourite.display(context),
+      //     ),
+      //     _getBottomNavigationBarItem(
+      //       iconData: Icons.chat_bubble_outline_outlined,
+      //       label: HomeIndexEnum.superUnfolded.display(context),
+      //     ),
+      //     _getBottomNavigationBarItem(
+      //       iconData: Icons.person_outlined,
+      //       label: HomeIndexEnum.timeMachine.display(context),
+      //     ),
+      //   ],
+      // ),
     );
   }
 

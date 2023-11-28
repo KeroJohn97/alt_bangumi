@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:alt_bangumi/constants/color_constant.dart';
+import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
@@ -112,21 +113,25 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
             return const Scaffold();
           case SubjectDetailScreenStateEnum.success:
             final subject = state.subject;
+            final episode = state.episode;
             final characters = state.characters;
             final relations = state.relations;
             final persons = state.persons;
+            final subjectOption = SearchScreenSubjectOption.values
+                .firstWhere((element) => element.value == subject?.type);
 
             if (subject == null) return const Scaffold();
 
-            final pageCount = ((subject.totalEpisodes ?? 0) / 32).ceil();
+            final pageCount = ((episode?.total ?? 0) / 32).ceil();
             final total = (int.tryParse('${subject.collection?.wish}') ?? 0) +
                 (int.tryParse('${subject.collection?.collect}') ?? 0) +
                 (int.tryParse('${subject.collection?.doing}') ?? 0) +
                 (int.tryParse('${subject.collection?.onHold}') ?? 0) +
                 (int.tryParse('${subject.collection?.dropped}') ?? 0);
 
+            // use for app bar image
             Future.delayed(Duration.zero).then((value) => _imageProvider.value =
-                CachedNetworkImageProvider('${subject.images?.large}'));
+                CachedNetworkImageProvider('${subject.images?.small}'));
 
             return SelectionArea(
               selectionControls: _selectionControls,
@@ -197,38 +202,41 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                                   width: 27.5,
                                                   radius: 8.0,
                                                   imageProvider: value,
-                                                  enableTap: false,
                                                   heroTag: '$value (AppBar)',
+                                                  onTap: () {},
                                                 ),
                                               );
                                             }),
                                         const SizedBox(width: 16.0),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${subject.nameCn}',
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            Row(
-                                              children: [
-                                                CustomStarRatingWidget(
-                                                  size: 12.0,
-                                                  rating: subject.rating?.score
-                                                          ?.toInt() ??
-                                                      0,
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${subject.nameCn}',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
                                                 ),
-                                                const SizedBox(width: 4.0),
-                                                Text(
-                                                    '${subject.rating?.score}'),
-                                              ],
-                                            ),
-                                          ],
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  CustomStarRatingWidget(
+                                                    size: 12.0,
+                                                    rating: subject
+                                                            .rating?.score
+                                                            ?.toInt() ??
+                                                        0,
+                                                  ),
+                                                  const SizedBox(width: 4.0),
+                                                  Text(
+                                                      '${subject.rating?.score}'),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     );
@@ -262,18 +270,15 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                                   height: 250.0,
                                                   width: 100.w,
                                                   imageUrl:
-                                                      subject.images?.large,
+                                                      subject.images?.small,
                                                   radius: 0.0,
-                                                  enableTap: false,
                                                   heroTag:
                                                       '$value (SliverAppBar)',
                                                   boxFit: BoxFit.cover,
+                                                  onTap: () {},
                                                 ),
                                                 BackdropFilter(
-                                                  filter: ImageFilter.blur(
-                                                    sigmaX: 0.5,
-                                                    sigmaY: 0.5,
-                                                  ),
+                                                  filter: ImageFilter.blur(),
                                                   child: Container(
                                                       color: Colors.white54),
                                                 ),
@@ -304,7 +309,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                   children: [
                                     const SizedBox(width: 12.0),
                                     _SubjectImage(
-                                        imageUrl: subject.images?.large),
+                                        imageUrl: subject.images?.medium),
                                     const SizedBox(width: 8.0),
                                     Expanded(
                                       child: SizedBox(
@@ -351,26 +356,87 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 ),
                               ),
                             ),
-                            SliverToBoxAdapter(
-                              child: Container(
-                                transform: Matrix4.translationValues(
-                                    0.0, -_extraHeight, 0.0),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 12.0),
-                                      decoration: const BoxDecoration(
-                                          color: Colors.white),
-                                      child: ListView(
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        children: [
+                            SliverList(
+                              delegate: SliverChildListDelegate(
+                                [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12.0),
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white),
+                                    child: ListView(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              TextConstant.favourite
+                                                  .getString(context),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18.0,
+                                              ),
+                                            ),
+                                            const Spacer(),
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(
+                                                Icons.folder_outlined,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(
+                                                Icons.close_outlined,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8.0),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              TextConstant.notAddedToFavourites
+                                                  .getString(context),
+                                              style: const TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8.0),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                '${subject.collection?.wish}${TextConstant.wished.getString(context)} / '
+                                                '${subject.collection?.collect}${TextConstant.watched.getString(context)} / '
+                                                '${subject.collection?.doing}${TextConstant.watching.getString(context)} / '
+                                                '${subject.collection?.onHold}${TextConstant.onHold.getString(context)} / '
+                                                '${subject.collection?.dropped}${TextConstant.dropped.getString(context)} / '
+                                                '${TextConstant.total.getString(context)}$total',
+                                                style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 14.0,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        if (episode?.total != null &&
+                                            episode!.total! > 0) ...[
                                           Row(
                                             children: [
                                               Text(
-                                                TextConstant.favourite
+                                                TextConstant.chapter
                                                     .getString(context),
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
@@ -381,688 +447,669 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                               IconButton(
                                                 onPressed: () {},
                                                 icon: const Icon(
-                                                  Icons.folder_outlined,
+                                                  Icons.tv_outlined,
                                                   color: Colors.grey,
                                                 ),
                                               ),
                                               IconButton(
                                                 onPressed: () {},
                                                 icon: const Icon(
-                                                  Icons.close_outlined,
+                                                  Icons.list_outlined,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                  Icons.sort_outlined,
                                                   color: Colors.grey,
                                                 ),
                                               ),
                                             ],
                                           ),
                                           const SizedBox(height: 8.0),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                TextConstant
-                                                    .notAddedToFavourites
-                                                    .getString(context),
-                                                style: const TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 8.0),
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  '${subject.collection?.wish}${TextConstant.wished.getString(context)} / '
-                                                  '${subject.collection?.collect}${TextConstant.watched.getString(context)} / '
-                                                  '${subject.collection?.doing}${TextConstant.watching.getString(context)} / '
-                                                  '${subject.collection?.onHold}${TextConstant.onHold.getString(context)} / '
-                                                  '${subject.collection?.dropped}${TextConstant.dropped.getString(context)} / '
-                                                  '${TextConstant.total.getString(context)}$total',
-                                                  style: const TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 14.0,
+                                          Container(
+                                            transform:
+                                                Matrix4.translationValues(
+                                                    -12.0, 0, 0.0),
+                                            height: 220.0,
+                                            child: PageView.builder(
+                                              controller: _pageController,
+                                              itemCount: pageCount,
+                                              itemBuilder:
+                                                  (context, pageIndex) {
+                                                int itemCount;
+                                                if (pageCount == 1) {
+                                                  itemCount = episode.total!;
+                                                } else if (pageCount ==
+                                                    pageIndex + 1) {
+                                                  itemCount = episode.total! %
+                                                      (32 * pageIndex);
+                                                } else {
+                                                  itemCount = 32;
+                                                }
+                                                return GridView.builder(
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      const NeverScrollableScrollPhysics(),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 12.0),
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 8,
+                                                    crossAxisSpacing: 10,
+                                                    mainAxisSpacing: 10,
+                                                    childAspectRatio: 0.8,
                                                   ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          if (subject.totalEpisodes != 0 &&
-                                              subject.totalEpisodes! >= 0) ...[
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  TextConstant.chapter
-                                                      .getString(context),
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0,
-                                                  ),
-                                                ),
-                                                const Spacer(),
-                                                IconButton(
-                                                  onPressed: () {},
-                                                  icon: const Icon(
-                                                    Icons.tv_outlined,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  onPressed: () {},
-                                                  icon: const Icon(
-                                                    Icons.list_outlined,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  onPressed: () {},
-                                                  icon: const Icon(
-                                                    Icons.sort_outlined,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8.0),
-                                            Container(
-                                              transform:
-                                                  Matrix4.translationValues(
-                                                      -12.0, 0, 0.0),
-                                              height: 25.h,
-                                              child: PageView.builder(
-                                                controller: _pageController,
-                                                itemCount: pageCount,
-                                                itemBuilder:
-                                                    (context, pageIndex) {
-                                                  int itemCount;
-                                                  if (pageCount == 1) {
-                                                    itemCount =
-                                                        subject.totalEpisodes!;
-                                                  } else if (pageCount ==
-                                                      pageIndex + 1) {
-                                                    itemCount =
-                                                        subject.totalEpisodes! %
-                                                            (32 * pageIndex);
-                                                  } else {
-                                                    itemCount = 32;
-                                                  }
-                                                  return GridView.builder(
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        const NeverScrollableScrollPhysics(),
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 12.0),
-                                                    gridDelegate:
-                                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                                      crossAxisCount: 8,
-                                                      crossAxisSpacing: 10,
-                                                      mainAxisSpacing: 10,
-                                                    ),
-                                                    itemCount: itemCount,
-                                                    itemBuilder:
-                                                        (context, gridIndex) {
-                                                      return Container(
-                                                        height: 20.0,
-                                                        width: 20.0,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color:
-                                                              Colors.grey[200],
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                        ),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: Text(
-                                                          '${(pageIndex * 32) + (gridIndex + 1)}',
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight.bold,
+                                                  itemCount: itemCount,
+                                                  itemBuilder:
+                                                      (context, gridIndex) {
+                                                    final index =
+                                                        (pageIndex * 32) +
+                                                            gridIndex;
+                                                    return Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .stretch,
+                                                      children: [
+                                                        Expanded(
+                                                          child: Container(
+                                                            width: 20.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .grey[200],
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                      .only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        8.0),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        8.0),
+                                                              ),
+                                                            ),
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Text(
+                                                              '${episode.data?[index].ep}',
+                                                              // '${(pageIndex * 32) + (gridIndex + 1)}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                            ValueListenableBuilder(
-                                                valueListenable: _pageIndex,
-                                                builder:
-                                                    (context, value, child) {
-                                                  return Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children:
-                                                        List<Widget>.generate(
-                                                            pageCount,
-                                                            (int index) {
-                                                      return Container(
-                                                        width: 10.0,
-                                                        height: 10.0,
-                                                        margin: const EdgeInsets
-                                                                .symmetric(
-                                                            horizontal: 2.0),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: _pageIndex
-                                                                      .value ==
-                                                                  index
-                                                              ? Colors.black
-                                                              : Colors.white,
-                                                          border: Border.all(),
+                                                        Container(
+                                                          height: 4.0,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4.0),
+                                                            color: ColorConstant
+                                                                .starColor,
+                                                          ),
                                                         ),
-                                                      );
-                                                    }),
-                                                  );
-                                                }),
-                                          ],
-                                          const SizedBox(height: 8.0),
-                                          Text(
-                                            TextConstant.tag.getString(context),
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18.0,
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
                                             ),
                                           ),
-                                          if (subject.tags != null) ...[
-                                            const SizedBox(height: 8.0),
-                                            Wrap(
-                                              children: [
-                                                ...subject.tags!
-                                                    .map(
-                                                      (e) => CustomTagWidget(
-                                                        onPressed: () {
-                                                          // TODO tag search
-                                                        },
-                                                        tag: '${e.name}',
-                                                        count: e.count,
+                                          ValueListenableBuilder(
+                                              valueListenable: _pageIndex,
+                                              builder: (context, value, child) {
+                                                return Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children:
+                                                      List<Widget>.generate(
+                                                          pageCount,
+                                                          (int index) {
+                                                    return Container(
+                                                      width: 10.0,
+                                                      height: 10.0,
+                                                      margin: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 2.0),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color:
+                                                            _pageIndex.value ==
+                                                                    index
+                                                                ? Colors.black
+                                                                : Colors.white,
+                                                        border: Border.all(),
                                                       ),
-                                                    )
-                                                    .toList(),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8.0),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  TextConstant.summary
-                                                      .getString(context),
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0,
-                                                  ),
-                                                ),
-                                                const Spacer(),
-                                                IconButton(
-                                                  onPressed: () {},
-                                                  icon: const Icon(
-                                                    Icons.translate_outlined,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8.0),
-                                            Text('${subject.summary}'),
-                                            const SizedBox(height: 16.0),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  TextConstant.preview
-                                                      .getString(context),
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0,
-                                                  ),
-                                                ),
-                                                const Spacer(),
-                                                TextButton(
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    '${TextConstant.more.getString(context)} >',
-                                                    style: const TextStyle(
-                                                        color: Colors.grey),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8.0),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  TextConstant.details
-                                                      .getString(context),
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0,
-                                                  ),
-                                                ),
-                                                const Spacer(),
-                                                TextButton(
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    '${TextConstant.revise.getString(context)} >',
-                                                    style: const TextStyle(
-                                                        color: Colors.grey),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8.0),
-                                            if (subject.infobox != null)
-                                              ...subject.infobox!
-                                                  .map((e) => Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 8.0),
-                                                        child: Text(
-                                                            '${e.key}: ${e.value}'),
-                                                      ))
+                                                    );
+                                                  }),
+                                                );
+                                              }),
+                                        ],
+                                        const SizedBox(height: 8.0),
+                                        Text(
+                                          TextConstant.tag.getString(context),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0,
+                                          ),
+                                        ),
+                                        if (subject.tags != null) ...[
+                                          const SizedBox(height: 8.0),
+                                          Wrap(
+                                            children: [
+                                              ...subject.tags!
+                                                  .map(
+                                                    (e) => CustomTagWidget(
+                                                      onPressed: () {
+                                                        // TODO tag search
+                                                      },
+                                                      tag: '${e.name}',
+                                                      count: e.count,
+                                                    ),
+                                                  )
                                                   .toList(),
-                                            if (subject.rating != null) ...[
-                                              const SizedBox(height: 8.0),
-                                              Row(
-                                                children: [
-                                                  Text.rich(
-                                                    TextSpan(
-                                                      text: TextConstant.rating
-                                                          .getString(context),
-                                                      children: [
-                                                        TextSpan(
-                                                          text:
-                                                              ' ${subject.rating?.score}',
-                                                          style: const TextStyle(
-                                                              color: ColorConstant
-                                                                  .starColor),
-                                                        ),
-                                                      ],
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 4.0),
-                                                  Container(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 12.0),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      color: ColorConstant
-                                                          .starColor,
-                                                    ),
-                                                    child: Text(
-                                                      '${subject.rating?.rank}',
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                        shadows: [
-                                                          Shadow(
-                                                            offset: Offset(
-                                                                0.0, 2.0),
-                                                            blurRadius: 5.0,
-                                                            color:
-                                                                Colors.black45,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  TextButton(
-                                                    onPressed: () {},
-                                                    child: Row(
-                                                      children: [
-                                                        Text(
-                                                          TextConstant.trend
-                                                              .getString(
-                                                                  context),
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .grey),
-                                                        ),
-                                                        const Icon(
-                                                          Icons
-                                                              .open_in_new_outlined,
-                                                          color: Colors.grey,
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {},
-                                                    child: Row(
-                                                      children: [
-                                                        Text(
-                                                          TextConstant
-                                                              .perspective
-                                                              .getString(
-                                                                  context),
-                                                          style:
-                                                              const TextStyle(
-                                                                  color: Colors
-                                                                      .grey),
-                                                        ),
-                                                        const Icon(
-                                                          Icons
-                                                              .open_in_new_outlined,
-                                                          color: Colors.grey,
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text(
-                                                  '${subject.rating?.total} ${TextConstant.rating.getString(context)}',
-                                                  style: const TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 12.0),
-                                                ),
-                                              ),
-                                              CustomRatingChartWidget(
-                                                  rating: subject.rating!),
-                                              Row(
-                                                children: [
-                                                  TextButton(
-                                                    onPressed: () {},
-                                                    child: Text(
-                                                      '${TextConstant.userRating.getString(context)} >',
-                                                      style: const TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 12.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  GestureDetector(
-                                                    child: Row(
-                                                      children: [
-                                                        Text.rich(
-                                                          TextSpan(
-                                                            text: TextConstant
-                                                                .standardDeviation
-                                                                .getString(
-                                                                    context),
-                                                            children: [
-                                                              TextSpan(
-                                                                text: _getStandardDeviation(
-                                                                    subject
-                                                                        .rating!
-                                                                        .count!),
-                                                                style: const TextStyle(
-                                                                    color: ColorConstant
-                                                                        .themeColor),
-                                                              ),
-                                                              const TextSpan(
-                                                                text: '基本一致',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.grey,
-                                                            fontSize: 12.0,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
                                             ],
-                                            if (characters != null) ...[
-                                              const SizedBox(height: 8.0),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    TextConstant.role
-                                                        .getString(context),
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18.0,
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  TextButton(
-                                                    onPressed: () {},
-                                                    child: Text(
-                                                      '${TextConstant.more.getString(context)} >',
-                                                      style: const TextStyle(
-                                                          color: Colors.grey),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 8.0),
-                                              SingleChildScrollView(
-                                                physics:
-                                                    const BouncingScrollPhysics(),
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    ...characters
-                                                        .map(
-                                                          (e) => RelationCard(
-                                                            relation: e,
-                                                            voidCallback: () {},
-                                                            height: 60.0,
-                                                            width: 60.0,
-                                                            scale: 1.5,
-                                                          ),
-                                                        )
-                                                        .toList(),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                            if (persons != null) ...[
-                                              const SizedBox(height: 8.0),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    TextConstant.productionStaff
-                                                        .getString(context),
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 18.0,
-                                                    ),
-                                                  ),
-                                                  const Spacer(),
-                                                  TextButton(
-                                                    onPressed: () {},
-                                                    child: Text(
-                                                      '${TextConstant.more.getString(context)} >',
-                                                      style: const TextStyle(
-                                                          color: Colors.grey),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 8.0),
-                                              SingleChildScrollView(
-                                                physics:
-                                                    const BouncingScrollPhysics(),
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    ...persons
-                                                        .map(
-                                                          (e) => RelationCard(
-                                                            relation: e,
-                                                            height: 60,
-                                                            width: 60,
-                                                          ),
-                                                        )
-                                                        .toList(),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                            if (relations != null) ...[
-                                              const SizedBox(height: 8.0),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Row(
+                                            children: [
                                               Text(
-                                                TextConstant.associate
+                                                TextConstant.summary
                                                     .getString(context),
                                                 style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 18.0,
                                                 ),
                                               ),
-                                              const SizedBox(height: 8.0),
-                                              SingleChildScrollView(
-                                                physics:
-                                                    const BouncingScrollPhysics(),
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                child: Row(
+                                              const Spacer(),
+                                              IconButton(
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                  Icons.translate_outlined,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Text('${subject.summary}'),
+                                          const SizedBox(height: 16.0),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                TextConstant.preview
+                                                    .getString(context),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              TextButton(
+                                                onPressed: () {},
+                                                child: Text(
+                                                  '${TextConstant.more.getString(context)} >',
+                                                  style: const TextStyle(
+                                                      color: Colors.grey),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                TextConstant.details
+                                                    .getString(context),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              TextButton(
+                                                onPressed: () {},
+                                                child: Text(
+                                                  '${TextConstant.revise.getString(context)} >',
+                                                  style: const TextStyle(
+                                                      color: Colors.grey),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          if (subject.infobox != null)
+                                            ...subject.infobox!
+                                                .map((e) => Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 8.0),
+                                                      child: Text(
+                                                          '${e.key}: ${e.value}'),
+                                                    ))
+                                                .toList(),
+                                          if (subject.rating != null) ...[
+                                            const SizedBox(height: 8.0),
+                                            Row(
+                                              children: [
+                                                Text.rich(
+                                                  TextSpan(
+                                                    text: TextConstant.rating
+                                                        .getString(context),
+                                                    children: [
+                                                      TextSpan(
+                                                        text:
+                                                            ' ${subject.rating?.score}',
+                                                        style: const TextStyle(
+                                                            color: ColorConstant
+                                                                .starColor),
+                                                      ),
+                                                    ],
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 4.0),
+                                                Container(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 12.0),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    color:
+                                                        ColorConstant.starColor,
+                                                  ),
+                                                  child: Text(
+                                                    '${subject.rating?.rank}',
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      shadows: [
+                                                        Shadow(
+                                                          offset:
+                                                              Offset(0.0, 2.0),
+                                                          blurRadius: 5.0,
+                                                          color: Colors.black45,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                const Spacer(),
+                                                TextButton(
+                                                  onPressed: () {},
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        TextConstant.trend
+                                                            .getString(context),
+                                                        style: const TextStyle(
+                                                            color: Colors.grey),
+                                                      ),
+                                                      const Icon(
+                                                        Icons
+                                                            .open_in_new_outlined,
+                                                        color: Colors.grey,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {},
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        TextConstant.perspective
+                                                            .getString(context),
+                                                        style: const TextStyle(
+                                                            color: Colors.grey),
+                                                      ),
+                                                      const Icon(
+                                                        Icons
+                                                            .open_in_new_outlined,
+                                                        color: Colors.grey,
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                '${subject.rating?.total} ${TextConstant.rating.getString(context)}',
+                                                style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 12.0),
+                                              ),
+                                            ),
+                                            CustomRatingChartWidget(
+                                                rating: subject.rating!),
+                                            Row(
+                                              children: [
+                                                TextButton(
+                                                  onPressed: () {},
+                                                  child: Text(
+                                                    '${TextConstant.userRating.getString(context)} >',
+                                                    style: const TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 12.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const Spacer(),
+                                                GestureDetector(
+                                                  child: Row(
+                                                    children: [
+                                                      Text.rich(
+                                                        TextSpan(
+                                                          text: TextConstant
+                                                              .standardDeviation
+                                                              .getString(
+                                                                  context),
+                                                          children: [
+                                                            TextSpan(
+                                                              text: _getStandardDeviation(
+                                                                  subject
+                                                                      .rating!
+                                                                      .count!),
+                                                              style: const TextStyle(
+                                                                  color: ColorConstant
+                                                                      .themeColor),
+                                                            ),
+                                                            const TextSpan(
+                                                              text: '基本一致',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        style: const TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 12.0,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                          if (characters != null) ...[
+                                            const SizedBox(height: 8.0),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  TextConstant.role
+                                                      .getString(context),
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                                const Spacer(),
+                                                TextButton(
+                                                  onPressed: () {},
+                                                  child: Text(
+                                                    '${TextConstant.more.getString(context)} >',
+                                                    style: const TextStyle(
+                                                        color: Colors.grey),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 8.0),
+                                            SingleChildScrollView(
+                                              physics:
+                                                  const BouncingScrollPhysics(),
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  ...characters
+                                                      .map(
+                                                        (e) => RelationCard(
+                                                          relation: e,
+                                                          height: 60.0,
+                                                          width: 60.0,
+                                                          scale: 1.5,
+                                                          group:
+                                                              SubjectRelationGroup
+                                                                  .character,
+                                                          option: subjectOption,
+                                                          sizeGroup:
+                                                              ImageSizeGroup
+                                                                  .small,
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                          if (persons != null) ...[
+                                            const SizedBox(height: 8.0),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  TextConstant.productionStaff
+                                                      .getString(context),
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 18.0,
+                                                  ),
+                                                ),
+                                                const Spacer(),
+                                                TextButton(
+                                                  onPressed: () {},
+                                                  child: Text(
+                                                    '${TextConstant.more.getString(context)} >',
+                                                    style: const TextStyle(
+                                                        color: Colors.grey),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 8.0),
+                                            SingleChildScrollView(
+                                              physics:
+                                                  const BouncingScrollPhysics(),
+                                              scrollDirection: Axis.horizontal,
+                                              child:
+                                                  Builder(builder: (context) {
+                                                final set = <String>{};
+                                                return Row(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    ...relations
+                                                    ...persons
+                                                        .where((element) =>
+                                                            set.add(
+                                                                '${element.id}'))
+                                                        .toList()
                                                         .map(
                                                           (e) => RelationCard(
                                                             relation: e,
-                                                            height: 120.0,
-                                                            width: 80.0,
+                                                            height: 60,
+                                                            width: 60,
+                                                            group: SubjectRelationGroup
+                                                                .productionStaff,
+                                                            option:
+                                                                subjectOption,
+                                                            sizeGroup:
+                                                                ImageSizeGroup
+                                                                    .small,
                                                           ),
                                                         )
                                                         .toList(),
                                                   ],
+                                                );
+                                              }),
+                                            ),
+                                          ],
+                                          if (relations != null) ...[
+                                            const SizedBox(height: 8.0),
+                                            Text(
+                                              TextConstant.associate
+                                                  .getString(context),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18.0,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8.0),
+                                            SingleChildScrollView(
+                                              physics:
+                                                  const BouncingScrollPhysics(),
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  ...relations
+                                                      .map(
+                                                        (e) => RelationCard(
+                                                          relation: e,
+                                                          height: 120.0,
+                                                          width: 80.0,
+                                                          group:
+                                                              SubjectRelationGroup
+                                                                  .relation,
+                                                          option: subjectOption,
+                                                          sizeGroup:
+                                                              ImageSizeGroup
+                                                                  .medium,
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                          const SizedBox(height: 8.0),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                TextConstant.catalog
+                                                    .getString(context),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              TextButton(
+                                                onPressed: () {},
+                                                child: Text(
+                                                  '${TextConstant.more.getString(context)} >',
+                                                  style: const TextStyle(
+                                                      color: Colors.grey),
                                                 ),
                                               ),
                                             ],
-                                            const SizedBox(height: 8.0),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  TextConstant.catalog
-                                                      .getString(context),
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          const SizedBox(height: 8.0),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                TextConstant.log
+                                                    .getString(context),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18.0,
+                                                ),
+                                              ),
+                                              const Spacer(),
+                                              TextButton(
+                                                onPressed: () {},
+                                                child: Text(
+                                                  '${TextConstant.more.getString(context)} >',
                                                   style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0,
-                                                  ),
+                                                      color: Colors.grey),
                                                 ),
-                                                const Spacer(),
-                                                TextButton(
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    '${TextConstant.more.getString(context)} >',
-                                                    style: const TextStyle(
-                                                        color: Colors.grey),
-                                                  ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          const SizedBox(height: 8.0),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                TextConstant.post
+                                                    .getString(context),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18.0,
                                                 ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8.0),
-                                            const SizedBox(height: 8.0),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  TextConstant.log
-                                                      .getString(context),
+                                              ),
+                                              const Spacer(),
+                                              TextButton(
+                                                onPressed: () {},
+                                                child: Text(
+                                                  '${TextConstant.more.getString(context)} >',
                                                   style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0,
-                                                  ),
+                                                      color: Colors.grey),
                                                 ),
-                                                const Spacer(),
-                                                TextButton(
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    '${TextConstant.more.getString(context)} >',
-                                                    style: const TextStyle(
-                                                        color: Colors.grey),
-                                                  ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8.0),
+                                          const SizedBox(height: 8.0),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                TextConstant.comment
+                                                    .getString(context),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18.0,
                                                 ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8.0),
-                                            const SizedBox(height: 8.0),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  TextConstant.post
-                                                      .getString(context),
+                                              ),
+                                              const Spacer(),
+                                              TextButton(
+                                                onPressed: () {},
+                                                child: Text(
+                                                  '${TextConstant.more.getString(context)} >',
                                                   style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0,
-                                                  ),
+                                                      color: Colors.grey),
                                                 ),
-                                                const Spacer(),
-                                                TextButton(
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    '${TextConstant.more.getString(context)} >',
-                                                    style: const TextStyle(
-                                                        color: Colors.grey),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8.0),
-                                            const SizedBox(height: 8.0),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  TextConstant.comment
-                                                      .getString(context),
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18.0,
-                                                  ),
-                                                ),
-                                                const Spacer(),
-                                                TextButton(
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    '${TextConstant.more.getString(context)} >',
-                                                    style: const TextStyle(
-                                                        color: Colors.grey),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8.0),
-                                          ],
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8.0),
                                         ],
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
+                            // SliverToBoxAdapter(
+                            //   child: Container(
+                            //     transform: Matrix4.translationValues(
+                            //         0.0, -_extraHeight, 0.0),
+                            //     child:
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         );
                       });
