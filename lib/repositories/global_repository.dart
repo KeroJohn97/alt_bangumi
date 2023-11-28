@@ -2,6 +2,8 @@ import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/constants/static_http_constant.dart';
 import 'package:alt_bangumi/helpers/http_helper.dart';
+import 'package:alt_bangumi/models/character_model/character_model.dart';
+import 'package:alt_bangumi/models/episode_model/episode_model.dart';
 import 'package:alt_bangumi/models/home_discovery_model/home_discovery_model.dart';
 import 'package:alt_bangumi/models/search_model/search_model.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
@@ -13,10 +15,6 @@ import '../models/static_anime_model/static_anime_model.dart';
 import '../models/static_hentai_model/static_hentai_model.dart';
 import '../models/static_manga_model/static_manga_model.dart';
 import '../models/static_wenku_model/static_wenku_model.dart';
-
-final globalRepositoryProvider = Provider<GlobalRepository>((ref) {
-  return GlobalRepository();
-});
 
 class GlobalRepository {
   static Future<Map<String, dynamic>> getOTA() async {
@@ -52,6 +50,12 @@ class GlobalRepository {
   static Future<SubjectModel> getSubject(String subjectId) async {
     final json = await HttpHelper.get(HttpConstant.apiSubject(subjectId));
     return SubjectModel.fromMap(json);
+  }
+
+  static Future<EpisodeModel> getEpisode(String subjectId) async {
+    final json = await HttpHelper.get(
+        '${HttpConstant.apiV0}/episodes?subject_id=$subjectId');
+    return EpisodeModel.fromMap(json);
   }
 
   static Future<List<RelationModel>> getPersons(String subjectId) async {
