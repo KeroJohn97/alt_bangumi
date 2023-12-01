@@ -1,5 +1,5 @@
 import 'package:alt_bangumi/gen/assets.gen.dart';
-import 'package:alt_bangumi/widgets/shimmer_widget.dart';
+import 'package:alt_bangumi/widgets/custom_shimmer_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -171,7 +171,7 @@ class _LoadingWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius ?? 0.00),
       ),
-      child: const ShimmerWidget(),
+      child: CustomShimmerWidget(borderRadius: radius),
     );
   }
 }

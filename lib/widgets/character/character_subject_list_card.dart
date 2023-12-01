@@ -4,7 +4,7 @@ import 'package:alt_bangumi/repositories/person_repository.dart';
 import 'package:alt_bangumi/screens/person_detail_screen.dart';
 import 'package:alt_bangumi/screens/subject_detail_screen.dart';
 import 'package:alt_bangumi/widgets/custom_network_image_widget.dart';
-import 'package:alt_bangumi/widgets/shimmer_widget.dart';
+import 'package:alt_bangumi/widgets/custom_shimmer_widget.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -177,6 +177,6 @@ class _Shimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ShimmerWidget();
+    return const CustomShimmerWidget(borderRadius: null);
   }
 }

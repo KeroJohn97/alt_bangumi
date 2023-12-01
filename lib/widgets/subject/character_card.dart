@@ -14,7 +14,7 @@ class RelationCard extends StatefulWidget {
   final double height;
   final double width;
   final SubjectRelationGroup group;
-  final SearchScreenSubjectOption option;
+  final SearchScreenSubjectOption? option;
   final ImageSizeGroup sizeGroup;
   final BoxFit boxFit;
   final double scale;
@@ -59,6 +59,8 @@ class _RelationCardState extends State<RelationCard> {
         break;
       case SearchScreenSubjectOption.user:
         // TODO: Handle this case.
+        break;
+      case null:
         break;
     }
     return '${widget.relation.relation}';

@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:alt_bangumi/widgets/shimmer_widget.dart';
+import 'package:alt_bangumi/widgets/custom_shimmer_widget.dart';
 
 class BannerWidget extends StatelessWidget {
   final String imageUrl;
@@ -22,10 +22,9 @@ class BannerWidget extends StatelessWidget {
       child: PageView.builder(
           itemCount: 3,
           itemBuilder: (context, index) {
-            return CachedNetworkImage(
-              imageUrl: imageUrl,
-              placeholder: (context, url) => const ShimmerWidget(),
-              errorWidget: (context, url, error) => const ShimmerWidget(),
+            return CustomShimmerWidget(
+              height: 100.0,
+              width: 80.w,
             );
           }),
     );

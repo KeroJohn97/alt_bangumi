@@ -2,6 +2,7 @@ import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
+import 'package:alt_bangumi/widgets/discover/search/anime_loading_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -10,7 +11,6 @@ import 'package:collection/collection.dart';
 
 import '../../constants/text_constant.dart';
 import '../../providers/discover_view_provider.dart';
-import '../shimmer_widget.dart';
 import 'anime_card.dart';
 
 class HomeSubjectWidget extends StatelessWidget {
@@ -54,10 +54,7 @@ class HomeSubjectWidget extends StatelessWidget {
               case DiscoverViewStateEnum.initial:
                 return const Text('initial');
               case DiscoverViewStateEnum.loading:
-                return const SizedBox(
-                  height: 50.0,
-                  child: ShimmerWidget(),
-                );
+                return const AnimeLoadingComponent();
               case DiscoverViewStateEnum.failure:
                 return const Text('Failed');
               case DiscoverViewStateEnum.success:

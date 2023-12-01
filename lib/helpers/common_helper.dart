@@ -37,4 +37,19 @@ class CommonHelper {
     final result = math.sqrt(sum / sumOfFrequencies);
     return (result * 100).round() / 100;
   }
+
+  static void showSnackBar({
+    required BuildContext context,
+    required String text,
+    Duration duration = const Duration(milliseconds: 3000),
+  }) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        duration: duration,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 }

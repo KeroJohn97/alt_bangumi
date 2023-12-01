@@ -2,12 +2,10 @@ import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/constants/static_http_constant.dart';
 import 'package:alt_bangumi/helpers/http_helper.dart';
-import 'package:alt_bangumi/models/character_model/character_model.dart';
 import 'package:alt_bangumi/models/episode_model/episode_model.dart';
 import 'package:alt_bangumi/models/home_discovery_model/home_discovery_model.dart';
 import 'package:alt_bangumi/models/search_model/search_model.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/calendar_model/calendar_model.dart';
 import '../models/relation_model/relation_model.dart';

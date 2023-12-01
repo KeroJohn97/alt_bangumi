@@ -6,7 +6,9 @@ flutter packages pub run build_runner build
 
 ## Solve Shader Compilation Jank
 https://docs.flutter.dev/perf/shader
+## Shift M to capture sksl
 flutter run --profile --cache-sksl --purge-persistent-cache
+flutter build ios --bundle-sksl-path flutter_01.sksl.json
 
 PowerBy
 

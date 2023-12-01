@@ -88,11 +88,16 @@ mixin TextConstant {
   static const writer = 'writer';
   static const illustrator = 'illustrator';
   static const actor = 'actor';
+  static const pleaseGrantStoragePermission =
+      'Please grant storage permission to the app to save';
+  static const fileIsBeingSaved = 'File is being saved';
+  static const subjectSharing = 'Subject sharing';
   static const withoutAName = '(Name does not exist)';
   static const withoutADate = '(Date does not exist)';
   static const inputLessThanRatings = '(Less than %a ratings)';
   static const inputPeopleRatings = '(%a ratings)';
   static const inputDateString = '%a-%a-%a';
+  static const theFileSaved = 'The file saved in directory (%a)';
 
   static const EN = {
     discover: 'Discover',
@@ -181,11 +186,15 @@ mixin TextConstant {
     writer: writer,
     illustrator: illustrator,
     actor: actor,
+    pleaseGrantStoragePermission: pleaseGrantStoragePermission,
+    fileIsBeingSaved: fileIsBeingSaved,
+    subjectSharing: subjectSharing,
     withoutAName: '(Name does not exist)',
     withoutADate: '(Date does not exist)',
     inputLessThanRatings: inputLessThanRatings,
     inputPeopleRatings: inputPeopleRatings,
-    inputDateString: '%a-%a-%a',
+    inputDateString: inputDateString,
+    theFileSaved: theFileSaved,
   };
 
   static const ZH_CN = {
@@ -275,11 +284,15 @@ mixin TextConstant {
     writer: '作家',
     illustrator: '插画家',
     actor: '演员',
+    pleaseGrantStoragePermission: '请授予应用存储权限以保存',
+    fileIsBeingSaved: '文件保存中',
+    subjectSharing: '主题分享',
     withoutAName: '(名字不存在)',
     withoutADate: '(日期不存在)',
     inputLessThanRatings: '(少于%a人评分)',
     inputPeopleRatings: '(%a人评分)',
     inputDateString: '%a年%a月%a日',
+    theFileSaved: '文件已保存 (%a)',
   };
 
   static const ZH_TW = {
@@ -367,11 +380,15 @@ mixin TextConstant {
     writer: '作家',
     illustrator: '插画家',
     actor: '演员',
-    /////////////////////////////////////////////////////////
+    pleaseGrantStoragePermission: '请授予应用存储权限以保存',
+    fileIsBeingSaved: '文件保存中',
+    subjectSharing: '主题分享',
     withoutAName: '(名字不存在)',
     withoutADate: '(日期不存在)',
     inputLessThanRatings: '(少於%a人評分)',
     inputDateString: '%a年%a月%a日',
+    theFileSaved: '文件已保存 (%a)',
+    /////////////////////////////////////////////////////////
   };
 
   static const JA = {};

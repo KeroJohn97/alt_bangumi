@@ -2,7 +2,7 @@ import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/providers/person_detail_screen_provider.dart';
 import 'package:alt_bangumi/widgets/custom_network_image_widget.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
-import 'package:alt_bangumi/widgets/shimmer_widget.dart';
+import 'package:alt_bangumi/widgets/custom_shimmer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -219,7 +219,7 @@ class _PersonSubjectListCard extends ConsumerWidget {
     }
     return const SizedBox(
       height: 50.0,
-      child: ShimmerWidget(),
+      child: CustomShimmerWidget(borderRadius: null),
     );
   }
 }

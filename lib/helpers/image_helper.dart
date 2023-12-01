@@ -1,3 +1,0 @@
-class ImageHelper {
-  ImageHelper._();
-}

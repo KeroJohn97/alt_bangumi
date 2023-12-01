@@ -49,7 +49,7 @@ class _CustomGifWidgetState extends State<CustomGifWidget>
         builder: (context, child) {
           int index = (_animation.value / 100).floor() % widget.fileCount + 1;
           return Container(
-            color: Colors.black,
+            color: Colors.grey,
             height: 100.h,
             width: 100.w,
             padding: EdgeInsets.symmetric(horizontal: 30.w),
