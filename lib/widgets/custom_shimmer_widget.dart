@@ -7,12 +7,12 @@ import 'package:shimmer/shimmer.dart';
 class CustomShimmerWidget extends StatelessWidget {
   final double height;
   final double width;
-  final double? borderRadius;
+  final double? radius;
   const CustomShimmerWidget({
     super.key,
     this.height = double.infinity,
     this.width = double.infinity,
-    this.borderRadius,
+    this.radius,
   });
 
   @override
@@ -26,9 +26,7 @@ class CustomShimmerWidget extends StatelessWidget {
         width: width,
         decoration: BoxDecoration(
           color: ColorConstant.themeColor,
-          borderRadius: borderRadius == null
-              ? null
-              : BorderRadius.circular(borderRadius!),
+          borderRadius: radius == null ? null : BorderRadius.circular(radius!),
         ),
       ),
     );

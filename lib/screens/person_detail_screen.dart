@@ -219,7 +219,7 @@ class _PersonSubjectListCard extends ConsumerWidget {
     }
     return const SizedBox(
       height: 50.0,
-      child: CustomShimmerWidget(borderRadius: null),
+      child: CustomShimmerWidget(radius: null),
     );
   }
 }

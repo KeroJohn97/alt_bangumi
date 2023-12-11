@@ -176,7 +176,7 @@ class _LoadingWidget extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius ?? 0.00),
       ),
-      child: CustomShimmerWidget(borderRadius: radius),
+      child: CustomShimmerWidget(radius: radius),
     );
   }
 }

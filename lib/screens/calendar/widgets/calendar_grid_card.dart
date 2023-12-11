@@ -7,7 +7,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../constants/text_constant.dart';
-import '../../custom_network_image_widget.dart';
+import '../../../widgets/custom_network_image_widget.dart';
 
 class CalendarGridCard extends StatelessWidget {
   final CalendarItem item;
@@ -44,7 +44,6 @@ class CalendarGridCard extends StatelessWidget {
                   const TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
             ),
           ),
-          // const SizedBox(height: 4.0),
           Text(
             '${item.id}',
             style: const TextStyle(

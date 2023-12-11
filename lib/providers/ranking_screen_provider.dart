@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/browser_rank_model.dart';
 
-enum RankingScreenStateEnum { initial, loading, sorting, failure, success }
+enum RankingScreenStateEnum { initial, loading, failure, success }
 
 class RankingScreenState {
   final RankingScreenStateEnum stateEnum;

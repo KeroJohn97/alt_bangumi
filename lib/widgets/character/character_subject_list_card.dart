@@ -177,6 +177,6 @@ class _Shimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CustomShimmerWidget(borderRadius: null);
+    return const CustomShimmerWidget(radius: null);
   }
 }

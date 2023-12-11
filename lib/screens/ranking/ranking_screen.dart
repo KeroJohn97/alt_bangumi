@@ -2,13 +2,13 @@ import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
-import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/images_model.dart';
 import 'package:alt_bangumi/models/rating_model.dart';
 import 'package:alt_bangumi/models/search_model/search_info_model.dart';
 import 'package:alt_bangumi/providers/ranking_screen_provider.dart';
+import 'package:alt_bangumi/screens/ranking/widgets/page_row_widget.dart';
+import 'package:alt_bangumi/screens/ranking/widgets/ranking_loading_widget.dart';
 import 'package:alt_bangumi/widgets/custom_empty_widget.dart';
-import 'package:alt_bangumi/widgets/custom_loading_widget.dart';
 import 'package:alt_bangumi/widgets/discover/search/search_grid_card.dart';
 import 'package:alt_bangumi/widgets/discover/search/search_list_card.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
@@ -19,6 +19,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/http_constant.dart';
 import '../../widgets/custom_error_widget.dart';
+import 'widgets/custom_popup_menu_button.dart';
 
 class RankingScreen extends ConsumerStatefulWidget {
   final String url;
@@ -160,7 +161,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
             flexibleSpace: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _CustomPopupMenuButton(
+                CustomPopupMenuButton(
                   tag: state.subjectOption.getString(context),
                   iconWidget: const Icon(
                     Icons.filter_list_outlined,
@@ -190,7 +191,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                 ),
                 Builder(builder: (context) {
                   final currentYear = DateTime.now().year;
-                  return _CustomPopupMenuButton(
+                  return CustomPopupMenuButton(
                     tag:
                         '${state.year ?? TextConstant.year.getString(context)}',
                     menuItem: [
@@ -218,7 +219,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                     ],
                   );
                 }),
-                _CustomPopupMenuButton(
+                CustomPopupMenuButton(
                   tag:
                       '${state.month ?? TextConstant.month.getString(context)}',
                   menuItem: [
@@ -245,7 +246,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                   ],
                 ),
                 if (state.subjectOption != ScreenSubjectOption.music)
-                  _CustomPopupMenuButton(
+                  CustomPopupMenuButton(
                     tag: state.subjectOption.filterString(
                           context: context,
                           animeTypeOption: state.animeTypeOption,
@@ -312,11 +313,11 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
             builder: (context) {
               switch (state.stateEnum) {
                 case RankingScreenStateEnum.initial:
-                  return const SliverToBoxAdapter(child: CustomLoadingWidget());
+                  return const SliverToBoxAdapter(
+                      child: RankingLoadingWidget());
                 case RankingScreenStateEnum.loading:
-                  return const SliverToBoxAdapter(child: CustomLoadingWidget());
-                case RankingScreenStateEnum.sorting:
-                  return const SliverToBoxAdapter(child: CustomLoadingWidget());
+                  return const SliverToBoxAdapter(
+                      child: RankingLoadingWidget());
                 case RankingScreenStateEnum.failure:
                   return const SliverToBoxAdapter(child: CustomErrorWidget());
                 case RankingScreenStateEnum.success:
@@ -364,7 +365,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                                 delegate: SliverChildBuilderDelegate(
                                   (context, index) {
                                     if (index == 1) {
-                                      return _PageRow(
+                                      return PageRowWidget(
                                         previousCallback: () =>
                                             _selectPage(state.page - 1),
                                         nextCallback: () =>
@@ -398,7 +399,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                                 delegate: SliverChildBuilderDelegate(
                                   (context, index) {
                                     if (index == list.length) {
-                                      return _PageRow(
+                                      return PageRowWidget(
                                         previousCallback: () =>
                                             _selectPage(state.page - 1),
                                         nextCallback: () =>
@@ -421,96 +422,6 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
             },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _PageRow extends ConsumerWidget {
-  final VoidCallback previousCallback;
-  final VoidCallback nextCallback;
-  const _PageRow({
-    required this.previousCallback,
-    required this.nextCallback,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(rankingScreenProvider);
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
-      child: SizedBox(
-        height: 40.0,
-        width: 100.w,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              onPressed: state.page <= 1 ? null : previousCallback,
-              icon: const Icon(Icons.chevron_left),
-            ),
-            Text(
-              '${state.page}',
-              style: const TextStyle(fontSize: 16.0),
-            ),
-            IconButton(
-              onPressed: state.results!.length % 24 != 0 ? null : nextCallback,
-              icon: const Icon(Icons.chevron_right),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CustomPopupMenuButton extends StatelessWidget {
-  final String tag;
-  final List<PopupMenuEntry<dynamic>> menuItem;
-  final Widget? iconWidget;
-  const _CustomPopupMenuButton({
-    required this.tag,
-    required this.menuItem,
-    this.iconWidget,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 2.0),
-      child: Theme(
-        data: ThemeData(
-          highlightColor: Colors.transparent,
-        ),
-        child: PopupMenuButton(
-          splashRadius: 24.0,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Container(
-            padding:
-                const EdgeInsets.symmetric(vertical: 6.0, horizontal: 16.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(24.0),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (iconWidget != null) iconWidget!,
-                Text(
-                  tag,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          itemBuilder: (context) {
-            return menuItem;
-          },
-        ),
       ),
     );
   }

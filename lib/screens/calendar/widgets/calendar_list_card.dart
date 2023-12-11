@@ -6,7 +6,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../constants/text_constant.dart';
-import '../../../screens/subject_detail_screen.dart';
+import '../../subject_detail_screen.dart';
 
 class CalendarListCard extends StatelessWidget {
   final CalendarItem item;

@@ -5,7 +5,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 enum StorageHelperOption {
   searchHistory, // List<String>
   searchResult, // List<SearchModel>
-  subjectOption, // SearchScreenSubjectOption
+  subjectOption, // ScreenSubjectOption
+  homeAnimeList, // Map<ScreenSubjectOption, List<SubjectModel>>
 }
 
 class StorageHelper {

@@ -26,6 +26,7 @@ class SubjectModel extends Equatable {
   final bool? locked;
   final bool? nsfw;
   final int? type;
+  final String? follow;
 
   const SubjectModel({
     this.date,
@@ -45,6 +46,7 @@ class SubjectModel extends Equatable {
     this.locked,
     this.nsfw,
     this.type,
+    this.follow,
   });
 
   factory SubjectModel.fromMap(Map<String, dynamic> data) => SubjectModel(
@@ -76,6 +78,7 @@ class SubjectModel extends Equatable {
         locked: data['locked'] as bool?,
         nsfw: data['nsfw'] as bool?,
         type: data['type'] as int?,
+        follow: data['follow'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
@@ -96,6 +99,7 @@ class SubjectModel extends Equatable {
         'locked': locked,
         'nsfw': nsfw,
         'type': type,
+        'follow': follow,
       };
 
   /// `dart:convert`
@@ -128,6 +132,7 @@ class SubjectModel extends Equatable {
     bool? locked,
     bool? nsfw,
     int? type,
+    String? follow,
   }) {
     return SubjectModel(
       date: date ?? this.date,
@@ -147,6 +152,7 @@ class SubjectModel extends Equatable {
       locked: locked ?? this.locked,
       nsfw: nsfw ?? this.nsfw,
       type: type ?? this.type,
+      follow: follow ?? this.follow,
     );
   }
 
@@ -173,6 +179,7 @@ class SubjectModel extends Equatable {
       locked,
       nsfw,
       type,
+      follow,
     ];
   }
 }

@@ -4,7 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AnimeCard extends StatelessWidget {
+class ChannelAnimeCard extends StatelessWidget {
   final String imageUrl;
   final String followers;
   final String title;
@@ -15,7 +15,7 @@ class AnimeCard extends StatelessWidget {
   final double minFontSize;
   final double maxFontSize;
 
-  const AnimeCard({
+  const ChannelAnimeCard({
     super.key,
     required this.imageUrl,
     required this.followers,

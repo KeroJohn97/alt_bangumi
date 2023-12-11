@@ -3,7 +3,7 @@ import 'package:alt_bangumi/helpers/http_helper.dart';
 import 'package:alt_bangumi/models/calendar_item_model/calendar_item_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/home_subject_model/subject_model.dart';
+import '../models/home_subject_model/home_subject_model.dart';
 
 final homeRepositoryProvider = Provider<HomeRepository>((ref) {
   return HomeRepository();

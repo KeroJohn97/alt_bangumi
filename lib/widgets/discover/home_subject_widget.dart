@@ -2,16 +2,16 @@ import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
+import 'package:alt_bangumi/widgets/custom_error_widget.dart';
 import 'package:alt_bangumi/widgets/discover/search/anime_loading_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:collection/collection.dart';
 
 import '../../constants/text_constant.dart';
 import '../../providers/discover_view_provider.dart';
-import 'anime_card.dart';
+import 'channel_anime_card.dart';
 
 class HomeSubjectWidget extends StatelessWidget {
   final AutoSizeGroup mainAutoSizeGroup;
@@ -80,22 +80,16 @@ class HomeSubjectWidget extends StatelessWidget {
                   default:
                     break;
                 }
-                if (rankedSubject == null && channel == null) {
-                  return const Text('By Null');
+                if (rankedSubject == null) {
+                  return const CustomErrorWidget();
                 }
                 return Column(
                   children: [
-                    if (rankedSubject!.isNotEmpty)
+                    if (rankedSubject.isNotEmpty)
                       Builder(builder: (context) {
-                        final matchedChannel = channel?[subjectOption]
-                            ?.rank
-                            ?.firstWhereOrNull(
-                              (element) =>
-                                  element.id == '${rankedSubject?.first.id}',
-                            );
-                        return AnimeCard(
+                        return ChannelAnimeCard(
                           imageUrl: '${rankedSubject?.first.images?.large}',
-                          followers: '${matchedChannel?.follow?.decode()}',
+                          followers: '${rankedSubject?.first.follow?.decode()}',
                           title: '${rankedSubject?.first.name}',
                           id: rankedSubject?.first.id,
                           height: 500.0,
@@ -117,17 +111,12 @@ class HomeSubjectWidget extends StatelessWidget {
                               final index =
                                   entry.key; // get the index of the element
                               final e = entry.value; // get the element
-                              final matchedChannel = channel?[subjectOption]
-                                  ?.rank
-                                  ?.firstWhereOrNull(
-                                    (element) => element.id == '${e.id}',
-                                  );
+
                               return Row(
                                 children: [
-                                  AnimeCard(
+                                  ChannelAnimeCard(
                                     imageUrl: '${e.images?.small}',
-                                    followers:
-                                        matchedChannel?.follow?.decode() ?? '',
+                                    followers: e.follow?.decode() ?? '',
                                     title: '${e.name}',
                                     id: e.id,
                                     height: 150.0,

@@ -12,7 +12,7 @@ class AnimeLoadingComponent extends StatelessWidget {
         CustomShimmerWidget(
           height: 500.0,
           width: 100.w,
-          borderRadius: 8.0,
+          radius: 8.0,
         ),
         const SizedBox(height: 12.0),
         SingleChildScrollView(
@@ -22,19 +22,19 @@ class AnimeLoadingComponent extends StatelessWidget {
               CustomShimmerWidget(
                 height: 150.0,
                 width: 30.w,
-                borderRadius: 8.0,
+                radius: 8.0,
               ),
               const SizedBox(width: 12.0),
               CustomShimmerWidget(
                 height: 150.0,
                 width: 30.w,
-                borderRadius: 8.0,
+                radius: 8.0,
               ),
               const SizedBox(width: 12.0),
               CustomShimmerWidget(
                 height: 150.0,
                 width: 30.w,
-                borderRadius: 8.0,
+                radius: 8.0,
               )
             ],
           ),

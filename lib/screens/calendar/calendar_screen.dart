@@ -1,10 +1,11 @@
+import 'package:alt_bangumi/screens/calendar/widgets/calendar_loading_widget.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/repositories/global_repository.dart';
-import 'package:alt_bangumi/widgets/discover/calendar/calendar_grid_widget.dart';
-import 'package:alt_bangumi/widgets/discover/calendar/calendar_list_widget.dart';
+import 'package:alt_bangumi/screens/calendar/widgets/calendar_grid_widget.dart';
+import 'package:alt_bangumi/screens/calendar/widgets/calendar_list_widget.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:alt_bangumi/widgets/custom_switch_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -129,7 +130,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen>
                 ),
               );
             }
-            return const Center(child: CircularProgressIndicator.adaptive());
+            return const CalendarLoadingWidget();
           }),
     );
   }

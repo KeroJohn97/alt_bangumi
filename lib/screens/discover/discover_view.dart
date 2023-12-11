@@ -1,8 +1,7 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/providers/discover_view_provider.dart';
-import 'package:alt_bangumi/repositories/bad_repository.dart';
 import 'package:alt_bangumi/screens/ranking/ranking_screen.dart';
 import 'package:alt_bangumi/screens/search/search_screen.dart';
 import 'package:alt_bangumi/widgets/discover/home_subject_widget.dart';
@@ -26,6 +25,7 @@ class DiscoverView extends ConsumerStatefulWidget {
 class _DiscoverViewState extends ConsumerState<DiscoverView> {
   late final AutoSizeGroup _mainAutoSizeGroup;
   late final AutoSizeGroup _subAutoSizeGroup;
+  Timer? timer;
 
   @override
   void initState() {
@@ -33,12 +33,19 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
     _mainAutoSizeGroup = AutoSizeGroup();
     _subAutoSizeGroup = AutoSizeGroup();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // TODO
-      final result = await BadRepository.fetchList(
-          subjectOption: ScreenSubjectOption.anime, page: 1);
-      log('message result: $result');
-      ref.read(discoverViewProvider.notifier).loadChannel();
+      ref.read(discoverViewProvider.notifier).initChannel();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Start the timer if it is null or not active
+    if (timer == null || !timer!.isActive) {
+      timer = Timer.periodic(const Duration(hours: 1), (_) {
+        ref.read(discoverViewProvider.notifier).loadChannel();
+      });
+    }
   }
 
   void _navigationCallback(NavigationEnum navigationEnum) {
