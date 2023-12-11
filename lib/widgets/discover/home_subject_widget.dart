@@ -35,7 +35,7 @@ class HomeSubjectWidget extends StatelessWidget {
         Row(
           children: [
             Text(
-              subjectOption.displayName(context),
+              subjectOption.getString(context),
               style:
                   const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
             ),
@@ -52,7 +52,7 @@ class HomeSubjectWidget extends StatelessWidget {
             final state = ref.watch(discoverViewProvider);
             switch (state.stateEnum) {
               case DiscoverViewStateEnum.initial:
-                return const Text('initial');
+                return const AnimeLoadingComponent();
               case DiscoverViewStateEnum.loading:
                 return const AnimeLoadingComponent();
               case DiscoverViewStateEnum.failure:
@@ -126,7 +126,7 @@ class HomeSubjectWidget extends StatelessWidget {
                                   AnimeCard(
                                     imageUrl: '${e.images?.small}',
                                     followers:
-                                        '${matchedChannel?.follow?.decode()}',
+                                        matchedChannel?.follow?.decode() ?? '',
                                     title: '${e.name}',
                                     id: e.id,
                                     height: 150.0,

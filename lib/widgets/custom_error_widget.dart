@@ -6,8 +6,8 @@ import '../gen/assets.gen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 
-class CustomEmptyWidget extends StatelessWidget {
-  const CustomEmptyWidget({super.key});
+class CustomErrorWidget extends StatelessWidget {
+  const CustomErrorWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class CustomEmptyWidget extends StatelessWidget {
       child: Column(
         children: [
           Assets.images.musume.values[random].image(),
-          Text(TextConstant.nothingThere.getString(context)),
+          Text(TextConstant.unknownError.getString(context)),
         ],
       ),
     );

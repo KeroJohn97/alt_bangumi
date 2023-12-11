@@ -1,9 +1,14 @@
 import 'package:alt_bangumi/gen/assets.gen.dart';
+import 'package:alt_bangumi/helpers/file_helper.dart';
 import 'package:alt_bangumi/widgets/custom_shimmer_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:photo_view/photo_view.dart';
+
+import '../constants/text_constant.dart';
+import '../helpers/common_helper.dart';
 
 class CustomNetworkImageWidget extends StatefulWidget {
   final double height;
@@ -237,13 +242,17 @@ class _CustomPhotoView extends StatefulWidget {
 class _CustomPhotoViewState extends State<_CustomPhotoView> {
   late final PhotoViewController _photoViewController;
   late final PhotoViewScaleStateController _scaleStateController;
+  late final ValueNotifier<bool> _disabledValue;
 
   @override
   void initState() {
     super.initState();
     _photoViewController = PhotoViewController();
     _scaleStateController = PhotoViewScaleStateController();
+    _disabledValue = ValueNotifier(false);
   }
+
+  void _enable() => _disabledValue.value = false;
 
   @override
   void dispose() {
@@ -252,6 +261,7 @@ class _CustomPhotoViewState extends State<_CustomPhotoView> {
     super.dispose();
   }
 
+  // TODO remove unused code
   void _checkScaleEndDetails({
     required BuildContext context,
     required ScaleEndDetails details,
@@ -291,19 +301,68 @@ class _CustomPhotoViewState extends State<_CustomPhotoView> {
 
   @override
   Widget build(BuildContext context) {
-    return PhotoView(
-      imageProvider: widget.imageProvider,
-      controller: _photoViewController,
-      scaleStateController: _scaleStateController,
-      minScale: PhotoViewComputedScale.contained,
-      maxScale: 2.0,
-      onScaleEnd: (context, details, controllerValue) => _checkScaleEndDetails(
-        context: context,
-        details: details,
-        controllerValue: controllerValue,
-      ),
-      heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag),
-      enablePanAlways: true,
+    return Stack(
+      children: [
+        PhotoView(
+          imageProvider: widget.imageProvider,
+          controller: _photoViewController,
+          scaleStateController: _scaleStateController,
+          minScale: PhotoViewComputedScale.contained,
+          maxScale: 2.0,
+          onScaleEnd: (context, details, controllerValue) =>
+              _checkScaleEndDetails(
+            context: context,
+            details: details,
+            controllerValue: controllerValue,
+          ),
+          heroAttributes: PhotoViewHeroAttributes(tag: widget.heroTag),
+          enablePanAlways: true,
+        ),
+        Positioned(
+          bottom: 8.0,
+          right: 8.0,
+          child: ValueListenableBuilder(
+              valueListenable: _disabledValue,
+              builder: (context, disabled, child) {
+                return IconButton(
+                  icon: const Icon(
+                    Icons.download,
+                    color: Colors.white,
+                    size: 32.0,
+                  ),
+                  onPressed: () async {
+                    if (disabled == true) return;
+                    _disabledValue.value = true;
+                    final storagePermission =
+                        await CommonHelper.getStoragePermission(context);
+                    if (storagePermission == false) {
+                      if (!mounted) return _enable();
+                      CommonHelper.showToast(
+                        TextConstant.pleaseGrantStoragePermission
+                            .getString(context),
+                      );
+                      return _enable();
+                    }
+                    final file = await FileHelper.saveImageProvider(
+                        widget.imageProvider);
+                    if (!mounted) return _enable();
+                    if (file != null) {
+                      CommonHelper.showToast(
+                        context.formatString(
+                          TextConstant.theFileSaved.getString(context),
+                          [file.path],
+                        ),
+                      ).then((value) => _enable());
+                    } else {
+                      CommonHelper.showToast(
+                        TextConstant.fileSaveTimeout.getString(context),
+                      ).then((value) => _enable());
+                    }
+                  },
+                );
+              }),
+        ),
+      ],
     );
   }
 }

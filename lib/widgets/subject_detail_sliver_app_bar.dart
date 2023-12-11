@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:alt_bangumi/constants/http_constant.dart';
+import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/relation_model/relation_model.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
@@ -27,13 +29,18 @@ class SubjectDetailSliverAppBar extends StatelessWidget {
     required this.person,
   });
 
+  _showInBrowser(BuildContext context) async {
+    await CommonHelper.showInBrowser(
+      context: context,
+      url: '${HttpConstant.host}/subject/${subject?.id}',
+    );
+  }
+
   _moveToScreenshot(BuildContext context) {
-    if (subject == null) return;
-    log('subject: $subject');
+    if (subject == null || imageProvider.value == null) return;
     final temp = subject?.tags;
     if (temp == null) return;
     temp.removeWhere((element) => element.name == 'TV');
-    // temp.sort((a, b) => (a.count ?? 0) > (b.count ?? 0) ? 1 : -1);
     final tags = temp.getRange(0, temp.length >= 5 ? 5 : temp.length).toList();
     final shortTag =
         '${person?.name} · ${tags.map((e) => e.name).toList().join(' · ')}';
@@ -128,17 +135,18 @@ class SubjectDetailSliverAppBar extends StatelessWidget {
       }),
       actions: [
         IconButton(
-          onPressed: () => _moveToScreenshot(context),
+          onPressed: () => _showInBrowser(context),
           icon: const Icon(
-            Icons.ios_share_outlined,
-            color: Colors.black,
+            Icons.open_in_browser_outlined,
+            color: Colors.black87,
+            size: 24.0,
           ),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () => _moveToScreenshot(context),
           icon: const Icon(
-            Icons.more_horiz_outlined,
-            color: Colors.black,
+            Icons.ios_share_outlined,
+            color: Colors.black87,
           ),
         ),
       ],

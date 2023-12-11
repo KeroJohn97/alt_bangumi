@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
+
+import '../constants/enum_constant.dart';
+import '../repositories/bad_repository.dart';
 
 class ScaffoldCustomed extends StatefulWidget {
   final Widget? leading;
@@ -60,6 +65,13 @@ class _ScaffoldCustomedState extends State<ScaffoldCustomed> {
       body: widget.body,
       bottomNavigationBar: widget.bottomNavigationBar,
       backgroundColor: widget.backgroundColor,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await BadRepository.fetchList(
+              subjectOption: SearchScreenSubjectOption.anime, page: 1);
+          log('message result: $result');
+        },
+      ),
     );
   }
 }
@@ -134,6 +146,7 @@ class AppBarCustomed extends StatelessWidget implements PreferredSizeWidget {
                 );
               })
             : const SizedBox.shrink()
+        // TODO remove comment below
         // const Padding(
         //     padding: EdgeInsets.symmetric(horizontal: 12.0),
         //     child: SizedBox(height: 24.0, width: 24.0),

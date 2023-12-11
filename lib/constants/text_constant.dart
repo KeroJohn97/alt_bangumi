@@ -92,6 +92,47 @@ mixin TextConstant {
       'Please grant storage permission to the app to save';
   static const fileIsBeingSaved = 'File is being saved';
   static const subjectSharing = 'Subject sharing';
+  static const invalidURL = 'Uh-oh! It looks like the URL is invalid';
+  static const unknownError =
+      'Oops! It seems like there might be a small hiccup';
+  static const fileSaveTimeout = 'File save timeout';
+  static const year = 'Year';
+  static const month = 'Month';
+  static const all = 'All';
+  static const entire = 'Entire';
+  static const type = 'Type';
+  static const others = 'Others';
+  static const tv = 'TV';
+  static const web = 'WEB';
+  static const ova = 'OVA';
+  static const movie = 'Movie';
+  static const comic = 'Comic';
+  static const novel = 'Novel';
+  static const illustration = 'Illustration';
+  static const japaneseDrama = 'Japanese Drama';
+  static const europeanNAmericanDramas = 'European & American Dramas';
+  static const chineseDrama = 'Chinese Drama';
+  static const pc = 'Personal Computer';
+  static const ns = 'Nintendo Switch';
+  static const ps5 = 'Play Station 5';
+  static const ps4 = 'Play Station 4';
+  static const psv = 'Play Station Vita';
+  static const xboxSeries = 'Xbox Series X/S';
+  static const xboxOne = 'Xbox One';
+  static const wiiU = 'Wii U';
+  static const ps3 = 'Play Station 3';
+  static const xbox360 = 'Xbox 360';
+  static const threeDS = 'Nintendo 3D Dual Screen';
+  static const psp = 'Play Station Portable';
+  static const wii = 'Wii';
+  static const nds = 'Nintendo Dual Screen';
+  static const ps2 = 'Play Station 2';
+  static const xbox = 'Xbox';
+  static const mac = 'Macbook';
+  static const ps = 'Play Station 1';
+  static const gba = 'Game Boy Advanced';
+  static const gb = 'Game Boy';
+  static const fc = 'Famicom';
   static const withoutAName = '(Name does not exist)';
   static const withoutADate = '(Date does not exist)';
   static const inputLessThanRatings = '(Less than %a ratings)';
@@ -189,6 +230,46 @@ mixin TextConstant {
     pleaseGrantStoragePermission: pleaseGrantStoragePermission,
     fileIsBeingSaved: fileIsBeingSaved,
     subjectSharing: subjectSharing,
+    invalidURL: invalidURL,
+    unknownError: unknownError,
+    fileSaveTimeout: fileSaveTimeout,
+    year: year,
+    month: month,
+    all: all,
+    entire: entire,
+    type: type,
+    others: others,
+    tv: tv,
+    web: web,
+    ova: ova,
+    movie: movie,
+    comic: comic,
+    novel: novel,
+    illustration: illustration,
+    japaneseDrama: japaneseDrama,
+    europeanNAmericanDramas: europeanNAmericanDramas,
+    chineseDrama: chineseDrama,
+    pc: pc,
+    ns: ns,
+    ps5: ps5,
+    ps4: ps4,
+    psv: psv,
+    xboxSeries: xboxSeries,
+    xboxOne: xboxOne,
+    wiiU: wiiU,
+    ps3: ps3,
+    xbox360: xbox360,
+    threeDS: threeDS,
+    psp: psp,
+    wii: wii,
+    nds: nds,
+    ps2: ps2,
+    xbox: xbox,
+    mac: mac,
+    ps: ps,
+    gba: gba,
+    gb: gb,
+    fc: fc,
     withoutAName: '(Name does not exist)',
     withoutADate: '(Date does not exist)',
     inputLessThanRatings: inputLessThanRatings,
@@ -287,6 +368,46 @@ mixin TextConstant {
     pleaseGrantStoragePermission: '请授予应用存储权限以保存',
     fileIsBeingSaved: '文件保存中',
     subjectSharing: '主题分享',
+    invalidURL: "哎呀！看起来URL无效",
+    unknownError: "糟糕！似乎出了点小问题",
+    fileSaveTimeout: '文件保存超时',
+    year: '年',
+    month: '月',
+    all: '全部',
+    entire: '全部',
+    type: '类型',
+    others: "其他",
+    tv: "TV",
+    web: "WEB",
+    ova: "OVA",
+    movie: "剧场版",
+    comic: "漫画",
+    novel: "小说",
+    illustration: "画集",
+    japaneseDrama: "日剧",
+    europeanNAmericanDramas: "欧美剧",
+    chineseDrama: "中剧",
+    pc: "PC",
+    ns: "NS",
+    ps5: "PS5",
+    ps4: "PS4",
+    psv: "PSV",
+    xboxSeries: "Xbox Series X/S",
+    xboxOne: "Xbox One",
+    wiiU: "Wii U",
+    ps3: "PS3",
+    xbox360: "Xbox 360",
+    threeDS: "3DS",
+    psp: "PSP",
+    wii: "Wii",
+    nds: "NDS",
+    ps2: "PS2",
+    xbox: "Xbox",
+    mac: "Mac",
+    ps: "PS",
+    gba: "GBA",
+    gb: "GB",
+    fc: "FC",
     withoutAName: '(名字不存在)',
     withoutADate: '(日期不存在)',
     inputLessThanRatings: '(少于%a人评分)',
@@ -383,6 +504,35 @@ mixin TextConstant {
     pleaseGrantStoragePermission: '请授予应用存储权限以保存',
     fileIsBeingSaved: '文件保存中',
     subjectSharing: '主题分享',
+    invalidURL: "哎呀！看起来URL无效",
+    unknownError: "糟糕！似乎出了点小问题",
+    fileSaveTimeout: '文件保存超时',
+    year: '年',
+    month: '月',
+    all: '全部',
+    entire: '全部',
+    type: '类型',
+    pc: "PC",
+    ns: "NS",
+    ps5: "PS5",
+    ps4: "PS4",
+    psv: "PSV",
+    xboxSeries: "Xbox Series X/S",
+    xboxOne: "Xbox One",
+    wiiU: "Wii U",
+    ps3: "PS3",
+    xbox360: "Xbox 360",
+    threeDS: "3DS",
+    psp: "PSP",
+    wii: "Wii",
+    nds: "NDS",
+    ps2: "PS2",
+    xbox: "Xbox",
+    mac: "Mac",
+    ps: "PS",
+    gba: "GBA",
+    gb: "GB",
+    fc: "FC",
     withoutAName: '(名字不存在)',
     withoutADate: '(日期不存在)',
     inputLessThanRatings: '(少於%a人評分)',

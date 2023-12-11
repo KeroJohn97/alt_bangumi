@@ -1,7 +1,6 @@
 import 'package:alt_bangumi/constants/color_constant.dart';
 import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
-import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/rating_model.dart';
 import 'package:alt_bangumi/screens/subject_detail_screen.dart';
 import 'package:alt_bangumi/widgets/custom_star_rating_widget.dart';
@@ -12,10 +11,10 @@ import 'package:go_router/go_router.dart';
 import '../../../models/search_model/search_info_model.dart';
 import '../../custom_network_image_widget.dart';
 
-class SearchListCard extends StatelessWidget {
+class SearchGridCard extends StatelessWidget {
   final SearchInfoModel info;
   final bool disable;
-  const SearchListCard({
+  const SearchGridCard({
     super.key,
     required this.info,
     this.disable = false,
@@ -37,8 +36,8 @@ class SearchListCard extends StatelessWidget {
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => _navigate(context),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CustomNetworkImageWidget(
               height: 150,
@@ -48,70 +47,26 @@ class SearchListCard extends StatelessWidget {
               boxFit: BoxFit.cover,
               onTap: disable ? () => _navigate(context) : null,
             ),
-            Expanded(
-              child: Container(
-                height: 18.h,
-                padding: const EdgeInsets.only(left: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${(info.nameCn?.isEmpty ?? true) ? TextConstant.withoutAName.getString(context) : info.nameCn.showHTML()}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '${info.name.showHTML()}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: _toggleFavorite,
-                          icon: Icon(
-                            Icons.star_outline,
-                            color: Colors.grey[400],
-                          ),
-                          padding: EdgeInsets.zero,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Text(
-                        '${info.airDate}',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const Spacer(),
-                    RatingsRow(
-                      rating: info.rating,
-                      rank: info.rank,
-                    ),
-                  ],
+            Container(
+              height: 40.0,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Text(
+                '${(info.nameCn?.isEmpty ?? true) ? TextConstant.withoutAName.getString(context) : info.nameCn.showHTML()}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: RatingsRow(
+                rating: info.rating,
+                rank: info.rank,
+                showTotal: false,
               ),
             ),
           ],
@@ -124,10 +79,12 @@ class SearchListCard extends StatelessWidget {
 class RatingsRow extends StatelessWidget {
   final RatingModel? rating;
   final int? rank;
+  final bool showTotal;
   const RatingsRow({
     super.key,
     required this.rating,
     required this.rank,
+    this.showTotal = true,
   });
 
   static const minimumRatings = 10;
@@ -144,8 +101,9 @@ class RatingsRow extends StatelessWidget {
       );
     }
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (rank != null)
+        if (rank != null && showTotal)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),
             decoration: BoxDecoration(
@@ -175,10 +133,10 @@ class RatingsRow extends StatelessWidget {
         ),
         const SizedBox(width: 2.0),
         Text(
-          '${rating!.score} ${context.formatString(
-            TextConstant.inputPeopleRatings.getString(context),
-            [rating?.total],
-          )}',
+          '${rating!.score} ${showTotal ? context.formatString(
+              TextConstant.inputPeopleRatings.getString(context),
+              [rating?.total],
+            ) : ''}',
           style: const TextStyle(
             fontSize: 12.0,
             fontWeight: FontWeight.bold,

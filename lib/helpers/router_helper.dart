@@ -7,6 +7,8 @@ import 'package:alt_bangumi/screens/subject_detail_screen.dart';
 import 'package:alt_bangumi/screens/subject_sharing_screen.dart';
 import 'package:go_router/go_router.dart';
 
+import '../screens/ranking/ranking_screen.dart';
+
 final routerHelper = GoRouter(
   initialLocation: HomeScreen.route,
   routes: [
@@ -74,5 +76,16 @@ final routerHelper = GoRouter(
             summary: extra[SubjectSharingScreen.summaryKey],
           );
         }),
+    GoRoute(
+      path: RankingScreen.route,
+      builder: (context, state) {
+        final stateExtra = state.extra;
+        final Map<String, dynamic> extra = {};
+        if (stateExtra is Map<String, dynamic>) {
+          extra.addAll(stateExtra);
+        }
+        return RankingScreen(url: extra[RankingScreen.urlKey]);
+      },
+    ),
   ],
 );

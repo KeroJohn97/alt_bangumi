@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -60,21 +59,13 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
   _screenShot() async {
     _disabledValue.value = true;
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
-    PermissionStatus storagePermission = await Permission.storage.status;
-    if (storagePermission.isPermanentlyDenied) {
-      await openAppSettings();
-    } else {
-      await Permission.storage.request();
-    }
-    storagePermission = await Permission.storage.status;
-    if (storagePermission == PermissionStatus.permanentlyDenied) {
+    final storagePermission = await CommonHelper.getStoragePermission(context);
+    if (storagePermission == false) {
       if (!mounted) return _enable();
       CommonHelper.showSnackBar(
         context: context,
         text: TextConstant.pleaseGrantStoragePermission.getString(context),
       );
-    }
-    if (storagePermission != PermissionStatus.granted) {
       return _enable();
     }
     if (!mounted) return _enable();
@@ -92,7 +83,7 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
     if (byteData == null) return _enable();
     Uint8List pngBytes = byteData.buffer.asUint8List();
     File imgFile = File(
-        '${directory.path}/Screenshot_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.jpg');
+        '${directory.path}/Screenshot_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.png');
     final result = await imgFile.writeAsBytes(pngBytes);
 
     await Share.shareXFiles([XFile(result.path)]);

@@ -49,6 +49,7 @@ class HttpHelper {
     //   'Authorization': accessToken,
     // };
     // Make a GET request to the URL
+    log('GET: $url');
     var response = await http.get(
       Uri.parse(url),
       headers: headers ??

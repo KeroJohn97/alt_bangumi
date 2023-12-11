@@ -112,17 +112,17 @@ enum CalendarScreenFilterOption {
 }
 
 extension CalendarScreenOptionExtension on CalendarScreenFilterOption {
-  String displayName() {
+  String getString(BuildContext context) {
     switch (this) {
       case CalendarScreenFilterOption.all:
-        return '全部';
+        return TextConstant.entire.getString(context);
       case CalendarScreenFilterOption.collection:
-        return '收藏';
+        return TextConstant.favourite.getString(context);
     }
   }
 }
 
-enum CalendarScreenViewOption {
+enum ScreenLayoutOption {
   grid,
   list,
 }
@@ -142,11 +142,11 @@ enum SearchScreenSubjectOption {
 }
 
 extension SubjectOptionExtension on SearchScreenSubjectOption {
-  toJson() {
+  String toJson() {
     return name;
   }
 
-  displayName(BuildContext context) {
+  String getString(BuildContext context) {
     switch (this) {
       case SearchScreenSubjectOption.entry:
         return TextConstant.entry.getString(context);
@@ -164,6 +164,55 @@ extension SubjectOptionExtension on SearchScreenSubjectOption {
         return TextConstant.character.getString(context);
       case SearchScreenSubjectOption.user:
         return TextConstant.user.getString(context);
+    }
+  }
+
+  String? filterUrl({
+    required AnimeTypeOption? animeTypeOption,
+    required BookTypeOption? bookTypeOption,
+    required RealTypeOption? realTypeOption,
+    required GameTypeOption? gameTypeOption,
+  }) {
+    switch (this) {
+      case SearchScreenSubjectOption.anime:
+        if (animeTypeOption == null) return null;
+        return '/${animeTypeOption.getUrl()}';
+      case SearchScreenSubjectOption.book:
+        if (bookTypeOption == null) return null;
+        return '/${bookTypeOption.getUrl()}';
+      case SearchScreenSubjectOption.real:
+        if (realTypeOption == null) return null;
+        return '/${realTypeOption.getUrl()}';
+      case SearchScreenSubjectOption.game:
+        if (gameTypeOption == null) return null;
+        return '/${gameTypeOption.getUrl()}';
+      default:
+        return '';
+    }
+  }
+
+  String? filterString({
+    required BuildContext context,
+    required AnimeTypeOption? animeTypeOption,
+    required BookTypeOption? bookTypeOption,
+    required RealTypeOption? realTypeOption,
+    required GameTypeOption? gameTypeOption,
+  }) {
+    switch (this) {
+      case SearchScreenSubjectOption.anime:
+        if (animeTypeOption == null) return null;
+        return animeTypeOption.getString(context);
+      case SearchScreenSubjectOption.book:
+        if (bookTypeOption == null) return null;
+        return bookTypeOption.getString(context);
+      case SearchScreenSubjectOption.real:
+        if (realTypeOption == null) return null;
+        return realTypeOption.getString(context);
+      case SearchScreenSubjectOption.game:
+        if (gameTypeOption == null) return null;
+        return gameTypeOption.getString(context);
+      default:
+        return '';
     }
   }
 }
@@ -195,7 +244,7 @@ enum CareerGroup {
 }
 
 extension CareerGroupExtension on CareerGroup {
-  String displayName(BuildContext context) {
+  String getString(BuildContext context) {
     switch (this) {
       case CareerGroup.producer:
         return TextConstant.producer.getString(context);
@@ -216,3 +265,236 @@ extension CareerGroupExtension on CareerGroup {
 }
 
 enum ImageSizeGroup { small, common, medium, large, grid }
+
+enum SortOption { collects, title, date, rank }
+
+enum AnimeTypeOption { all, tv, web, ova, movie, others }
+
+extension AnimeTypeOptionExtension on AnimeTypeOption {
+  String getString(BuildContext context) {
+    switch (this) {
+      case AnimeTypeOption.all:
+        return TextConstant.entire.getString(context);
+      case AnimeTypeOption.tv:
+        return TextConstant.tv.getString(context);
+      case AnimeTypeOption.web:
+        return TextConstant.web.getString(context);
+      case AnimeTypeOption.ova:
+        return TextConstant.ova.getString(context);
+      case AnimeTypeOption.movie:
+        return TextConstant.movie.getString(context);
+      case AnimeTypeOption.others:
+        return TextConstant.others.getString(context);
+    }
+  }
+
+  String getUrl() {
+    switch (this) {
+      case AnimeTypeOption.all:
+        return '';
+      case AnimeTypeOption.tv:
+        return 'tv';
+      case AnimeTypeOption.web:
+        return 'web';
+      case AnimeTypeOption.ova:
+        return 'ova';
+      case AnimeTypeOption.movie:
+        return 'movie';
+      case AnimeTypeOption.others:
+        return 'misc';
+    }
+  }
+}
+
+enum BookTypeOption { all, comic, novel, illustration, others }
+
+extension BookTypeOptionExtension on BookTypeOption {
+  String getString(BuildContext context) {
+    switch (this) {
+      case BookTypeOption.all:
+        return TextConstant.entire.getString(context);
+      case BookTypeOption.comic:
+        return TextConstant.comic.getString(context);
+      case BookTypeOption.novel:
+        return TextConstant.novel.getString(context);
+      case BookTypeOption.illustration:
+        return TextConstant.illustration.getString(context);
+      case BookTypeOption.others:
+        return TextConstant.others.getString(context);
+    }
+  }
+
+  String getUrl() {
+    switch (this) {
+      case BookTypeOption.all:
+        return '';
+      case BookTypeOption.comic:
+        return 'comic';
+      case BookTypeOption.novel:
+        return 'novel';
+      case BookTypeOption.illustration:
+        return 'illustration';
+      case BookTypeOption.others:
+        return 'misc';
+    }
+  }
+}
+
+enum RealTypeOption { all, japan, europe, china, others }
+
+extension RealTypeOptionExtension on RealTypeOption {
+  String getString(BuildContext context) {
+    switch (this) {
+      case RealTypeOption.all:
+        return TextConstant.entire.getString(context);
+      case RealTypeOption.japan:
+        return TextConstant.japaneseDrama.getString(context);
+      case RealTypeOption.europe:
+        return TextConstant.europeanNAmericanDramas.getString(context);
+      case RealTypeOption.china:
+        return TextConstant.chineseDrama.getString(context);
+      case RealTypeOption.others:
+        return TextConstant.others.getString(context);
+    }
+  }
+
+  String getUrl() {
+    switch (this) {
+      case RealTypeOption.all:
+        return '';
+      case RealTypeOption.japan:
+        return 'jp';
+      case RealTypeOption.europe:
+        return 'en';
+      case RealTypeOption.china:
+        return 'cn';
+      case RealTypeOption.others:
+        return 'misc';
+    }
+  }
+}
+
+enum GameTypeOption {
+  all,
+  pc,
+  ns,
+  ps5,
+  ps4,
+  psv,
+  xboxSeries,
+  xboxOne,
+  wiiU,
+  ps3,
+  xbox360,
+  threeDS,
+  psp,
+  wii,
+  nds,
+  ps2,
+  xbox,
+  mac,
+  ps,
+  gba,
+  gb,
+  fc
+}
+
+extension GameTypeOptionExtension on GameTypeOption {
+  String getString(BuildContext context) {
+    switch (this) {
+      case GameTypeOption.all:
+        return TextConstant.entire.getString(context);
+      case GameTypeOption.pc:
+        return TextConstant.pc.getString(context);
+      case GameTypeOption.ns:
+        return TextConstant.ns.getString(context);
+      case GameTypeOption.ps5:
+        return TextConstant.ps5.getString(context);
+      case GameTypeOption.ps4:
+        return TextConstant.ps4.getString(context);
+      case GameTypeOption.psv:
+        return TextConstant.psv.getString(context);
+      case GameTypeOption.xboxSeries:
+        return TextConstant.xboxSeries.getString(context);
+      case GameTypeOption.xboxOne:
+        return TextConstant.xboxOne.getString(context);
+      case GameTypeOption.wiiU:
+        return TextConstant.wiiU.getString(context);
+      case GameTypeOption.ps3:
+        return TextConstant.ps3.getString(context);
+      case GameTypeOption.xbox360:
+        return TextConstant.xbox360.getString(context);
+      case GameTypeOption.threeDS:
+        return TextConstant.threeDS.getString(context);
+      case GameTypeOption.psp:
+        return TextConstant.psp.getString(context);
+      case GameTypeOption.wii:
+        return TextConstant.wii.getString(context);
+      case GameTypeOption.nds:
+        return TextConstant.nds.getString(context);
+      case GameTypeOption.ps2:
+        return TextConstant.ps2.getString(context);
+      case GameTypeOption.xbox:
+        return TextConstant.xbox.getString(context);
+      case GameTypeOption.mac:
+        return TextConstant.mac.getString(context);
+      case GameTypeOption.ps:
+        return TextConstant.ps.getString(context);
+      case GameTypeOption.gba:
+        return TextConstant.gba.getString(context);
+      case GameTypeOption.gb:
+        return TextConstant.gb.getString(context);
+      case GameTypeOption.fc:
+        return TextConstant.fc.getString(context);
+    }
+  }
+
+  String getUrl() {
+    switch (this) {
+      case GameTypeOption.all:
+        return '';
+      case GameTypeOption.pc:
+        return 'pc';
+      case GameTypeOption.ns:
+        return 'ns';
+      case GameTypeOption.ps5:
+        return 'ps5';
+      case GameTypeOption.ps4:
+        return 'ps4';
+      case GameTypeOption.psv:
+        return 'psv';
+      case GameTypeOption.xboxSeries:
+        return 'xbox_series_xs';
+      case GameTypeOption.xboxOne:
+        return 'xbox_one';
+      case GameTypeOption.wiiU:
+        return 'will_u';
+      case GameTypeOption.ps3:
+        return 'ps3';
+      case GameTypeOption.xbox360:
+        return 'xbox360';
+      case GameTypeOption.threeDS:
+        return '3ds';
+      case GameTypeOption.psp:
+        return 'psp';
+      case GameTypeOption.wii:
+        return 'wii';
+      case GameTypeOption.nds:
+        return 'nds';
+      case GameTypeOption.ps2:
+        return 'ps2';
+      case GameTypeOption.xbox:
+        return 'xbox';
+      case GameTypeOption.mac:
+        return 'mac';
+      case GameTypeOption.ps:
+        return 'ps';
+      case GameTypeOption.gba:
+        return 'gba';
+      case GameTypeOption.gb:
+        return 'gb';
+      case GameTypeOption.fc:
+        return 'fc';
+    }
+  }
+}

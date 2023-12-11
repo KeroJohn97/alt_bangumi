@@ -9,7 +9,7 @@ class DatumModel extends Equatable {
   final String? duration;
   final String? desc;
   final int? ep;
-  final int? sort;
+  final num? sort;
   final int? id;
   final int? subjectId;
   final int? comment;
@@ -40,7 +40,7 @@ class DatumModel extends Equatable {
         duration: data['duration'] as String?,
         desc: data['desc'] as String?,
         ep: data['ep'] as int?,
-        sort: data['sort'] as int?,
+        sort: data['sort'] as num?,
         id: data['id'] as int?,
         subjectId: data['subject_id'] as int?,
         comment: data['comment'] as int?,
@@ -84,7 +84,7 @@ class DatumModel extends Equatable {
     String? duration,
     String? desc,
     int? ep,
-    int? sort,
+    double? sort,
     int? id,
     int? subjectId,
     int? comment,

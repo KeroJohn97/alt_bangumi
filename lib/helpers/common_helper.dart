@@ -1,5 +1,12 @@
+import 'dart:async';
 import 'dart:math' as math;
+import 'package:alt_bangumi/constants/text_constant.dart';
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class CommonHelper {
   static double screenHeight(BuildContext context, {required double value}) =>
@@ -38,6 +45,11 @@ class CommonHelper {
     return (result * 100).round() / 100;
   }
 
+  static Future<void> showToast(String msg) async {
+    await Fluttertoast.cancel()
+        .then((value) => Fluttertoast.showToast(msg: msg));
+  }
+
   static void showSnackBar({
     required BuildContext context,
     required String text,
@@ -51,5 +63,31 @@ class CommonHelper {
         behavior: SnackBarBehavior.floating,
       ),
     );
+  }
+
+  static Future<bool> showInBrowser({
+    required BuildContext context,
+    required String url,
+  }) async {
+    final isValid = await canLaunchUrlString('${url.ensureUrlScheme()}');
+    if (context.mounted && !isValid) {
+      showSnackBar(
+        context: context,
+        text: TextConstant.invalidURL.getString(context),
+      );
+      return false;
+    }
+    return await launchUrlString('${url.ensureUrlScheme()}');
+  }
+
+  static Future<bool> getStoragePermission(BuildContext context) async {
+    PermissionStatus storagePermission = await Permission.storage.status;
+    if (storagePermission.isPermanentlyDenied) {
+      await openAppSettings();
+    } else {
+      await Permission.storage.request();
+    }
+    storagePermission = await Permission.storage.status;
+    return storagePermission == PermissionStatus.granted;
   }
 }

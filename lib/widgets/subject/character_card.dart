@@ -81,7 +81,7 @@ class _RelationCardState extends State<RelationCard> {
     final matched = CareerGroup.values
         .firstWhereOrNull((element) => element.name == career.toLowerCase());
     if (matched == null) return null;
-    return matched.displayName(context);
+    return matched.getString(context);
   }
 
   _getImageUrl() {

@@ -30,12 +30,14 @@ class CustomTagWidget extends StatelessWidget {
             TextSpan(
               text: tag,
               children: [
-                TextSpan(
+                if (count != null)
+                  TextSpan(
                     text: ' $count',
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 10.0,
-                    )),
+                    ),
+                  ),
               ],
             ),
             style: const TextStyle(

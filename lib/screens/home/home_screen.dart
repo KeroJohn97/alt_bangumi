@@ -20,6 +20,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final currentIndex = ref.watch(homeIndexNotifier);
     return const ScaffoldCustomed(
       title: '',
+      showAppBar: false,
       body: DiscoverView(),
       // IndexedStack(
       //   index: currentIndex,

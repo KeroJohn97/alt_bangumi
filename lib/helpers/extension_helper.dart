@@ -11,7 +11,11 @@ extension StringExtension on String? {
 
   String? decode() {
     if (this == null) return this;
-    return utf8.decode(this!.runes.toList());
+    try {
+      return utf8.decode(this!.runes.toList());
+    } catch (e) {
+      return null;
+    }
   }
 
   String? showHTML() {
@@ -26,6 +30,10 @@ extension StringExtension on String? {
       // If the URL already has a scheme, return it as is
       return this;
     }
+  }
+
+  String? getNumber() {
+    return this?.replaceAll(RegExp(r'[^0-9]'), '');
   }
 
   DateTime? toDateTime() {

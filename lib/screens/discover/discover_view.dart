@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:alt_bangumi/providers/discover_view_provider.dart';
+import 'package:alt_bangumi/repositories/bad_repository.dart';
+import 'package:alt_bangumi/screens/ranking/ranking_screen.dart';
 import 'package:alt_bangumi/screens/search/search_screen.dart';
 import 'package:alt_bangumi/widgets/discover/home_subject_widget.dart';
 import 'package:alt_bangumi/constants/enum_constant.dart';
@@ -27,20 +31,28 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
     super.initState();
     _mainAutoSizeGroup = AutoSizeGroup();
     _subAutoSizeGroup = AutoSizeGroup();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // TODO
+      final result = await BadRepository.fetchList(
+          subjectOption: SearchScreenSubjectOption.anime, page: 1);
+      log('message result: $result');
       ref.read(discoverViewProvider.notifier).loadChannel();
     });
   }
 
   void _navigationCallback(NavigationEnum navigationEnum) {
-    context.push(_getScreenRoute(navigationEnum));
+    context.push(
+      _getScreenRoute(navigationEnum),
+      extra: {
+        RankingScreen.urlKey: 'https://bgm.tv/anime/browser?sort=rank&page=1',
+      },
+    );
   }
-
+  
   String _getScreenRoute(NavigationEnum navigationEnum) {
     switch (navigationEnum) {
       case NavigationEnum.ranking:
-        // TODO: Handle this case.
-        break;
+        return RankingScreen.route;
       case NavigationEnum.searchEntry:
         // TODO: Handle this case.
         break;
@@ -181,13 +193,8 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            BannerWidget(
-              height: 20.h,
-              width: 100.w,
-              imageUrl:
-                  'https://www.wikihow.com/images/thumb/7/72/Right-Click-on-a-MacBook-Step-6.jpg/aid551538-v4-728px-Right-Click-on-a-MacBook-Step-6.jpg.webp',
-            ),
-            SizedBox(height: 2.h),
+            const SizedBox(height: kToolbarHeight),
+            const BannerWidget(),
             SizedBox(
               width: 100.w,
               child: GridView.builder(
