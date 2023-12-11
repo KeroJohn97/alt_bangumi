@@ -8,7 +8,7 @@ enum SearchScreenStateEnum { initial, possible, loading, success, failure }
 
 class SearchScreenState {
   final SearchScreenStateEnum stateEnum;
-  final SearchScreenSubjectOption subjectOption;
+  final ScreenSubjectOption subjectOption;
   final SearchScreenFilterOption filterOption;
   final SearchModel? searchResult;
   final List<String>? possibleMatch;
@@ -23,7 +23,7 @@ class SearchScreenState {
 
   SearchScreenState copyWith({
     SearchScreenStateEnum? stateEnum,
-    SearchScreenSubjectOption? subjectOption,
+    ScreenSubjectOption? subjectOption,
     SearchScreenFilterOption? filterOption,
     List<String>? possibleMatch,
     required SearchModel? searchResult,
@@ -43,7 +43,7 @@ class SearchScreenNotifier extends StateNotifier<SearchScreenState> {
       : super(
           SearchScreenState(
             stateEnum: SearchScreenStateEnum.initial,
-            subjectOption: SearchScreenSubjectOption.values.first,
+            subjectOption: ScreenSubjectOption.values.first,
             filterOption: SearchScreenFilterOption.values.first,
             possibleMatch: null,
             searchResult: null,
@@ -57,7 +57,7 @@ class SearchScreenNotifier extends StateNotifier<SearchScreenState> {
     );
   }
 
-  void selectCategory(SearchScreenSubjectOption subjectOption) {
+  void selectCategory(ScreenSubjectOption subjectOption) {
     state = state.copyWith(
       subjectOption: subjectOption,
       searchResult: state.searchResult,

@@ -68,7 +68,7 @@ class _ScaffoldCustomedState extends State<ScaffoldCustomed> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await BadRepository.fetchList(
-              subjectOption: SearchScreenSubjectOption.anime, page: 1);
+              subjectOption: ScreenSubjectOption.anime, page: 1);
           log('message result: $result');
         },
       ),

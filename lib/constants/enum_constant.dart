@@ -127,7 +127,7 @@ enum ScreenLayoutOption {
   list,
 }
 
-enum SearchScreenSubjectOption {
+enum ScreenSubjectOption {
   entry(5),
   anime(2),
   book(1),
@@ -138,31 +138,31 @@ enum SearchScreenSubjectOption {
   user(8);
 
   final int value;
-  const SearchScreenSubjectOption(this.value);
+  const ScreenSubjectOption(this.value);
 }
 
-extension SubjectOptionExtension on SearchScreenSubjectOption {
+extension SubjectOptionExtension on ScreenSubjectOption {
   String toJson() {
     return name;
   }
 
   String getString(BuildContext context) {
     switch (this) {
-      case SearchScreenSubjectOption.entry:
+      case ScreenSubjectOption.entry:
         return TextConstant.entry.getString(context);
-      case SearchScreenSubjectOption.anime:
+      case ScreenSubjectOption.anime:
         return TextConstant.anime.getString(context);
-      case SearchScreenSubjectOption.book:
+      case ScreenSubjectOption.book:
         return TextConstant.book.getString(context);
-      case SearchScreenSubjectOption.music:
+      case ScreenSubjectOption.music:
         return TextConstant.music.getString(context);
-      case SearchScreenSubjectOption.game:
+      case ScreenSubjectOption.game:
         return TextConstant.game.getString(context);
-      case SearchScreenSubjectOption.real:
+      case ScreenSubjectOption.real:
         return TextConstant.real.getString(context);
-      case SearchScreenSubjectOption.character:
+      case ScreenSubjectOption.character:
         return TextConstant.character.getString(context);
-      case SearchScreenSubjectOption.user:
+      case ScreenSubjectOption.user:
         return TextConstant.user.getString(context);
     }
   }
@@ -174,16 +174,16 @@ extension SubjectOptionExtension on SearchScreenSubjectOption {
     required GameTypeOption? gameTypeOption,
   }) {
     switch (this) {
-      case SearchScreenSubjectOption.anime:
+      case ScreenSubjectOption.anime:
         if (animeTypeOption == null) return null;
         return '/${animeTypeOption.getUrl()}';
-      case SearchScreenSubjectOption.book:
+      case ScreenSubjectOption.book:
         if (bookTypeOption == null) return null;
         return '/${bookTypeOption.getUrl()}';
-      case SearchScreenSubjectOption.real:
+      case ScreenSubjectOption.real:
         if (realTypeOption == null) return null;
         return '/${realTypeOption.getUrl()}';
-      case SearchScreenSubjectOption.game:
+      case ScreenSubjectOption.game:
         if (gameTypeOption == null) return null;
         return '/${gameTypeOption.getUrl()}';
       default:
@@ -199,16 +199,16 @@ extension SubjectOptionExtension on SearchScreenSubjectOption {
     required GameTypeOption? gameTypeOption,
   }) {
     switch (this) {
-      case SearchScreenSubjectOption.anime:
+      case ScreenSubjectOption.anime:
         if (animeTypeOption == null) return null;
         return animeTypeOption.getString(context);
-      case SearchScreenSubjectOption.book:
+      case ScreenSubjectOption.book:
         if (bookTypeOption == null) return null;
         return bookTypeOption.getString(context);
-      case SearchScreenSubjectOption.real:
+      case ScreenSubjectOption.real:
         if (realTypeOption == null) return null;
         return realTypeOption.getString(context);
-      case SearchScreenSubjectOption.game:
+      case ScreenSubjectOption.game:
         if (gameTypeOption == null) return null;
         return gameTypeOption.getString(context);
       default:

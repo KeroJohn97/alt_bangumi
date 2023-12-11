@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/providers/discover_view_provider.dart';
 import 'package:alt_bangumi/repositories/bad_repository.dart';
 import 'package:alt_bangumi/screens/ranking/ranking_screen.dart';
@@ -34,7 +35,7 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // TODO
       final result = await BadRepository.fetchList(
-          subjectOption: SearchScreenSubjectOption.anime, page: 1);
+          subjectOption: ScreenSubjectOption.anime, page: 1);
       log('message result: $result');
       ref.read(discoverViewProvider.notifier).loadChannel();
     });
@@ -44,11 +45,12 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
     context.push(
       _getScreenRoute(navigationEnum),
       extra: {
-        RankingScreen.urlKey: 'https://bgm.tv/anime/browser?sort=rank&page=1',
+        RankingScreen.urlKey:
+            '${HttpConstant.host}/anime/browser?sort=rank&page=1',
       },
     );
   }
-  
+
   String _getScreenRoute(NavigationEnum navigationEnum) {
     switch (navigationEnum) {
       case NavigationEnum.ranking:
@@ -213,31 +215,15 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
                   );
                 },
               ),
-              // Wrap(
-              //   children: [
-              //     ...NavigationEnum.values
-              //         .where((element) =>
-              //             element.name.contains('t') ||
-              //             element.name.contains('search'))
-              //         .map(
-              //           (e) => CustomIconButton(
-              //             callback: () => _navigationCallback(e),
-              //             labelText: e.name,
-              //             iconData: _setIconData(e),
-              //           ),
-              //         )
-              //         .toList()
-              //   ],
-              // ),
             ),
-            ...SearchScreenSubjectOption.values
+            ...ScreenSubjectOption.values
                 .where(
                   (element) => [
-                    SearchScreenSubjectOption.anime,
-                    SearchScreenSubjectOption.book,
-                    SearchScreenSubjectOption.game,
-                    SearchScreenSubjectOption.music,
-                    SearchScreenSubjectOption.real,
+                    ScreenSubjectOption.anime,
+                    ScreenSubjectOption.book,
+                    ScreenSubjectOption.game,
+                    ScreenSubjectOption.music,
+                    ScreenSubjectOption.real,
                   ].contains(element),
                 )
                 .map(

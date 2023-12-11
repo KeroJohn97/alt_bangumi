@@ -87,7 +87,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
       final characters = state.characters;
       final relations = state.relations;
       final persons = state.persons;
-      final subjectOption = SearchScreenSubjectOption.values
+      final subjectOption = ScreenSubjectOption.values
           .firstWhereOrNull((element) => element.value == subject?.type);
 
       final pageCount = ((episode?.total ?? 0) / 32).ceil();

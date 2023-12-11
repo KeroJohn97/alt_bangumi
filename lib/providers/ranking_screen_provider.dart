@@ -10,7 +10,7 @@ enum RankingScreenStateEnum { initial, loading, sorting, failure, success }
 class RankingScreenState {
   final RankingScreenStateEnum stateEnum;
   final SortOption sortOption;
-  final SearchScreenSubjectOption subjectOption;
+  final ScreenSubjectOption subjectOption;
   final int page;
   final int? year;
   final int? month;
@@ -37,7 +37,7 @@ class RankingScreenState {
   RankingScreenState copyWith({
     RankingScreenStateEnum? stateEnum,
     SortOption? sortOption,
-    SearchScreenSubjectOption? subjectOption,
+    ScreenSubjectOption? subjectOption,
     int? page,
     AnimeTypeOption? animeTypeOption,
     BookTypeOption? bookTypeOption,
@@ -69,7 +69,7 @@ class RankingScreenNotifier extends StateNotifier<RankingScreenState> {
           RankingScreenState(
             stateEnum: RankingScreenStateEnum.initial,
             sortOption: SortOption.rank,
-            subjectOption: SearchScreenSubjectOption.anime,
+            subjectOption: ScreenSubjectOption.anime,
             page: 1,
             year: null,
             month: null,
@@ -139,7 +139,7 @@ class RankingScreenNotifier extends StateNotifier<RankingScreenState> {
   //   } finally {}
   // }
 
-  void selectSubject(SearchScreenSubjectOption subjectOption) {
+  void selectSubject(ScreenSubjectOption subjectOption) {
     state = state.copyWith(
       subjectOption: subjectOption,
       results: state.results,
@@ -159,7 +159,7 @@ class RankingScreenNotifier extends StateNotifier<RankingScreenState> {
     );
   }
 
-  void selectCategory(SearchScreenSubjectOption subjectOption) {
+  void selectCategory(ScreenSubjectOption subjectOption) {
     state = state.copyWith(
       subjectOption: subjectOption,
       results: state.results,

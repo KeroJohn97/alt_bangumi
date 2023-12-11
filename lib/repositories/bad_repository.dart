@@ -33,7 +33,7 @@ class BadRepository {
   }
 
   static Future<ChannelModel> fetchChannel(
-      SearchScreenSubjectOption subjectOption) async {
+      ScreenSubjectOption subjectOption) async {
     final html = await HttpHelper.getHtmlFromUrl(
         '${HttpConstant.host}/${subjectOption.name}');
     final htmlDocument = html_parser.parse(html);
@@ -174,7 +174,7 @@ class BadRepository {
   }
 
   static Future<dynamic> fetchList({
-    required SearchScreenSubjectOption subjectOption,
+    required ScreenSubjectOption subjectOption,
     required int page,
     Map<String, dynamic> pagination = const {'pageTotal': 0}, // page total?
   }) async {
@@ -196,7 +196,7 @@ class BadRepository {
   }
 
   static Future<List<BrowserRankModel>?> fetchRank({
-    required SearchScreenSubjectOption subjectOption,
+    required ScreenSubjectOption subjectOption,
     required SortOption sortOption,
     required int page,
     required AnimeTypeOption? animeTypeOption,

@@ -16,7 +16,7 @@ import 'anime_card.dart';
 class HomeSubjectWidget extends StatelessWidget {
   final AutoSizeGroup mainAutoSizeGroup;
   final AutoSizeGroup subAutoSizeGroup;
-  final SearchScreenSubjectOption subjectOption;
+  final ScreenSubjectOption subjectOption;
   const HomeSubjectWidget({
     super.key,
     required this.mainAutoSizeGroup,
@@ -25,6 +25,7 @@ class HomeSubjectWidget extends StatelessWidget {
   });
 
   void _pushChannelScreen() {
+    // TODO add push channel
     // context.push(CalendarScreen.route);
   }
 
@@ -61,19 +62,19 @@ class HomeSubjectWidget extends StatelessWidget {
                 final channel = state.channel;
                 List<SubjectModel>? rankedSubject;
                 switch (subjectOption) {
-                  case SearchScreenSubjectOption.anime:
+                  case ScreenSubjectOption.anime:
                     rankedSubject = state.rankedAnime;
                     break;
-                  case SearchScreenSubjectOption.book:
+                  case ScreenSubjectOption.book:
                     rankedSubject = state.rankedBook;
                     break;
-                  case SearchScreenSubjectOption.music:
+                  case ScreenSubjectOption.music:
                     rankedSubject = state.rankedMusic;
                     break;
-                  case SearchScreenSubjectOption.game:
+                  case ScreenSubjectOption.game:
                     rankedSubject = state.rankedGame;
                     break;
-                  case SearchScreenSubjectOption.real:
+                  case ScreenSubjectOption.real:
                     rankedSubject = state.rankedReal;
                     break;
                   default:

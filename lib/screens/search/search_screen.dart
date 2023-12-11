@@ -99,19 +99,19 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         } else {
           final List<String> possibleList = [];
           switch (ref.read(searchScreenProvider).subjectOption) {
-            case SearchScreenSubjectOption.anime:
+            case ScreenSubjectOption.anime:
               possibleList
                   .addAll(await SubstringHelper.instance().getAnimeList());
               break;
-            case SearchScreenSubjectOption.book:
+            case ScreenSubjectOption.book:
               possibleList
                   .addAll(await SubstringHelper.instance().getBookList());
               break;
-            case SearchScreenSubjectOption.game:
+            case ScreenSubjectOption.game:
               possibleList
                   .addAll(await SubstringHelper.instance().getGameList());
               break;
-            case SearchScreenSubjectOption.user:
+            case ScreenSubjectOption.user:
               break;
             default:
               possibleList
@@ -129,15 +129,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     });
   }
 
-  Future<SearchScreenSubjectOption?> _getStorageSubjectOption() async {
+  Future<ScreenSubjectOption?> _getStorageSubjectOption() async {
     final result = await StorageHelper.read(StorageHelperOption.subjectOption);
     if (result == null) return null;
     final subjectOption = jsonDecode(result);
-    return SearchScreenSubjectOption.values
+    return ScreenSubjectOption.values
         .firstWhereOrNull((element) => element.toJson() == subjectOption);
   }
 
-  void _saveStorageSubjectOption(SearchScreenSubjectOption subjectOption) {
+  void _saveStorageSubjectOption(ScreenSubjectOption subjectOption) {
     StorageHelper.write(
       option: StorageHelperOption.subjectOption,
       value: jsonEncode(subjectOption.toJson()),
@@ -266,7 +266,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           alignment: Alignment.center,
                           icon: const SizedBox.shrink(),
                           value: state.subjectOption,
-                          items: SearchScreenSubjectOption.values
+                          items: ScreenSubjectOption.values
                               .map((e) => DropdownMenuItem(
                                     value: e,
                                     alignment: AlignmentDirectional.center,

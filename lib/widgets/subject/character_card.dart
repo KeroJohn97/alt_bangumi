@@ -14,7 +14,7 @@ class RelationCard extends StatefulWidget {
   final double height;
   final double width;
   final SubjectRelationGroup group;
-  final SearchScreenSubjectOption? option;
+  final ScreenSubjectOption? option;
   final ImageSizeGroup sizeGroup;
   final BoxFit boxFit;
   final double scale;
@@ -37,27 +37,27 @@ class RelationCard extends StatefulWidget {
 class _RelationCardState extends State<RelationCard> {
   _getSubtitleCharater() {
     switch (widget.option) {
-      case SearchScreenSubjectOption.entry:
+      case ScreenSubjectOption.entry:
         // TODO: Handle this case.
         break;
-      case SearchScreenSubjectOption.anime:
+      case ScreenSubjectOption.anime:
         return '${widget.relation.actors?.isEmpty ?? true ? '${widget.relation.relation}' : widget.relation.actors!.first.name}';
-      case SearchScreenSubjectOption.book:
+      case ScreenSubjectOption.book:
         // TODO: Handle this case.
         break;
-      case SearchScreenSubjectOption.music:
+      case ScreenSubjectOption.music:
         // TODO: Handle this case.
         break;
-      case SearchScreenSubjectOption.game:
+      case ScreenSubjectOption.game:
         // TODO: Handle this case.
         break;
-      case SearchScreenSubjectOption.real:
+      case ScreenSubjectOption.real:
         // TODO: Handle this case.
         break;
-      case SearchScreenSubjectOption.character:
+      case ScreenSubjectOption.character:
         // TODO: Handle this case.
         break;
-      case SearchScreenSubjectOption.user:
+      case ScreenSubjectOption.user:
         // TODO: Handle this case.
         break;
       case null:

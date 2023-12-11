@@ -8,7 +8,7 @@ import '../models/relation_model/relation_model.dart';
 
 class SubjectDetailCharacterWidget extends StatelessWidget {
   final List<RelationModel>? characters;
-  final SearchScreenSubjectOption? subjectOption;
+  final ScreenSubjectOption? subjectOption;
   const SubjectDetailCharacterWidget({
     super.key,
     required this.characters,

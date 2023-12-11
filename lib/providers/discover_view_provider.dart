@@ -12,7 +12,7 @@ enum DiscoverViewStateEnum { initial, loading, failure, success }
 
 class DiscoverViewState {
   final DiscoverViewStateEnum stateEnum;
-  final Map<SearchScreenSubjectOption, ChannelModel>? channel;
+  final Map<ScreenSubjectOption, ChannelModel>? channel;
   final List<SubjectModel>? rankedAnime;
   final List<SubjectModel>? rankedBook;
   final List<SubjectModel>? rankedMusic;
@@ -31,7 +31,7 @@ class DiscoverViewState {
 
   DiscoverViewState copyWith({
     DiscoverViewStateEnum? stateEnum,
-    Map<SearchScreenSubjectOption, ChannelModel>? channel,
+    Map<ScreenSubjectOption, ChannelModel>? channel,
     List<SubjectModel>? rankedAnime,
     List<SubjectModel>? rankedBook,
     List<SubjectModel>? rankedMusic,
@@ -73,49 +73,49 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
     final List<SubjectModel> tempMusic = [];
     final List<SubjectModel> tempGame = [];
     final List<SubjectModel> tempReal = [];
-    final Map<SearchScreenSubjectOption, ChannelModel> tempChannel = {};
-    for (var element in SearchScreenSubjectOption.values) {
+    final Map<ScreenSubjectOption, ChannelModel> tempChannel = {};
+    for (var element in ScreenSubjectOption.values) {
       final valid = [
-        SearchScreenSubjectOption.anime,
-        SearchScreenSubjectOption.book,
-        SearchScreenSubjectOption.game,
-        SearchScreenSubjectOption.music,
-        SearchScreenSubjectOption.real,
+        ScreenSubjectOption.anime,
+        ScreenSubjectOption.book,
+        ScreenSubjectOption.game,
+        ScreenSubjectOption.music,
+        ScreenSubjectOption.real,
       ].contains(element);
       if (!valid) continue;
       final channel = await BadRepository.fetchChannel(element);
       tempChannel.addAll({element: channel});
       if (channel.rank != null) {
         switch (element) {
-          case SearchScreenSubjectOption.anime:
+          case ScreenSubjectOption.anime:
             for (var element in channel.rank!) {
               final subject =
                   await GlobalRepository.getSubject('${element.id}');
               tempAnime.add(subject);
             }
             break;
-          case SearchScreenSubjectOption.book:
+          case ScreenSubjectOption.book:
             for (var element in channel.rank!) {
               final subject =
                   await GlobalRepository.getSubject('${element.id}');
               tempBook.add(subject);
             }
             break;
-          case SearchScreenSubjectOption.music:
+          case ScreenSubjectOption.music:
             for (var element in channel.rank!) {
               final subject =
                   await GlobalRepository.getSubject('${element.id}');
               tempMusic.add(subject);
             }
             break;
-          case SearchScreenSubjectOption.game:
+          case ScreenSubjectOption.game:
             for (var element in channel.rank!) {
               final subject =
                   await GlobalRepository.getSubject('${element.id}');
               tempGame.add(subject);
             }
             break;
-          case SearchScreenSubjectOption.real:
+          case ScreenSubjectOption.real:
             for (var element in channel.rank!) {
               final subject =
                   await GlobalRepository.getSubject('${element.id}');

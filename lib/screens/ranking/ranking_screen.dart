@@ -89,28 +89,28 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
     final state = ref.read(rankingScreenProvider);
     final notifier = ref.read(rankingScreenProvider.notifier);
     switch (state.subjectOption) {
-      case SearchScreenSubjectOption.anime:
+      case ScreenSubjectOption.anime:
         notifier.selectAnimeTypeOption(
           AnimeTypeOption.values.firstWhere(
             (element) => element.getString(context) == selectedType,
           ),
         );
         break;
-      case SearchScreenSubjectOption.book:
+      case ScreenSubjectOption.book:
         notifier.selectBookTypeOption(
           BookTypeOption.values.firstWhere(
             (element) => element.getString(context) == selectedType,
           ),
         );
         break;
-      case SearchScreenSubjectOption.real:
+      case ScreenSubjectOption.real:
         notifier.selectRealTypeOption(
           RealTypeOption.values.firstWhere(
             (element) => element.getString(context) == selectedType,
           ),
         );
         break;
-      case SearchScreenSubjectOption.game:
+      case ScreenSubjectOption.game:
         notifier.selectGameTypeOption(
           GameTypeOption.values.firstWhere(
             (element) => element.getString(context) == selectedType,
@@ -167,12 +167,12 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                     size: 16.0,
                   ),
                   menuItem: [
-                    ...SearchScreenSubjectOption.values
+                    ...ScreenSubjectOption.values
                         .whereNot(
                           (element) =>
-                              element == SearchScreenSubjectOption.entry ||
-                              element == SearchScreenSubjectOption.character ||
-                              element == SearchScreenSubjectOption.user,
+                              element == ScreenSubjectOption.entry ||
+                              element == ScreenSubjectOption.character ||
+                              element == ScreenSubjectOption.user,
                         )
                         .map(
                           (e) => PopupMenuItem(
@@ -244,7 +244,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                         .toList(),
                   ],
                 ),
-                if (state.subjectOption != SearchScreenSubjectOption.music)
+                if (state.subjectOption != ScreenSubjectOption.music)
                   _CustomPopupMenuButton(
                     tag: state.subjectOption.filterString(
                           context: context,
@@ -256,20 +256,16 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                         TextConstant.type.getString(context),
                     menuItem: [
                       ...[
-                        if (state.subjectOption ==
-                            SearchScreenSubjectOption.anime)
+                        if (state.subjectOption == ScreenSubjectOption.anime)
                           ...AnimeTypeOption.values
                               .map((e) => e.getString(context)),
-                        if (state.subjectOption ==
-                            SearchScreenSubjectOption.book)
+                        if (state.subjectOption == ScreenSubjectOption.book)
                           ...BookTypeOption.values
                               .map((e) => e.getString(context)),
-                        if (state.subjectOption ==
-                            SearchScreenSubjectOption.real)
+                        if (state.subjectOption == ScreenSubjectOption.real)
                           ...RealTypeOption.values
                               .map((e) => e.getString(context)),
-                        if (state.subjectOption ==
-                            SearchScreenSubjectOption.game)
+                        if (state.subjectOption == ScreenSubjectOption.game)
                           ...GameTypeOption.values
                               .map((e) => e.getString(context)),
                       ]

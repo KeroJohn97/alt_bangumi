@@ -27,7 +27,7 @@ class GlobalRepository {
 
   static Future<SearchModel> searchKeyword({
     required String keyword,
-    required SearchScreenSubjectOption subjectOption,
+    required ScreenSubjectOption subjectOption,
     required SearchScreenFilterOption filterOption,
     required int start,
   }) async {
