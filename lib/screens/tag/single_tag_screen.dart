@@ -5,35 +5,40 @@ import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/models/images_model.dart';
 import 'package:alt_bangumi/models/rating_model.dart';
 import 'package:alt_bangumi/models/search_model/search_info_model.dart';
-import 'package:alt_bangumi/providers/ranking_screen_provider.dart';
-import 'package:alt_bangumi/screens/ranking/widgets/page_row_widget.dart';
-import 'package:alt_bangumi/screens/ranking/widgets/ranking_loading_widget.dart';
+import 'package:alt_bangumi/screens/tag/widgets/single_tag_loading_widget.dart';
+import 'package:alt_bangumi/screens/tag/widgets/single_tag_page_row_widget.dart';
 import 'package:alt_bangumi/widgets/custom_empty_widget.dart';
 import 'package:alt_bangumi/widgets/discover/search/search_grid_card.dart';
 import 'package:alt_bangumi/widgets/discover/search/search_list_card.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 import '../../constants/http_constant.dart';
+import '../../providers/single_tag_screen_provider.dart';
 import '../../widgets/custom_error_widget.dart';
 import '../../widgets/custom_popup_menu_button.dart';
 
-class RankingScreen extends ConsumerStatefulWidget {
-  final String url;
-  const RankingScreen({super.key, required this.url});
+class SingleTagScreen extends ConsumerStatefulWidget {
+  final String tag;
+  final ScreenSubjectOption subjectOption;
+  const SingleTagScreen({
+    super.key,
+    required this.tag,
+    required this.subjectOption,
+  });
 
-  static const route = '/ranking';
-  static const urlKey = 'url_key';
+  static const route = '/single_tag';
+  static const tagKey = 'tag_key';
+  static const subjectKey = 'subject_key';
 
   @override
-  ConsumerState<RankingScreen> createState() => _RankingScreenState();
+  ConsumerState<SingleTagScreen> createState() => _SingleTagScreenState();
 }
 
-class _RankingScreenState extends ConsumerState<RankingScreen>
+class _SingleTagScreenState extends ConsumerState<SingleTagScreen>
     with SingleTickerProviderStateMixin {
   late final ValueNotifier<ScreenLayoutOption> _layoutOption;
   late AnimationController _animationController;
@@ -49,7 +54,9 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
       vsync: this,
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(rankingScreenProvider.notifier).search();
+      final notifier = ref.read(singleTagScreenProvider.notifier);
+      notifier.selectSubject(widget.subjectOption);
+      _search();
       _animationController.forward();
     });
   }
@@ -61,19 +68,13 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
   }
 
   void _search() {
-    ref.read(rankingScreenProvider.notifier).search();
+    ref.read(singleTagScreenProvider.notifier).search(widget.tag);
   }
 
   void _viewInBrowser() {
-    final state = ref.read(rankingScreenProvider);
-    final type = state.subjectOption.filterUrl(
-      animeTypeOption: state.animeTypeOption,
-      bookTypeOption: state.bookTypeOption,
-      gameTypeOption: state.gameTypeOption,
-      realTypeOption: state.filmTypeOption,
-    );
-    final url = '${HttpConstant.host}/${state.subjectOption.name}/browser'
-        '${type ?? ''}'
+    final state = ref.read(singleTagScreenProvider);
+    final url =
+        '${HttpConstant.host}/${state.subjectOption.name}/tag/${widget.tag}'
         '${_airtimeString(state.year, state.month)}'
         '?sort=${state.sortOption.name}&page=${state.page}';
     CommonHelper.showInBrowser(context: context, url: url);
@@ -87,52 +88,14 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
     return '/airtime/$year' '${month == null ? '' : '-$month'}';
   }
 
-  void _selectTypeOption({required String selectedType}) {
-    final state = ref.read(rankingScreenProvider);
-    final notifier = ref.read(rankingScreenProvider.notifier);
-    switch (state.subjectOption) {
-      case ScreenSubjectOption.anime:
-        notifier.selectAnimeTypeOption(
-          AnimeTypeOption.values.firstWhere(
-            (element) => element.getString(context) == selectedType,
-          ),
-        );
-        break;
-      case ScreenSubjectOption.book:
-        notifier.selectBookTypeOption(
-          BookTypeOption.values.firstWhere(
-            (element) => element.getString(context) == selectedType,
-          ),
-        );
-        break;
-      case ScreenSubjectOption.film:
-        notifier.selectRealTypeOption(
-          RealTypeOption.values.firstWhere(
-            (element) => element.getString(context) == selectedType,
-          ),
-        );
-        break;
-      case ScreenSubjectOption.game:
-        notifier.selectGameTypeOption(
-          GameTypeOption.values.firstWhere(
-            (element) => element.getString(context) == selectedType,
-          ),
-        );
-        break;
-      default:
-        break;
-    }
-    _search();
-  }
-
   void _selectPage(int page) {
-    ref.read(rankingScreenProvider.notifier).selectPage(page);
+    ref.read(singleTagScreenProvider.notifier).selectPage(page);
     _search();
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(rankingScreenProvider);
+    final state = ref.watch(singleTagScreenProvider);
     return ScaffoldCustomed(
       leading: const BackButton(color: Colors.black),
       trailing: Padding(
@@ -152,7 +115,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
           ),
         ),
       ),
-      title: TextConstant.ranking.getString(context),
+      title: widget.tag,
       body: CustomScrollView(
         slivers: [
           SliverPinnedHeader(
@@ -163,26 +126,20 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomPopupMenuButton(
-                    tag: state.subjectOption.getString(context),
+                    tag: state.sortOption.getString(context),
                     iconWidget: const Icon(
                       Icons.filter_list_outlined,
                       size: 16.0,
                     ),
                     menuItem: [
-                      ...ScreenSubjectOption.values
-                          .whereNot(
-                            (element) =>
-                                element == ScreenSubjectOption.entry ||
-                                element == ScreenSubjectOption.character ||
-                                element == ScreenSubjectOption.user,
-                          )
+                      ...SortOption.values
                           .map(
                             (e) => PopupMenuItem(
                               child: Text(e.getString(context)),
                               onTap: () {
                                 ref
-                                    .read(rankingScreenProvider.notifier)
-                                    .selectSubject(e);
+                                    .read(singleTagScreenProvider.notifier)
+                                    .selectSort(e);
                                 _search();
                               },
                             ),
@@ -210,7 +167,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                                 ),
                                 onTap: () {
                                   ref
-                                      .read(rankingScreenProvider.notifier)
+                                      .read(singleTagScreenProvider.notifier)
                                       .selectYear(e);
                                   _search();
                                 },
@@ -237,7 +194,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                                   '${e ?? TextConstant.entire.getString(context)}'),
                               onTap: () {
                                 ref
-                                    .read(rankingScreenProvider.notifier)
+                                    .read(singleTagScreenProvider.notifier)
                                     .selectMonth(e);
                                 _search();
                               },
@@ -246,40 +203,6 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                           .toList(),
                     ],
                   ),
-                  if (state.subjectOption != ScreenSubjectOption.music)
-                    CustomPopupMenuButton(
-                      tag: state.subjectOption.filterString(
-                            context: context,
-                            animeTypeOption: state.animeTypeOption,
-                            bookTypeOption: state.bookTypeOption,
-                            gameTypeOption: state.gameTypeOption,
-                            realTypeOption: state.filmTypeOption,
-                          ) ??
-                          TextConstant.type.getString(context),
-                      menuItem: [
-                        ...[
-                          if (state.subjectOption == ScreenSubjectOption.anime)
-                            ...AnimeTypeOption.values
-                                .map((e) => e.getString(context)),
-                          if (state.subjectOption == ScreenSubjectOption.book)
-                            ...BookTypeOption.values
-                                .map((e) => e.getString(context)),
-                          if (state.subjectOption == ScreenSubjectOption.film)
-                            ...RealTypeOption.values
-                                .map((e) => e.getString(context)),
-                          if (state.subjectOption == ScreenSubjectOption.game)
-                            ...GameTypeOption.values
-                                .map((e) => e.getString(context)),
-                        ]
-                            .map(
-                              (e) => PopupMenuItem(
-                                child: Text(e),
-                                onTap: () => _selectTypeOption(selectedType: e),
-                              ),
-                            )
-                            .toList(),
-                      ],
-                    ),
                   ValueListenableBuilder(
                       valueListenable: _layoutOption,
                       builder: (context, layoutOption, child) {
@@ -314,15 +237,15 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
           Builder(
             builder: (context) {
               switch (state.stateEnum) {
-                case RankingScreenStateEnum.initial:
+                case SingleTagScreenStateEnum.initial:
                   return const SliverToBoxAdapter(
-                      child: RankingLoadingWidget());
-                case RankingScreenStateEnum.loading:
+                      child: SingleTagLoadingWidget());
+                case SingleTagScreenStateEnum.loading:
                   return const SliverToBoxAdapter(
-                      child: RankingLoadingWidget());
-                case RankingScreenStateEnum.failure:
+                      child: SingleTagLoadingWidget());
+                case SingleTagScreenStateEnum.failure:
                   return const SliverToBoxAdapter(child: CustomErrorWidget());
-                case RankingScreenStateEnum.success:
+                case SingleTagScreenStateEnum.success:
                   final result = state.results;
                   final list = result?.map(
                     (e) {
@@ -366,7 +289,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                                 delegate: SliverChildBuilderDelegate(
                                   (context, index) {
                                     if (index == 1) {
-                                      return PageRowWidget(
+                                      return SingleTagPageRowWidget(
                                         previousCallback: () =>
                                             _selectPage(state.page - 1),
                                         nextCallback: () =>
@@ -375,6 +298,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                                     }
                                     return GridView.builder(
                                       shrinkWrap: true,
+                                      padding: EdgeInsets.zero,
                                       physics:
                                           const NeverScrollableScrollPhysics(),
                                       gridDelegate:
@@ -400,7 +324,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                                 delegate: SliverChildBuilderDelegate(
                                   (context, index) {
                                     if (index == list.length) {
-                                      return PageRowWidget(
+                                      return SingleTagPageRowWidget(
                                         previousCallback: () =>
                                             _selectPage(state.page - 1),
                                         nextCallback: () =>

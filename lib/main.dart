@@ -1,4 +1,8 @@
+import 'dart:ui';
+
+import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/constants/text_constant.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:alt_bangumi/constants/color_constant.dart';
 import 'package:alt_bangumi/helpers/router_helper.dart';
@@ -25,25 +29,32 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  int languageIndex = LanguageEnum.english.index;
+
   @override
   void initState() {
     super.initState();
     localization.init(
       mapLocales: [
-        const MapLocale('en', TextConstant.EN),
-        const MapLocale('zh-cn', TextConstant.ZH_CN),
-        const MapLocale('zh-tw', TextConstant.ZH_TW),
-        // TODO locale ja
+        MapLocale(LanguageEnum.english.languageCode(), TextConstant.EN),
+        MapLocale(
+            LanguageEnum.simplifiedChinese.languageCode(), TextConstant.ZH_CN),
+        MapLocale(
+            LanguageEnum.traditionalChinese.languageCode(), TextConstant.ZH_TW),
+        // TODO: locale ja.
         // const MapLocale('ja', TextConstant.JA),
       ],
-      initLanguageCode: 'zh-cn',
+      initLanguageCode: window.locale.languageCode,
     );
     localization.onTranslatedLanguage = _onTranslatedLanguage;
   }
 
   // the setState function here is a must to add
   void _onTranslatedLanguage(Locale? locale) {
+    final languageEnum = LanguageEnum.values.firstWhereOrNull(
+        (element) => element.languageCode() == locale?.languageCode);
     setState(() {
+      if (languageEnum != null) languageIndex = languageEnum.index;
       // whenever your initialization is completed, remove the splash screen
       FlutterNativeSplash.remove();
     });
@@ -56,6 +67,8 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         useMaterial3: true,
         primarySwatch: Colors.pink,
+        primaryColorLight: ColorConstant.themeColor,
+        primaryColorDark: ColorConstant.themeColor,
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(fontSize: 12.0, color: Colors.black),
           systemOverlayStyle: SystemUiOverlayStyle(

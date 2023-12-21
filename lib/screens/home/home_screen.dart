@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:alt_bangumi/constants/color_constant.dart';
 import 'package:alt_bangumi/screens/discover/discover_view.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,7 +16,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final currentIndex = ref.watch(homeIndexNotifier);
+    // final currentIndex = ref.watch(homeIndexNotifier);
     return const ScaffoldCustomed(
       title: '',
       showAppBar: false,
@@ -62,17 +61,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  BottomNavigationBarItem _getBottomNavigationBarItem({
-    required IconData iconData,
-    required String label,
-  }) {
-    return BottomNavigationBarItem(
-      icon: Icon(iconData, color: Colors.black),
-      activeIcon: Icon(
-        iconData,
-        color: ColorConstant.themeColor,
-      ),
-      label: label,
-    );
-  }
+  // BottomNavigationBarItem _getBottomNavigationBarItem({
+  //   required IconData iconData,
+  //   required String label,
+  // }) {
+  //   return BottomNavigationBarItem(
+  //     icon: Icon(iconData, color: Colors.black),
+  //     activeIcon: Icon(
+  //       iconData,
+  //       color: ColorConstant.themeColor,
+  //     ),
+  //     label: label,
+  //   );
+  // }
 }

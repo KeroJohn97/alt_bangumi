@@ -22,6 +22,8 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
+import '../helpers/common_helper.dart';
+
 class SubjectDetailScreen extends ConsumerStatefulWidget {
   static const route = '/subject';
   final int subjectId;
@@ -41,12 +43,18 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
   late final ValueNotifier<ImageProvider?> _imageProvider;
   late final TextSelectionControls _selectionControls;
   late final StreamController<BoxConstraints?> _constraintsController;
+  late final AutoDisposeStateNotifierProvider<SubjectDetailScreenNotifier,
+      SubjectDetailScreenState> subjectDetailScreenProvider;
 
   static const _extraHeight = 30.0;
 
   @override
   void initState() {
     super.initState();
+    subjectDetailScreenProvider = AutoDisposeStateNotifierProvider<
+        SubjectDetailScreenNotifier, SubjectDetailScreenState>((ref) {
+      return SubjectDetailScreenNotifier();
+    });
     _pageIndex = ValueNotifier(0);
     _imageProvider = ValueNotifier(null);
     _scrollController = ScrollController();
@@ -76,11 +84,12 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
     if (_pageController.page == null) return;
     _pageIndex.value = _pageController.page!.round();
   }
+  // TODO: fetchTopic, fetchBlog
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(subjectDetailScreenProvider);
-    final stateEnum = state.stateEnum;
+    // final stateEnum = state.stateEnum;
     return Builder(builder: (context) {
       final subject = state.subject;
       final episode = state.episode;
@@ -110,7 +119,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
         child: ScaffoldCustomed(
           showAppBar: false,
           leading: const SizedBox.shrink(),
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           body: StreamBuilder(
               stream: _constraintsController.stream,
               builder: (context, snapshot) {
@@ -123,305 +132,320 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                           kToolbarHeight +
                           20.0;
                 }
-                return Builder(builder: (context) {
-                  return CustomScrollView(
-                    controller: _scrollController,
-                    clipBehavior: Clip.none,
-                    slivers: [
-                      SliverStack(
-                        // insetOnOverlap: true,
-                        children: [
-                          SubjectDetailSliverAppBar(
-                            isCollapsed: isCollapsed,
-                            imageProvider: _imageProvider,
-                            subject: subject,
-                            constraintsController: _constraintsController,
-                            person: persons?.isNotEmpty ?? false
-                                ? persons?.first
-                                : null,
-                          ),
-                          // SliverPositioned.fill(
-                          //   top: 200.0,
-                          //   child: Container(),
-                          // ),
-                        ],
-                      ),
-                      SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12.0),
-                              decoration:
-                                  const BoxDecoration(color: Colors.white),
-                              child: ListView(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                children: [
-                                  SubjectDetailTitleWidget(
-                                      subject: subject,
-                                      extraHeight: _extraHeight),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        TextConstant.favourite
-                                            .getString(context),
+                return RefreshIndicator(
+                  // edgeOffset: kToolbarHeight,
+                  onRefresh: () async => ref
+                      .read(subjectDetailScreenProvider.notifier)
+                      .loadSubject('${widget.subjectId}', isRefresh: true),
+                  child: Builder(builder: (context) {
+                    return CustomScrollView(
+                      controller: _scrollController,
+                      clipBehavior: Clip.none,
+                      slivers: [
+                        SliverStack(
+                          // insetOnOverlap: true,
+                          children: [
+                            SubjectDetailSliverAppBar(
+                              isCollapsed: isCollapsed,
+                              imageProvider: _imageProvider,
+                              subject: subject,
+                              constraintsController: _constraintsController,
+                              person: persons?.isNotEmpty ?? false
+                                  ? persons?.first
+                                  : null,
+                            ),
+                            // SliverPositioned.fill(
+                            //   top: 200.0,
+                            //   child: Container(),
+                            // ),
+                          ],
+                        ),
+                        SliverPadding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          sliver: SliverList(
+                            delegate: SliverChildListDelegate(
+                              [
+                                SubjectDetailTitleWidget(
+                                    subject: subject,
+                                    extraHeight: _extraHeight),
+                                // Row(
+                                //   children: [
+                                //     Text(
+                                //       TextConstant.favourite.getString(context),
+                                //       style: const TextStyle(
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: 18.0,
+                                //       ),
+                                //     ),
+                                //     const Spacer(),
+                                //     IconButton(
+                                //       onPressed: () {},
+                                //       icon: const Icon(
+                                //         Icons.folder_outlined,
+                                //         color: Colors.grey,
+                                //       ),
+                                //     ),
+                                //     IconButton(
+                                //       onPressed: () {},
+                                //       icon: const Icon(
+                                //         Icons.close_outlined,
+                                //         color: Colors.grey,
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // const SizedBox(height: 8.0),
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.center,
+                                //   children: [
+                                //     Text(
+                                //       TextConstant.notAddedToFavourites
+                                //           .getString(context),
+                                //       style: const TextStyle(
+                                //         fontSize: 16.0,
+                                //         fontWeight: FontWeight.bold,
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                const SizedBox(height: 8.0),
+
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        '${subject?.collection?.wish ?? ''}${TextConstant.wished.getString(context)} / '
+                                        '${subject?.collection?.collect ?? ''}${TextConstant.watched.getString(context)} / '
+                                        '${subject?.collection?.doing ?? ''}${TextConstant.watching.getString(context)} / '
+                                        '${subject?.collection?.onHold ?? ''}${TextConstant.onHold.getString(context)} / '
+                                        '${subject?.collection?.dropped ?? ''}${TextConstant.dropped.getString(context)} / '
+                                        '${TextConstant.total.getString(context)}$total',
                                         style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.folder_outlined,
                                           color: Colors.grey,
+                                          fontSize: 14.0,
                                         ),
+                                        textAlign: TextAlign.center,
                                       ),
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.close_outlined,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        TextConstant.notAddedToFavourites
-                                            .getString(context),
-                                        style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          '${subject?.collection?.wish ?? ''}${TextConstant.wished.getString(context)} / '
-                                          '${subject?.collection?.collect ?? ''}${TextConstant.watched.getString(context)} / '
-                                          '${subject?.collection?.doing ?? ''}${TextConstant.watching.getString(context)} / '
-                                          '${subject?.collection?.onHold ?? ''}${TextConstant.onHold.getString(context)} / '
-                                          '${subject?.collection?.dropped ?? ''}${TextConstant.dropped.getString(context)} / '
-                                          '${TextConstant.total.getString(context)}$total',
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 14.0,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
+                                ),
+                                if (subjectOption ==
+                                        ScreenSubjectOption.anime ||
+                                    subjectOption ==
+                                        ScreenSubjectOption.music ||
+                                    subjectOption == ScreenSubjectOption.film)
                                   SubjectDetailEpisodeWidget(
                                     episode: episode,
+                                    provider: subjectDetailScreenProvider,
                                     pageController: _pageController,
                                     pageCount: pageCount,
                                     pageIndex: _pageIndex,
+                                    isMusic: subjectOption ==
+                                        ScreenSubjectOption.music,
                                   ),
-                                  const SizedBox(height: 8.0),
-                                  Text(
-                                    TextConstant.tag.getString(context),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0,
-                                    ),
+                                const SizedBox(height: 8.0),
+                                Text(
+                                  TextConstant.tag.getString(context),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0,
                                   ),
+                                ),
+                                if (subjectOption != null) ...[
                                   const SizedBox(height: 8.0),
-                                  SubjectDetailTagWidget(tags: subject?.tags),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        TextConstant.summary.getString(context),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.translate_outlined,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
+                                  SubjectDetailTagWidget(
+                                    tags: subject?.tags,
+                                    subjectOption: subjectOption,
                                   ),
-                                  const SizedBox(height: 8.0),
-                                  if (subject?.summary != null)
-                                    Text(subject?.summary ?? ''),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        TextConstant.preview.getString(context),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          '${TextConstant.more.getString(context)} >',
-                                          style: const TextStyle(
-                                              color: Colors.grey),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 16.0),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        TextConstant.details.getString(context),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          '${TextConstant.revise.getString(context)} >',
-                                          style: const TextStyle(
-                                              color: Colors.grey),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  SubjectDetailInfoboxWidget(
-                                      infobox: subject?.infobox),
-                                  SubjectDetailRatingWidget(
-                                      rating: subject?.rating),
-                                  SubjectDetailCharacterWidget(
-                                      characters: characters,
-                                      subjectOption: subjectOption),
-                                  SubjectDetailPersonWidget(
-                                      persons: persons,
-                                      subjectOption: subjectOption),
-                                  SubjectDetailRelationWidget(
-                                      relations: relations,
-                                      subjectOption: subjectOption),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        TextConstant.catalog.getString(context),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          '${TextConstant.more.getString(context)} >',
-                                          style: const TextStyle(
-                                              color: Colors.grey),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        TextConstant.log.getString(context),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          '${TextConstant.more.getString(context)} >',
-                                          style: const TextStyle(
-                                              color: Colors.grey),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        TextConstant.post.getString(context),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          '${TextConstant.more.getString(context)} >',
-                                          style: const TextStyle(
-                                              color: Colors.grey),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        TextConstant.comment.getString(context),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      TextButton(
-                                        onPressed: () {},
-                                        child: Text(
-                                          '${TextConstant.more.getString(context)} >',
-                                          style: const TextStyle(
-                                              color: Colors.grey),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8.0),
                                 ],
-                              ),
+                                const SizedBox(height: 8.0),
+                                Row(
+                                  children: [
+                                    Text(
+                                      TextConstant.summary.getString(context),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      onPressed: () => CommonHelper.translate(
+                                        context: context,
+                                        text: subject?.summary,
+                                        isRefresh: false,
+                                      ),
+                                      icon: const Icon(
+                                        Icons.translate_outlined,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                if (subject?.summary != null) ...[
+                                  const SizedBox(height: 8.0),
+                                  Text(subject?.summary ?? ''),
+                                ],
+                                // const SizedBox(height: 8.0),
+                                // Row(
+                                //   children: [
+                                //     Text(
+                                //       TextConstant.preview.getString(context),
+                                //       style: const TextStyle(
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: 18.0,
+                                //       ),
+                                //     ),
+                                //     const Spacer(),
+                                //     TextButton(
+                                //       onPressed: () {},
+                                //       child: Text(
+                                //         '${TextConstant.more.getString(context)} >',
+                                //         style:
+                                //             const TextStyle(color: Colors.grey),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                const SizedBox(height: 8.0),
+                                Row(
+                                  children: [
+                                    Text(
+                                      TextConstant.details.getString(context),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                    // const Spacer(),
+                                    // TextButton(
+                                    //   onPressed: () {},
+                                    //   child: Text(
+                                    //     '${TextConstant.revise.getString(context)} >',
+                                    //     style:
+                                    //         const TextStyle(color: Colors.grey),
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8.0),
+                                SubjectDetailInfoboxWidget(
+                                    infobox: subject?.infobox),
+                                SubjectDetailRatingWidget(
+                                  rating: subject?.rating,
+                                  subjectId: subject?.id,
+                                ),
+                                SubjectDetailCharacterWidget(
+                                  subject: subject,
+                                  characters: characters,
+                                  subjectOption: subjectOption,
+                                ),
+                                SubjectDetailPersonWidget(
+                                  subject: subject,
+                                  persons: persons,
+                                  subjectOption: subjectOption,
+                                ),
+                                SubjectDetailRelationWidget(
+                                  relations: relations,
+                                  subjectOption: subjectOption,
+                                ),
+                                const SizedBox(height: 8.0),
+                                // Row(
+                                //   children: [
+                                //     Text(
+                                //       TextConstant.catalog.getString(context),
+                                //       style: const TextStyle(
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: 18.0,
+                                //       ),
+                                //     ),
+                                //     const Spacer(),
+                                //     TextButton(
+                                //       onPressed: () {},
+                                //       child: Text(
+                                //         '${TextConstant.more.getString(context)} >',
+                                //         style:
+                                //             const TextStyle(color: Colors.grey),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // const SizedBox(height: 8.0),
+                                // const SizedBox(height: 8.0),
+                                // Row(
+                                //   children: [
+                                //     Text(
+                                //       TextConstant.log.getString(context),
+                                //       style: const TextStyle(
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: 18.0,
+                                //       ),
+                                //     ),
+                                //     const Spacer(),
+                                //     TextButton(
+                                //       onPressed: () {},
+                                //       child: Text(
+                                //         '${TextConstant.more.getString(context)} >',
+                                //         style:
+                                //             const TextStyle(color: Colors.grey),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // const SizedBox(height: 8.0),
+                                // const SizedBox(height: 8.0),
+                                // Row(
+                                //   children: [
+                                //     Text(
+                                //       TextConstant.post.getString(context),
+                                //       style: const TextStyle(
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: 18.0,
+                                //       ),
+                                //     ),
+                                //     const Spacer(),
+                                //     TextButton(
+                                //       onPressed: () {},
+                                //       child: Text(
+                                //         '${TextConstant.more.getString(context)} >',
+                                //         style:
+                                //             const TextStyle(color: Colors.grey),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // const SizedBox(height: 8.0),
+                                // const SizedBox(height: 8.0),
+                                // Row(
+                                //   children: [
+                                //     Text(
+                                //       TextConstant.comment.getString(context),
+                                //       style: const TextStyle(
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: 18.0,
+                                //       ),
+                                //     ),
+                                //     const Spacer(),
+                                //     TextButton(
+                                //       onPressed: () {},
+                                //       child: Text(
+                                //         '${TextConstant.more.getString(context)} >',
+                                //         style:
+                                //             const TextStyle(color: Colors.grey),
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // const SizedBox(height: 8.0),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                      // SliverToBoxAdapter(
-                      //   child: Container(
-                      //     transform: Matrix4.translationValues(
-                      //         0.0, -_extraHeight, 0.0),
-                      //     child:
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
-                  );
-                });
+                      ],
+                    );
+                  }),
+                );
               }),
         ),
       );

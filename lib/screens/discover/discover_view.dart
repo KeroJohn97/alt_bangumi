@@ -4,16 +4,18 @@ import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/providers/discover_view_provider.dart';
 import 'package:alt_bangumi/screens/ranking/ranking_screen.dart';
 import 'package:alt_bangumi/screens/search/search_screen.dart';
+import 'package:alt_bangumi/screens/settings/settings_screen.dart';
 import 'package:alt_bangumi/widgets/discover/home_subject_widget.dart';
 import 'package:alt_bangumi/constants/enum_constant.dart';
-import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/screens/calendar/calendar_screen.dart';
 import 'package:alt_bangumi/widgets/discover/banner_widget.dart';
-import 'package:alt_bangumi/widgets/discover/icon_button.dart';
+import 'package:alt_bangumi/widgets/discover/custom_icon_button.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../tag/tags_screen.dart';
 
 class DiscoverView extends ConsumerStatefulWidget {
   const DiscoverView({super.key});
@@ -77,8 +79,7 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
         // TODO: Handle this case.
         break;
       case NavigationEnum.tag:
-        // TODO: Handle this case.
-        break;
+        return TagsScreen.route;
       case NavigationEnum.ongoing:
         // TODO: Handle this case.
         break;
@@ -126,6 +127,8 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
       case NavigationEnum.clipboard:
         // TODO: Handle this case.
         break;
+      case NavigationEnum.settings:
+        return SettingsScreen.route;
       default:
         return '';
     }
@@ -180,6 +183,8 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
         return Icons.macro_off_outlined;
       case NavigationEnum.clipboard:
         return Icons.circle_sharp;
+      case NavigationEnum.settings:
+        return Icons.settings_outlined;
     }
   }
 
@@ -192,7 +197,8 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
             NavigationEnum.search,
             NavigationEnum.ranking,
             NavigationEnum.tag,
-            NavigationEnum.catalog,
+            // NavigationEnum.catalog,
+            NavigationEnum.settings,
           ].contains(element),
         )
         .toList();
@@ -205,20 +211,20 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
             const SizedBox(height: kToolbarHeight),
             const BannerWidget(),
             SizedBox(
-              width: 100.w,
+              height: kToolbarHeight + 24.0,
               child: GridView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
+                // shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 5,
-                  childAspectRatio: 0.8,
                 ),
                 itemCount: list.length,
                 itemBuilder: (BuildContext context, int index) {
                   return CustomIconButton(
                     callback: () => _navigationCallback(list[index]),
-                    labelText: list[index].displayName(context),
                     iconData: _setIconData(list[index]),
+                    navigationEnum: list[index],
                   );
                 },
               ),
@@ -230,7 +236,7 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
                     ScreenSubjectOption.book,
                     ScreenSubjectOption.game,
                     ScreenSubjectOption.music,
-                    ScreenSubjectOption.real,
+                    ScreenSubjectOption.film,
                   ].contains(element),
                 )
                 .map(
@@ -241,9 +247,9 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
                   ),
                 )
                 .toList(),
-            const SizedBox(height: 10.0),
-            const SizedBox(height: 10.0),
-            const SizedBox(height: 10.0),
+            // const SizedBox(height: 10.0),
+            // const SizedBox(height: 10.0),
+            // const SizedBox(height: 10.0),
           ]),
         ),
       ),

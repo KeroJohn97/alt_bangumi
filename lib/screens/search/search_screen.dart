@@ -3,7 +3,9 @@ import 'dart:convert';
 
 import 'package:alt_bangumi/constants/color_constant.dart';
 import 'package:alt_bangumi/constants/enum_constant.dart';
+import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/constants/text_constant.dart';
+import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/debouncer_helper.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
@@ -11,6 +13,9 @@ import 'package:alt_bangumi/helpers/storage_helper.dart';
 import 'package:alt_bangumi/helpers/substring_helper.dart';
 import 'package:alt_bangumi/models/search_model/search_model.dart';
 import 'package:alt_bangumi/providers/search_screen_provider.dart';
+import 'package:alt_bangumi/screens/ranking/widgets/ranking_loading_widget.dart';
+import 'package:alt_bangumi/screens/subject_detail_screen.dart';
+import 'package:alt_bangumi/widgets/custom_error_widget.dart';
 import 'package:alt_bangumi/widgets/discover/search/search_list_card.dart';
 import 'package:alt_bangumi/widgets/custom_empty_widget.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
@@ -18,6 +23,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../widgets/discover/search/possible_match_list.dart';
 
@@ -33,6 +39,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   late final FocusNode _searchFocusNode;
   late final TextEditingController _searchController;
   late final ScrollController _scrollController;
+  final _inputBorder = OutlineInputBorder(
+    borderRadius: const BorderRadius.only(
+      topRight: Radius.circular(100),
+      bottomRight: Radius.circular(100),
+    ),
+    borderSide: BorderSide(
+      color: Colors.black.withOpacity(0.2),
+      width: 0.5,
+    ),
+  );
 
   @override
   void initState() {
@@ -91,46 +107,48 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         _saveStorageHistory(keyword);
         final apiResult = await notifier.searchKeyword(keyword);
         if (apiResult == null) return;
-        _saveStorageResult(searchModel: apiResult, keyword: keyword);
+        _saveStorageResult(
+          subjectOption: ref.read(searchScreenProvider).subjectOption,
+          searchModel: apiResult,
+          keyword: keyword,
+        );
       } else {
         final searchResult = await _getStorageResult(keyword);
         if (searchResult != null) {
           notifier.searchStorage(searchResult: searchResult);
         } else {
-          final List<String> possibleList = [];
+          final Map<String, dynamic> possibleList = {};
           switch (ref.read(searchScreenProvider).subjectOption) {
+            case ScreenSubjectOption.entry:
+              final aliasMap = await SubstringHelper.instance().getAliasList();
+              possibleList.addAll(aliasMap);
+              break;
             case ScreenSubjectOption.anime:
-              possibleList
-                  .addAll(await SubstringHelper.instance().getAnimeList());
+              final animeMap = await SubstringHelper.instance().getAnimeList();
+              possibleList.addAll(animeMap);
               break;
             case ScreenSubjectOption.book:
-              possibleList
-                  .addAll(await SubstringHelper.instance().getBookList());
+              final bookMap = await SubstringHelper.instance().getBookList();
+              possibleList.addAll(bookMap);
               break;
             case ScreenSubjectOption.game:
-              possibleList
-                  .addAll(await SubstringHelper.instance().getGameList());
-              break;
-            case ScreenSubjectOption.user:
+              final gameMap = await SubstringHelper.instance().getGameList();
+              possibleList.addAll(gameMap);
               break;
             default:
-              possibleList
-                  .addAll(await SubstringHelper.instance().getAnimeList());
               break;
           }
-          final possibleMatch = possibleList
-              .where((element) =>
-                  element.toLowerCase().contains(keyword.toLowerCase()))
-              .toList();
-          notifier.possibleMatch(possibleMatch);
-          // TODO show possible matched results
+
+          notifier.possibleMatch(possibleList);
+          if (possibleList.isEmpty) _search(onSubmitted: true);
         }
       }
     });
   }
 
   Future<ScreenSubjectOption?> _getStorageSubjectOption() async {
-    final result = await StorageHelper.read(StorageHelperOption.subjectOption);
+    final result = await StorageHelper.read(
+        StorageHelperOption.defaultSearchSubjectOption);
     if (result == null) return null;
     final subjectOption = jsonDecode(result);
     return ScreenSubjectOption.values
@@ -139,7 +157,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   void _saveStorageSubjectOption(ScreenSubjectOption subjectOption) {
     StorageHelper.write(
-      option: StorageHelperOption.subjectOption,
+      option: StorageHelperOption.defaultSearchSubjectOption,
       value: jsonEncode(subjectOption.toJson()),
     );
   }
@@ -159,29 +177,36 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 
-  // TODO search screen: save with category option
   void _saveStorageResult({
+    required ScreenSubjectOption subjectOption,
     required SearchModel searchModel,
     required String keyword,
   }) async {
     final keywordSearchModel = searchModel.copyWith(keyword: keyword);
-    final result = await StorageHelper.read(StorageHelperOption.searchResult);
-    final List<dynamic> list = result == null ? [] : jsonDecode(result);
-    list
-      ..remove(keywordSearchModel.toMap())
-      ..add(keywordSearchModel.toMap());
+    final result =
+        await StorageHelper.read(StorageHelperOption.searchResultHistory);
+    final Map<String, dynamic> map = result == null ? {} : jsonDecode(result);
+    Map<String, dynamic>? subjectMap = map[subjectOption.toJson()];
+    if (subjectMap == null) {
+      subjectMap = {keyword: keywordSearchModel.toJson()};
+    } else {
+      subjectMap[keyword] = keywordSearchModel.toJson();
+    }
+    map[subjectOption.toJson()] = subjectMap;
     StorageHelper.write(
-      option: StorageHelperOption.searchResult,
-      value: jsonEncode(list),
+      option: StorageHelperOption.searchResultHistory,
+      value: jsonEncode(map),
     );
   }
 
-  // TODO search screen: save with category option
   Future<SearchModel?> _getStorageResult(String keyword) async {
-    final result = await StorageHelper.read(StorageHelperOption.searchResult);
-    final List<dynamic> list = result == null ? [] : jsonDecode(result);
-    final storageResult = list.map((e) => SearchModel.fromMap(e)).toList();
-    return storageResult.firstWhereOrNull((e) => e.keyword == keyword);
+    final subjectOption = ref.read(searchScreenProvider).subjectOption;
+    final result =
+        await StorageHelper.read(StorageHelperOption.searchResultHistory);
+    final Map<String, dynamic> map = result == null ? {} : jsonDecode(result);
+    final String? data = map[subjectOption.toJson()]?[keyword];
+    if (data == null) return null;
+    return SearchModel.fromJson(data);
   }
 
   void _removeSearchHistory(int index) async {
@@ -202,8 +227,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     await StorageHelper.delete(StorageHelperOption.searchHistory);
   }
 
-  void _openInNew(int index) {
-    // TODO
+  void _openInNew(MapEntry<String, dynamic>? map) {
+    if (map == null) return;
+    context.push(
+      SubjectDetailScreen.route,
+      extra: {
+        SubjectDetailScreen.subjectIdKey: map.value,
+      },
+    );
   }
 
   @override
@@ -223,7 +254,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 value: 0,
                 child: Text(TextConstant.viewInBrowser.getString(context)),
                 onTap: () {
-                  // TODO launchUrl
+                  final state = ref.read(searchScreenProvider);
+                  final keyword = _searchController.text.trim();
+                  final length = state.searchResult?.searchInfoList?.length;
+                  final page = (length ?? 0) ~/ 25;
+                  final url =
+                      '${HttpConstant.host}/subject_search/$keyword?cat=${state.subjectOption.value}&page=${page + 1}&legacy=0';
+                  CommonHelper.showInBrowser(context: context, url: url);
                 },
               ),
             ];
@@ -267,6 +304,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           icon: const SizedBox.shrink(),
                           value: state.subjectOption,
                           items: ScreenSubjectOption.values
+                              .where((element) => [
+                                    ScreenSubjectOption.anime,
+                                    ScreenSubjectOption.book,
+                                    ScreenSubjectOption.entry,
+                                    ScreenSubjectOption.game,
+                                    ScreenSubjectOption.music,
+                                    ScreenSubjectOption.film,
+                                  ].contains(element))
                               .map((e) => DropdownMenuItem(
                                     value: e,
                                     alignment: AlignmentDirectional.center,
@@ -294,7 +339,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     ),
                     SizedBox(
                       height: 36.0,
-                      width: 25.w,
+                      width: 25.w + 80.0,
                       child: TextField(
                         controller: _searchController,
                         focusNode: _searchFocusNode,
@@ -302,25 +347,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.only(
                               bottom: 12.0, left: 8.0, right: 8.0),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero,
-                            borderSide: BorderSide(
-                              color: Colors.black.withOpacity(0.2),
-                              width: 0.5,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.zero,
-                            borderSide: BorderSide(
-                              color: Colors.black.withOpacity(0.2),
-                              width: 0.5,
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.zero,
-                            borderSide:
-                                BorderSide(color: ColorConstant.themeColor),
-                          ),
+                          border: _inputBorder,
+                          enabledBorder: _inputBorder,
+                          focusedBorder: _inputBorder,
                           focusColor: ColorConstant.themeColor,
                           hoverColor: ColorConstant.themeColor,
                           hintText:
@@ -338,49 +367,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         ),
                         onChanged: (value) => _search(),
                         onSubmitted: (value) => _search(onSubmitted: true),
-                      ),
-                    ),
-                    Container(
-                      height: 36.0,
-                      width: 80.0,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        border:
-                            Border.all(color: Colors.grey[400]!, width: 0.5),
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(100),
-                          bottomRight: Radius.circular(100),
-                        ),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                          alignment: Alignment.center,
-                          icon: const SizedBox.shrink(),
-                          value: state.filterOption,
-                          items: SearchScreenFilterOption.values
-                              .map((e) => DropdownMenuItem(
-                                    value: e,
-                                    alignment: AlignmentDirectional.center,
-                                    child: Text(
-                                      e.name
-                                          .capitalizeFirst()
-                                          .getString(context),
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.grey[800],
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            if (value == null) return;
-                            notifier.selectFilter(value);
-                            _search(onSubmitted: true);
-                          },
-                        ),
                       ),
                     ),
                     const SizedBox(width: 8.0),
@@ -425,12 +411,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         return SliverToBoxAdapter(
                           child: Builder(
                             builder: (context) {
-                              // TODO remove this
                               if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                return Text(
-                                  TextConstant.noHistory.getString(context),
-                                  textAlign: TextAlign.center,
-                                );
+                                return const SizedBox.shrink();
                               }
                               final List<dynamic> searchHistory =
                                   snapshot.data!;
@@ -472,35 +454,35 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           ),
                         );
                       case SearchScreenStateEnum.possible:
-                        if (state.possibleMatch?.isNotEmpty ?? false) {
+                        final keyword = _searchController.text.trim();
+                        final possibleMatchList = state.possibleMatch?.entries
+                            .where((element) => element.key
+                                .toLowerCase()
+                                .contains(keyword.toLowerCase()))
+                            .toList();
+                        if (possibleMatchList != null) {
                           return PossibleMatchList(
                             keyword: _searchController.text.trim(),
-                            possibleMatch: state.possibleMatch!,
+                            possibleMatchList: possibleMatchList,
                             callback: (int index) {
                               _searchController.text =
-                                  state.possibleMatch![index];
+                                  possibleMatchList[index].key;
                               _searchFocusNode.unfocus();
                               _search(onSubmitted: true);
                             },
-                            openInNew: _openInNew,
+                            openInNew: (int index) =>
+                                _openInNew(possibleMatchList[index]),
                           );
                         }
                         break;
                       case SearchScreenStateEnum.loading:
-                        return SliverToBoxAdapter(
-                          child: Container(
-                            height: 50.h,
-                            alignment: Alignment.center,
-                            child: const CircularProgressIndicator.adaptive(),
-                          ),
+                        return const SliverToBoxAdapter(
+                          child: RankingLoadingWidget(horizontalPadding: 0.0),
                         );
                       case SearchScreenStateEnum.success:
-                        if (state.searchResult == null) {
-                          return const SliverToBoxAdapter(
-                              child: Text('Result is null'));
-                        }
-                        if (state.searchResult!.searchInfoList?.isEmpty ??
-                            true) {
+                        if (state.searchResult == null ||
+                            (state.searchResult!.searchInfoList?.isEmpty ??
+                                true)) {
                           return const SliverToBoxAdapter(
                             child: CustomEmptyWidget(),
                           );
@@ -519,8 +501,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           ),
                         );
                       case SearchScreenStateEnum.failure:
-                        // TODO: Handle this case.
-                        break;
+                        return const SliverToBoxAdapter(
+                            child: CustomErrorWidget());
                     }
                     return const SliverToBoxAdapter();
                   }),
