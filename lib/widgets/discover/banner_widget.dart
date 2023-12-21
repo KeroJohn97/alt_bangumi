@@ -16,12 +16,13 @@ class BannerWidget extends StatefulWidget {
 }
 
 class _BannerWidgetState extends State<BannerWidget> {
-  final _height = 150.0;
+  double? _height;
   double? _width;
 
   @override
   void initState() {
     super.initState();
+    _height = 30.h;
     _width = 100.w;
   }
 
