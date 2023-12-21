@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/constants/text_constant.dart';
+import 'package:alt_bangumi/screens/home/widgets/connectivity_builder.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:alt_bangumi/constants/color_constant.dart';
@@ -100,15 +101,17 @@ class _MyAppState extends State<MyApp> {
       ),
       builder: (context, child) {
         SizingHelper.getSize(context);
-        return GestureDetector(
-          onTap: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (currentFocus.hasPrimaryFocus) return;
-            currentFocus.unfocus();
-            currentFocus.focusedChild?.unfocus();
-          },
-          child: child!,
+        return ConnectivityBuilder(
+          child: GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (currentFocus.hasPrimaryFocus) return;
+              currentFocus.unfocus();
+              currentFocus.focusedChild?.unfocus();
+            },
+            child: child!,
+          ),
         );
       },
       routerConfig: routerHelper,
