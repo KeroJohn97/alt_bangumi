@@ -58,23 +58,19 @@ class SubstringHelper {
     return _game;
   }
 
-  Future<List<String>> getAliasList() async {
-    final result = await _getAlias();
-    return result.entries.map((e) => e.key).toList();
+  Future<Map<String, dynamic>> getAliasList() async {
+    return await _getAlias();
   }
 
-  Future<List<String>> getAnimeList() async {
-    final result = await _getAnime();
-    return result.entries.map((e) => e.key).toList();
+  Future<Map<String, dynamic>> getAnimeList() async {
+    return await _getAnime();
   }
 
-  Future<List<String>> getBookList() async {
-    final result = await _getBook();
-    return result.entries.map((e) => e.key).toList();
+  Future<Map<String, dynamic>> getBookList() async {
+    return await _getBook();
   }
 
-  Future<List<String>> getGameList() async {
-    final result = await _getGame();
-    return result.entries.map((e) => e.key).toList();
+  Future<Map<String, dynamic>> getGameList() async {
+    return await _getGame();
   }
 }

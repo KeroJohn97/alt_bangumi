@@ -54,4 +54,11 @@ extension DoubleExtension on double {
     final multiplier = math.pow(10, decimalPlaces.toDouble());
     return (this * multiplier).round() / multiplier;
   }
+
+  String showInUnit() {
+    if (this >= 1000) {
+      return '${(this / 1000 * 10).roundToDouble() / 10}k';
+    }
+    return toStringAsFixed(0);
+  }
 }

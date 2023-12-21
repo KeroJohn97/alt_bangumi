@@ -3,13 +3,19 @@ import 'package:flutter/services.dart';
 
 class SecretHelper {
   final String authorization;
+  final String rapidAPIKey;
+  final String rapidAPIHost;
   SecretHelper({
     required this.authorization,
+    required this.rapidAPIKey,
+    required this.rapidAPIHost,
   });
 
   factory SecretHelper.fromJson(Map<String, dynamic> jsonMap) {
     return SecretHelper(
       authorization: jsonMap['Authorization'],
+      rapidAPIKey: jsonMap['X-RapidAPI-Key'],
+      rapidAPIHost: jsonMap['X-RapidAPI-Host'],
     );
   }
 }

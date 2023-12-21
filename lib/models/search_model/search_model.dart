@@ -44,7 +44,7 @@ class SearchModel extends Equatable {
   }) {
     return SearchModel(
       results: results ?? this.results,
-      searchInfoList: searchInfoList ?? searchInfoList,
+      searchInfoList: searchInfoList ?? this.searchInfoList,
       keyword: keyword ?? this.keyword,
     );
   }

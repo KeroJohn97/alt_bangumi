@@ -27,6 +27,7 @@ class SubjectModel extends Equatable {
   final bool? nsfw;
   final int? type;
   final String? follow;
+  final String? apiDate;
 
   const SubjectModel({
     this.date,
@@ -47,6 +48,7 @@ class SubjectModel extends Equatable {
     this.nsfw,
     this.type,
     this.follow,
+    this.apiDate,
   });
 
   factory SubjectModel.fromMap(Map<String, dynamic> data) => SubjectModel(
@@ -79,6 +81,7 @@ class SubjectModel extends Equatable {
         nsfw: data['nsfw'] as bool?,
         type: data['type'] as int?,
         follow: data['follow'] as String?,
+        apiDate: data['api_date'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
@@ -100,6 +103,7 @@ class SubjectModel extends Equatable {
         'nsfw': nsfw,
         'type': type,
         'follow': follow,
+        'api_date': apiDate,
       };
 
   /// `dart:convert`
@@ -133,6 +137,7 @@ class SubjectModel extends Equatable {
     bool? nsfw,
     int? type,
     String? follow,
+    String? apiDate,
   }) {
     return SubjectModel(
       date: date ?? this.date,
@@ -153,6 +158,7 @@ class SubjectModel extends Equatable {
       nsfw: nsfw ?? this.nsfw,
       type: type ?? this.type,
       follow: follow ?? this.follow,
+      apiDate: apiDate ?? this.apiDate,
     );
   }
 
@@ -180,6 +186,7 @@ class SubjectModel extends Equatable {
       nsfw,
       type,
       follow,
+      apiDate,
     ];
   }
 }

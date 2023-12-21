@@ -3,19 +3,23 @@ import 'dart:developer';
 
 import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/helpers/secret_helper.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class HttpHelper {
+  HttpHelper._();
+
   static Future<dynamic> get(String endpoint,
       {Map<String, String>? headers}) async {
     final accessToken = (await secretHelper).authorization;
     headers?.addEntries({
       'Authorization': accessToken,
     } as Iterable<MapEntry<String, String>>);
+    headers ??= {'Authorization': accessToken};
     final url = Uri.parse(endpoint);
-    log('GET: $url');
+    log('GET ${endpoint.hashCode}: $url');
     final response = await http.get(url, headers: headers);
-    log('GET RESPONSE: ${response.body}');
+    log('GET RESPONSE ${endpoint.hashCode}: ${response.body}');
     try {
       final decodedJson = jsonDecode(response.body);
       return decodedJson;
@@ -31,8 +35,40 @@ class HttpHelper {
       'Authorization': accessToken,
     } as Iterable<MapEntry<String, String>>);
     final url = Uri.parse(endpoint);
-    log('POST: $url');
+    log('POST ${endpoint.hashCode}: $url');
     final response = await http.post(url, headers: headers, body: data);
+    log('POST RESPONSE ${endpoint.hashCode}: ${response.body}');
+    try {
+      final decodedJson = jsonDecode(response.body);
+      return decodedJson;
+    } on FormatException {
+      return response.body;
+    }
+  }
+
+  static Future<dynamic> translate({
+    required Locale locale,
+    required String body,
+  }) async {
+    final secret = await secretHelper;
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'X-RapidAPI-Key': secret.rapidAPIKey,
+      'X-RapidAPI-Host': secret.rapidAPIHost,
+    };
+    final url = Uri.parse(
+      'https://microsoft-translator-text.p.rapidapi.com/translate'
+      '?api-version=3.0'
+      '&to%5B0%5D=${locale.languageCode}'
+      '&profanityAction=NoAction'
+      '&textType=plain',
+    );
+    log('url: $url, headers: $headers, body: $body');
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
     log('POST RESPONSE: ${response.body}');
     try {
       final decodedJson = jsonDecode(response.body);

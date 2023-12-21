@@ -6,7 +6,10 @@ class TagModel extends Equatable {
   final String? name;
   final int? count;
 
-  const TagModel({this.name, this.count});
+  const TagModel({
+    this.name,
+    this.count,
+  });
 
   factory TagModel.fromMap(Map<String, dynamic> data) => TagModel(
         name: data['name'] as String?,

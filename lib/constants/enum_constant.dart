@@ -27,6 +27,32 @@ extension HomeIndexEnumExtension on HomeIndexEnum {
   }
 }
 
+enum LanguageEnum { english, simplifiedChinese, traditionalChinese }
+
+extension LanguageEnumExtension on LanguageEnum {
+  String getString(BuildContext context) {
+    switch (this) {
+      case LanguageEnum.english:
+        return TextConstant.english.getString(context);
+      case LanguageEnum.simplifiedChinese:
+        return TextConstant.simplifiedChinese.getString(context);
+      case LanguageEnum.traditionalChinese:
+        return TextConstant.traditionalChinese.getString(context);
+    }
+  }
+
+  String languageCode() {
+    switch (this) {
+      case LanguageEnum.english:
+        return 'en';
+      case LanguageEnum.simplifiedChinese:
+        return 'zh-cn';
+      case LanguageEnum.traditionalChinese:
+        return 'zh-tw';
+    }
+  }
+}
+
 enum NavigationEnum {
   ranking,
   searchEntry,
@@ -51,10 +77,11 @@ enum NavigationEnum {
   myCharacter,
   myCatalogue,
   clipboard,
+  settings,
 }
 
 extension NavigationEnumExtension on NavigationEnum {
-  String displayName(BuildContext context) {
+  String getString(BuildContext context) {
     switch (this) {
       case NavigationEnum.ranking:
         return TextConstant.ranking.getString(context);
@@ -102,6 +129,8 @@ extension NavigationEnumExtension on NavigationEnum {
         return TextConstant.myCatalogue.getString(context);
       case NavigationEnum.clipboard:
         return TextConstant.clipboard.getString(context);
+      case NavigationEnum.settings:
+        return TextConstant.settings.getString(context);
     }
   }
 }
@@ -128,17 +157,18 @@ enum ScreenLayoutOption {
 }
 
 enum ScreenSubjectOption {
-  entry(5),
-  anime(2),
-  book(1),
-  music(3),
-  game(4),
-  real(6),
-  character(7),
-  user(8);
+  entry(value: 5, api: 'entry'),
+  anime(value: 2, api: 'anime'),
+  book(value: 1, api: 'book'),
+  music(value: 3, api: 'music'),
+  game(value: 4, api: 'game'),
+  film(value: 6, api: 'real'),
+  character(value: 7, api: 'character'),
+  user(value: 8, api: 'user');
 
   final int value;
-  const ScreenSubjectOption(this.value);
+  final String api;
+  const ScreenSubjectOption({required this.value, required this.api});
 }
 
 extension SubjectOptionExtension on ScreenSubjectOption {
@@ -158,8 +188,8 @@ extension SubjectOptionExtension on ScreenSubjectOption {
         return TextConstant.music.getString(context);
       case ScreenSubjectOption.game:
         return TextConstant.game.getString(context);
-      case ScreenSubjectOption.real:
-        return TextConstant.real.getString(context);
+      case ScreenSubjectOption.film:
+        return TextConstant.film.getString(context);
       case ScreenSubjectOption.character:
         return TextConstant.character.getString(context);
       case ScreenSubjectOption.user:
@@ -180,7 +210,7 @@ extension SubjectOptionExtension on ScreenSubjectOption {
       case ScreenSubjectOption.book:
         if (bookTypeOption == null) return null;
         return '/${bookTypeOption.getUrl()}';
-      case ScreenSubjectOption.real:
+      case ScreenSubjectOption.film:
         if (realTypeOption == null) return null;
         return '/${realTypeOption.getUrl()}';
       case ScreenSubjectOption.game:
@@ -205,7 +235,7 @@ extension SubjectOptionExtension on ScreenSubjectOption {
       case ScreenSubjectOption.book:
         if (bookTypeOption == null) return null;
         return bookTypeOption.getString(context);
-      case ScreenSubjectOption.real:
+      case ScreenSubjectOption.film:
         if (realTypeOption == null) return null;
         return realTypeOption.getString(context);
       case ScreenSubjectOption.game:
@@ -267,6 +297,21 @@ extension CareerGroupExtension on CareerGroup {
 enum ImageSizeGroup { small, common, medium, large, grid }
 
 enum SortOption { collects, title, date, rank }
+
+extension SortOptionExtension on SortOption {
+  String getString(BuildContext context) {
+    switch (this) {
+      case SortOption.collects:
+        return TextConstant.numberOfAnnotations.getString(context);
+      case SortOption.title:
+        return TextConstant.name.getString(context);
+      case SortOption.date:
+        return TextConstant.date.getString(context);
+      case SortOption.rank:
+        return TextConstant.ranking.getString(context);
+    }
+  }
+}
 
 enum AnimeTypeOption { all, tv, web, ova, movie, others }
 

@@ -41,16 +41,16 @@ class CountModel extends Equatable {
       );
 
   Map<String, dynamic> toMap() => {
-        '1': 1,
-        '2': 2,
-        '3': 3,
-        '4': 4,
-        '5': 5,
-        '6': 6,
-        '7': 7,
-        '8': 8,
-        '9': 9,
-        '10': 10,
+        '1': rate1,
+        '2': rate2,
+        '3': rate3,
+        '4': rate4,
+        '5': rate5,
+        '6': rate6,
+        '7': rate7,
+        '8': rate8,
+        '9': rate9,
+        '10': rate10,
       };
 
   /// `dart:convert`

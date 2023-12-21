@@ -6,14 +6,14 @@ import 'anime.dart';
 import 'book.dart';
 import 'game.dart';
 import 'music.dart';
-import 'real.dart';
+import 'film.dart';
 
 class HomeDiscoveryModel extends Equatable {
   final List<Anime>? anime;
   final List<Game>? game;
   final List<Book>? book;
   final List<Music>? music;
-  final List<Real>? real;
+  final List<Film>? film;
   final String? today;
 
   const HomeDiscoveryModel({
@@ -21,7 +21,7 @@ class HomeDiscoveryModel extends Equatable {
     this.game,
     this.book,
     this.music,
-    this.real,
+    this.film,
     this.today,
   });
 
@@ -39,8 +39,8 @@ class HomeDiscoveryModel extends Equatable {
       music: (data['music'] as List<dynamic>?)
           ?.map((e) => Music.fromMap(e as Map<String, dynamic>))
           .toList(),
-      real: (data['real'] as List<dynamic>?)
-          ?.map((e) => Real.fromMap(e as Map<String, dynamic>))
+      film: (data['real'] as List<dynamic>?)
+          ?.map((e) => Film.fromMap(e as Map<String, dynamic>))
           .toList(),
       today: data['today'] as String?,
     );
@@ -51,7 +51,7 @@ class HomeDiscoveryModel extends Equatable {
         'game': game?.map((e) => e.toMap()).toList(),
         'book': book?.map((e) => e.toMap()).toList(),
         'music': music?.map((e) => e.toMap()).toList(),
-        'real': real?.map((e) => e.toMap()).toList(),
+        'real': film?.map((e) => e.toMap()).toList(),
         'today': today,
       };
 
@@ -73,7 +73,7 @@ class HomeDiscoveryModel extends Equatable {
     List<Game>? game,
     List<Book>? book,
     List<Music>? music,
-    List<Real>? real,
+    List<Film>? film,
     String? today,
   }) {
     return HomeDiscoveryModel(
@@ -81,7 +81,7 @@ class HomeDiscoveryModel extends Equatable {
       game: game ?? this.game,
       book: book ?? this.book,
       music: music ?? this.music,
-      real: real ?? this.real,
+      film: film ?? this.film,
       today: today ?? this.today,
     );
   }
@@ -90,5 +90,5 @@ class HomeDiscoveryModel extends Equatable {
   bool get stringify => true;
 
   @override
-  List<Object?> get props => [anime, game, book, music, real, today];
+  List<Object?> get props => [anime, game, book, music, film, today];
 }

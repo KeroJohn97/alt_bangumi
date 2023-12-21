@@ -48,7 +48,7 @@ class RelationModel extends Equatable {
         'name': name,
         'name_cn': nameCn,
         'relation': relation,
-        'actors': actors,
+        'actors': actors?.map((e) => e.toMap()).toList(),
         'career': career,
         'type': type,
         'id': id,
