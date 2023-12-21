@@ -8,7 +8,7 @@
 PRODUCT_NAME = flutter_bangumi
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.flutterBangumi
+PRODUCT_BUNDLE_IDENTIFIER = com.kerojohn.flutterBangumi
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.kerojohn. All rights reserved.
