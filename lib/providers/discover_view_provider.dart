@@ -20,7 +20,7 @@ class DiscoverViewState {
   final List<SubjectModel>? rankedBook;
   final List<SubjectModel>? rankedMusic;
   final List<SubjectModel>? rankedGame;
-  final List<SubjectModel>? rankedReal;
+  final List<SubjectModel>? rankedFilm;
 
   DiscoverViewState({
     required this.stateEnum,
@@ -29,7 +29,7 @@ class DiscoverViewState {
     required this.rankedBook,
     required this.rankedMusic,
     required this.rankedGame,
-    required this.rankedReal,
+    required this.rankedFilm,
   });
 
   DiscoverViewState copyWith({
@@ -39,7 +39,7 @@ class DiscoverViewState {
     List<SubjectModel>? rankedBook,
     List<SubjectModel>? rankedMusic,
     List<SubjectModel>? rankedGame,
-    List<SubjectModel>? rankedReal,
+    List<SubjectModel>? rankedFilm,
   }) {
     return DiscoverViewState(
       stateEnum: stateEnum ?? this.stateEnum,
@@ -48,7 +48,7 @@ class DiscoverViewState {
       rankedBook: rankedBook ?? this.rankedBook,
       rankedGame: rankedGame ?? this.rankedGame,
       rankedMusic: rankedMusic ?? this.rankedMusic,
-      rankedReal: rankedReal ?? this.rankedReal,
+      rankedFilm: rankedFilm ?? this.rankedFilm,
     );
   }
 }
@@ -63,7 +63,7 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
             rankedBook: null,
             rankedGame: null,
             rankedMusic: null,
-            rankedReal: null,
+            rankedFilm: null,
           ),
         );
 
@@ -71,23 +71,25 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
     final storage = await StorageHelper.read(StorageHelperOption.homeAnimeList);
     if (storage == null) return loadChannel();
     final data = jsonDecode(storage);
-    final List<dynamic> tempAnime = data[ScreenSubjectOption.anime.toJson()];
-    final rankedAnime = tempAnime.map((e) => SubjectModel.fromJson(e)).toList();
-    final List<dynamic> tempBook = data[ScreenSubjectOption.book.toJson()];
-    final rankedBook = tempBook.map((e) => SubjectModel.fromJson(e)).toList();
-    final List<dynamic> tempGame = data[ScreenSubjectOption.game.toJson()];
-    final rankedGame = tempGame.map((e) => SubjectModel.fromJson(e)).toList();
-    final List<dynamic> tempMusic = data[ScreenSubjectOption.music.toJson()];
-    final rankedMusic = tempMusic.map((e) => SubjectModel.fromJson(e)).toList();
-    final List<dynamic> tempReal = data[ScreenSubjectOption.real.toJson()];
-    final rankedReal = tempReal.map((e) => SubjectModel.fromJson(e)).toList();
+    final List<dynamic>? tempAnime = data[ScreenSubjectOption.anime.toJson()];
+    final rankedAnime =
+        tempAnime?.map((e) => SubjectModel.fromJson(e)).toList();
+    final List<dynamic>? tempBook = data[ScreenSubjectOption.book.toJson()];
+    final rankedBook = tempBook?.map((e) => SubjectModel.fromJson(e)).toList();
+    final List<dynamic>? tempGame = data[ScreenSubjectOption.game.toJson()];
+    final rankedGame = tempGame?.map((e) => SubjectModel.fromJson(e)).toList();
+    final List<dynamic>? tempMusic = data[ScreenSubjectOption.music.toJson()];
+    final rankedMusic =
+        tempMusic?.map((e) => SubjectModel.fromJson(e)).toList();
+    final List<dynamic>? tempFilm = data[ScreenSubjectOption.film.toJson()];
+    final rankedFilm = tempFilm?.map((e) => SubjectModel.fromJson(e)).toList();
     state = state.copyWith(
       stateEnum: DiscoverViewStateEnum.success,
       rankedAnime: rankedAnime,
       rankedBook: rankedBook,
       rankedGame: rankedGame,
       rankedMusic: rankedMusic,
-      rankedReal: rankedReal,
+      rankedFilm: rankedFilm,
     );
     // loadChannel();
   }
@@ -97,7 +99,7 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
     final List<SubjectModel> tempBook = [];
     final List<SubjectModel> tempMusic = [];
     final List<SubjectModel> tempGame = [];
-    final List<SubjectModel> tempReal = [];
+    final List<SubjectModel> tempFilm = [];
     final Map<ScreenSubjectOption, ChannelModel> tempChannel = {};
     for (var element in ScreenSubjectOption.values) {
       final valid = [
@@ -105,7 +107,7 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
         ScreenSubjectOption.book,
         ScreenSubjectOption.game,
         ScreenSubjectOption.music,
-        ScreenSubjectOption.real,
+        ScreenSubjectOption.film,
       ].contains(element);
       if (!valid) continue;
       final channel = await BadRepository.fetchChannel(element);
@@ -118,6 +120,11 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
                   await GlobalRepository.getSubject('${element.id}');
               tempAnime.add(subject.copyWith(follow: element.follow));
             }
+            tempAnime.removeWhere((element) => element.id == null);
+            state = state.copyWith(
+              stateEnum: DiscoverViewStateEnum.success,
+              rankedAnime: tempAnime,
+            );
             break;
           case ScreenSubjectOption.book:
             for (var element in channel.rank!) {
@@ -125,6 +132,11 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
                   await GlobalRepository.getSubject('${element.id}');
               tempBook.add(subject.copyWith(follow: element.follow));
             }
+            tempBook.removeWhere((element) => element.id == null);
+            state = state.copyWith(
+              stateEnum: DiscoverViewStateEnum.success,
+              rankedBook: tempBook,
+            );
             break;
           case ScreenSubjectOption.music:
             for (var element in channel.rank!) {
@@ -132,6 +144,11 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
                   await GlobalRepository.getSubject('${element.id}');
               tempMusic.add(subject.copyWith(follow: element.follow));
             }
+            tempMusic.removeWhere((element) => element.id == null);
+            state = state.copyWith(
+              stateEnum: DiscoverViewStateEnum.success,
+              rankedMusic: tempMusic,
+            );
             break;
           case ScreenSubjectOption.game:
             for (var element in channel.rank!) {
@@ -139,13 +156,23 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
                   await GlobalRepository.getSubject('${element.id}');
               tempGame.add(subject.copyWith(follow: element.follow));
             }
+            tempGame.removeWhere((element) => element.id == null);
+            state = state.copyWith(
+              stateEnum: DiscoverViewStateEnum.success,
+              rankedGame: tempGame,
+            );
             break;
-          case ScreenSubjectOption.real:
+          case ScreenSubjectOption.film:
             for (var element in channel.rank!) {
               final subject =
                   await GlobalRepository.getSubject('${element.id}');
-              tempReal.add(subject.copyWith(follow: element.follow));
+              tempFilm.add(subject.copyWith(follow: element.follow));
             }
+            tempFilm.removeWhere((element) => element.id == null);
+            state = state.copyWith(
+              stateEnum: DiscoverViewStateEnum.success,
+              rankedFilm: tempFilm,
+            );
             break;
           default:
             break;
@@ -153,19 +180,13 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
       }
     }
 
-    tempAnime.removeWhere((element) => element.id == null);
-    tempBook.removeWhere((element) => element.id == null);
-    tempGame.removeWhere((element) => element.id == null);
-    tempMusic.removeWhere((element) => element.id == null);
-    tempReal.removeWhere((element) => element.id == null);
-
     final sameAnime = state.rankedAnime == tempAnime;
     final sameBook = state.rankedBook == tempBook;
     final sameGame = state.rankedGame == tempGame;
     final sameMusic = state.rankedMusic == tempMusic;
-    final sameReal = state.rankedReal == tempReal;
+    final sameFilm = state.rankedFilm == tempFilm;
 
-    if (sameAnime && sameBook && sameGame && sameMusic && sameReal) return;
+    if (sameAnime && sameBook && sameGame && sameMusic && sameFilm) return;
 
     StorageHelper.write(
       option: StorageHelperOption.homeAnimeList,
@@ -179,8 +200,8 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
               tempGame.map((e) => e.toJson()).toList(),
           ScreenSubjectOption.music.toJson():
               tempMusic.map((e) => e.toJson()).toList(),
-          ScreenSubjectOption.real.toJson():
-              tempReal.map((e) => e.toJson()).toList(),
+          ScreenSubjectOption.film.toJson():
+              tempFilm.map((e) => e.toJson()).toList(),
         },
       ),
     );
@@ -192,7 +213,7 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
       rankedBook: tempBook,
       rankedGame: tempGame,
       rankedMusic: tempMusic,
-      rankedReal: tempReal,
+      rankedFilm: tempFilm,
     );
   }
 }

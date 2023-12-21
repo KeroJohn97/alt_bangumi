@@ -5,110 +5,87 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/browser_rank_model.dart';
 
-enum RankingScreenStateEnum { initial, loading, failure, success }
+enum SingleTagScreenStateEnum { initial, loading, failure, success }
 
-class RankingScreenState {
-  final RankingScreenStateEnum stateEnum;
+class SingleTagScreenState {
+  final SingleTagScreenStateEnum stateEnum;
   final SortOption sortOption;
   final ScreenSubjectOption subjectOption;
   final int page;
   final int? year;
   final int? month;
-  final AnimeTypeOption? animeTypeOption;
-  final BookTypeOption? bookTypeOption;
-  final RealTypeOption? filmTypeOption;
-  final GameTypeOption? gameTypeOption;
   final List<BrowserRankModel>? results;
 
-  RankingScreenState({
+  SingleTagScreenState({
     required this.stateEnum,
     required this.sortOption,
     required this.subjectOption,
     required this.page,
     required this.year,
     required this.month,
-    required this.animeTypeOption,
-    required this.bookTypeOption,
-    required this.filmTypeOption,
-    required this.gameTypeOption,
     required this.results,
   });
 
-  RankingScreenState copyWith({
-    RankingScreenStateEnum? stateEnum,
+  SingleTagScreenState copyWith({
+    SingleTagScreenStateEnum? stateEnum,
     SortOption? sortOption,
     ScreenSubjectOption? subjectOption,
     int? page,
-    AnimeTypeOption? animeTypeOption,
-    BookTypeOption? bookTypeOption,
-    RealTypeOption? filmTypeOption,
-    GameTypeOption? gameTypeOption,
     required int? year,
     required int? month,
     required List<BrowserRankModel>? results,
   }) {
-    return RankingScreenState(
+    return SingleTagScreenState(
       stateEnum: stateEnum ?? this.stateEnum,
       sortOption: sortOption ?? this.sortOption,
       subjectOption: subjectOption ?? this.subjectOption,
       page: page ?? this.page,
       year: year,
       month: month,
-      animeTypeOption: animeTypeOption ?? this.animeTypeOption,
-      bookTypeOption: bookTypeOption ?? this.bookTypeOption,
-      filmTypeOption: filmTypeOption ?? this.filmTypeOption,
-      gameTypeOption: gameTypeOption ?? this.gameTypeOption,
       results: results,
     );
   }
 }
 
-class RankingScreenNotifier extends StateNotifier<RankingScreenState> {
-  RankingScreenNotifier()
+class SingleTagScreenNotifier extends StateNotifier<SingleTagScreenState> {
+  SingleTagScreenNotifier()
       : super(
-          RankingScreenState(
-            stateEnum: RankingScreenStateEnum.initial,
-            sortOption: SortOption.rank,
+          SingleTagScreenState(
+            stateEnum: SingleTagScreenStateEnum.initial,
+            sortOption: SortOption.title,
             subjectOption: ScreenSubjectOption.anime,
             page: 1,
             year: null,
             month: null,
-            animeTypeOption: null,
-            bookTypeOption: null,
-            filmTypeOption: null,
-            gameTypeOption: null,
             results: null,
           ),
         );
 
-  void search() async {
+  void search(String text) async {
     state = state.copyWith(
-      stateEnum: RankingScreenStateEnum.loading,
+      stateEnum: SingleTagScreenStateEnum.loading,
       results: null,
       year: state.year,
       month: state.month,
     );
     try {
-      final results = await BadRepository.fetchRank(
+      final results = await BadRepository.fetchSubjectsByTag(
         subjectOption: state.subjectOption,
         sortOption: state.sortOption,
+        text: text,
+        page: state.page,
         year: state.year,
         month: state.month,
-        animeTypeOption: state.animeTypeOption,
-        bookTypeOption: state.bookTypeOption,
-        realTypeOption: state.filmTypeOption,
-        gameTypeOption: state.gameTypeOption,
-        page: state.page,
       );
       state = state.copyWith(
-        stateEnum: RankingScreenStateEnum.success,
+        stateEnum: SingleTagScreenStateEnum.success,
         results: results,
         year: state.year,
         month: state.month,
       );
     } catch (e) {
       state = state.copyWith(
-        stateEnum: RankingScreenStateEnum.failure,
+        stateEnum: SingleTagScreenStateEnum.failure,
         results: state.results,
         year: state.year,
         month: state.month,
@@ -172,49 +149,9 @@ class RankingScreenNotifier extends StateNotifier<RankingScreenState> {
       page: 1,
     );
   }
-
-  void selectAnimeTypeOption(AnimeTypeOption animeTypeOption) {
-    state = state.copyWith(
-      animeTypeOption: animeTypeOption,
-      results: state.results,
-      year: state.year,
-      month: state.month,
-      page: 1,
-    );
-  }
-
-  void selectBookTypeOption(BookTypeOption bookTypeOption) {
-    state = state.copyWith(
-      bookTypeOption: bookTypeOption,
-      results: state.results,
-      year: state.year,
-      month: state.month,
-      page: 1,
-    );
-  }
-
-  void selectRealTypeOption(RealTypeOption realTypeOption) {
-    state = state.copyWith(
-      filmTypeOption: realTypeOption,
-      results: state.results,
-      year: state.year,
-      month: state.month,
-      page: 1,
-    );
-  }
-
-  void selectGameTypeOption(GameTypeOption gameTypeOption) {
-    state = state.copyWith(
-      gameTypeOption: gameTypeOption,
-      results: state.results,
-      year: state.year,
-      month: state.month,
-      page: 1,
-    );
-  }
 }
 
-final rankingScreenProvider =
-    AutoDisposeStateNotifierProvider<RankingScreenNotifier, RankingScreenState>(
-  (ref) => RankingScreenNotifier(),
+final singleTagScreenProvider = AutoDisposeStateNotifierProvider<
+    SingleTagScreenNotifier, SingleTagScreenState>(
+  (ref) => SingleTagScreenNotifier(),
 );

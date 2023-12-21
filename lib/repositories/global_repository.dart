@@ -6,6 +6,7 @@ import 'package:alt_bangumi/models/episode_model/episode_model.dart';
 import 'package:alt_bangumi/models/home_discovery_model/home_discovery_model.dart';
 import 'package:alt_bangumi/models/search_model/search_model.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
+import 'package:intl/intl.dart';
 
 import '../models/calendar_model/calendar_model.dart';
 import '../models/relation_model/relation_model.dart';
@@ -30,8 +31,8 @@ class GlobalRepository {
     required ScreenSubjectOption subjectOption,
     required SearchScreenFilterOption filterOption,
     required int start,
+    required int maxResults,
   }) async {
-    const maxResults = 25;
     const responseGroup = SearchScreenResponseGroup.large;
     final json = await HttpHelper.get(
       HttpConstant.apiSearch(
@@ -46,13 +47,18 @@ class GlobalRepository {
   }
 
   static Future<SubjectModel> getSubject(String subjectId) async {
-    final json = await HttpHelper.get(HttpConstant.apiSubject(subjectId));
+    final Map<String, dynamic> json =
+        await HttpHelper.get(HttpConstant.apiSubject(subjectId));
+    json.addAll({'api_date': DateFormat('yyyy-MM-dd').format(DateTime.now())});
     return SubjectModel.fromMap(json);
   }
 
-  static Future<EpisodeModel> getEpisode(String subjectId) async {
+  static Future<EpisodeModel> getEpisode({
+    required String subjectId,
+    required int offset,
+  }) async {
     final json = await HttpHelper.get(
-        '${HttpConstant.apiV0}/episodes?subject_id=$subjectId');
+        '${HttpConstant.apiV0}/episodes?subject_id=$subjectId&offset=$offset');
     return EpisodeModel.fromMap(json);
   }
 

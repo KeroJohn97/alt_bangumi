@@ -11,7 +11,7 @@ class SearchScreenState {
   final ScreenSubjectOption subjectOption;
   final SearchScreenFilterOption filterOption;
   final SearchModel? searchResult;
-  final List<String>? possibleMatch;
+  final Map<String, dynamic>? possibleMatch;
 
   SearchScreenState({
     required this.stateEnum,
@@ -25,7 +25,7 @@ class SearchScreenState {
     SearchScreenStateEnum? stateEnum,
     ScreenSubjectOption? subjectOption,
     SearchScreenFilterOption? filterOption,
-    List<String>? possibleMatch,
+    Map<String, dynamic>? possibleMatch,
     required SearchModel? searchResult,
   }) {
     return SearchScreenState(
@@ -86,12 +86,14 @@ class SearchScreenNotifier extends StateNotifier<SearchScreenState> {
       searchResult: null,
       stateEnum: SearchScreenStateEnum.loading,
     );
+    const maxResults = 25;
     try {
       final result = await GlobalRepository.searchKeyword(
         keyword: keyword,
         subjectOption: state.subjectOption,
         filterOption: state.filterOption,
         start: start,
+        maxResults: maxResults,
       );
       state = state.copyWith(
         searchResult: result,
@@ -109,12 +111,15 @@ class SearchScreenNotifier extends StateNotifier<SearchScreenState> {
 
   void scrollMore(String keyword) async {
     final current = state.searchResult?.searchInfoList?.length ?? 0;
+    const maxResults = 25;
+    if (current <= 25) return;
     try {
       final result = await GlobalRepository.searchKeyword(
         keyword: keyword,
         subjectOption: state.subjectOption,
         filterOption: state.filterOption,
         start: current,
+        maxResults: maxResults,
       );
       if (result.searchInfoList == null) return;
       final combinedResult = state.searchResult?.searchInfoList
@@ -126,7 +131,7 @@ class SearchScreenNotifier extends StateNotifier<SearchScreenState> {
     } finally {}
   }
 
-  void possibleMatch(List<String> possibleMatch) {
+  void possibleMatch(Map<String, dynamic> possibleMatch) {
     state = state.copyWith(
       searchResult: state.searchResult,
       possibleMatch: possibleMatch,

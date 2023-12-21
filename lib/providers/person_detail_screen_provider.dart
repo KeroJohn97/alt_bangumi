@@ -62,9 +62,3 @@ class PersonDetailScreenNotifier
     );
   }
 }
-
-final personDetailScreenProvider =
-    StateNotifierProvider<PersonDetailScreenNotifier, PersonDetailScreenState>(
-        (ref) {
-  return PersonDetailScreenNotifier();
-});

@@ -47,7 +47,7 @@ class CharacterDetailScreenNotifier
           ),
         );
 
-  void loadCharacter(CharacterModel character) async {
+  Future<void> loadCharacter(CharacterModel character) async {
     state = state.copyWith(
         character: character,
         stateEnum: CharacterDetailScreenStateEnum.loading);
@@ -62,8 +62,3 @@ class CharacterDetailScreenNotifier
     );
   }
 }
-
-final characterDetailScreenProvider = AutoDisposeStateNotifierProvider<
-    CharacterDetailScreenNotifier, CharacterDetailScreenState>((ref) {
-  return CharacterDetailScreenNotifier();
-});

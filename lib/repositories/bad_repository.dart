@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/helpers/http_helper.dart';
 import 'package:alt_bangumi/models/browser_rank_model.dart';
+import 'package:alt_bangumi/models/subject_model/tag_model.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:html/dom.dart';
@@ -35,7 +34,7 @@ class BadRepository {
   static Future<ChannelModel> fetchChannel(
       ScreenSubjectOption subjectOption) async {
     final html = await HttpHelper.getHtmlFromUrl(
-        '${HttpConstant.host}/${subjectOption.name}');
+        '${HttpConstant.host}/${subjectOption.api}');
     final htmlDocument = html_parser.parse(html);
 
     Map<String, dynamic> safeObject(Map<String, dynamic>? obj) {
@@ -181,7 +180,7 @@ class BadRepository {
     final currentDate = DateFormat('yyyy-MM').format(DateTime.now());
     final raw = await HttpHelper.getHtmlFromUrl(
         'https://bgm.tv/${subjectOption.name}/browser/airtime/$currentDate?sort=rank&page=$page');
-    final result = _analysisTags(raw, page, pagination);
+    final result = _analyseList(raw, page, pagination);
 
     // final stateKey = '$type|$airtime|$sort';
     final data = {
@@ -217,7 +216,38 @@ class BadRepository {
         '${_airtimeString(year, month)}'
         '?sort=${sortOption.name}&page=$page';
     final html = await HttpHelper.getHtmlFromUrl(url);
-    return _analyseRank(html);
+    return _analyseSubject(html);
+  }
+
+  static Future<List<TagModel>?> fetchTags({
+    required ScreenSubjectOption subjectOption,
+    required String? filter,
+    required int page,
+  }) async {
+    final isFiltered = filter != null && filter.isNotEmpty;
+    final url = '${HttpConstant.host}/'
+        '${isFiltered ? 'search' : subjectOption.name}'
+        '/tag'
+        '${isFiltered ? '/${subjectOption.name}/$filter' : ''}'
+        '?page=$page';
+    final html = await HttpHelper.getHtmlFromUrl(url);
+    return _analyseTag(html);
+  }
+
+  static Future<List<BrowserRankModel>?> fetchSubjectsByTag({
+    required ScreenSubjectOption subjectOption,
+    required SortOption sortOption,
+    required String text,
+    required int? page,
+    required int? year,
+    required int? month,
+  }) async {
+    final url = '${HttpConstant.host}/${subjectOption.name}/tag/$text'
+        '${_airtimeString(year, month)}'
+        '?sort=${sortOption.name}&page=$page';
+    final html = await HttpHelper.getHtmlFromUrl(url);
+    return _analyseSubject(html);
+    // return _analyseSubjectByTag(html);
   }
 
   static String _airtimeString(
@@ -228,7 +258,7 @@ class BadRepository {
     return '/airtime/$year' '${month == null ? '' : '-$month'}';
   }
 
-  static List<BrowserRankModel>? _analyseRank(String html) {
+  static List<BrowserRankModel>? _analyseSubject(String html) {
     // Define a regular expression pattern to match content within <li> tags under the specified <ul> tag
     final ulPattern = RegExp(
         r'<ul\s+id="browserItemList"\s+class="browserFull">(.*?)<\/ul>',
@@ -257,7 +287,6 @@ class BadRepository {
         extractedValues.add(liContent);
       }
     }
-    log('message each: $extractedValues');
 
     final htmlDocument =
         extractedValues.map((e) => html_parser.parse(e)).toList();
@@ -314,33 +343,68 @@ class BadRepository {
     }
     return list;
   }
+
+  static List<TagModel>? _analyseTag(String html) {
+    // Define a regular expression pattern to match content within <li> tags under the specified <ul> tag
+    final ulPattern =
+        RegExp(r'<div id="tagList">(.*?)<hr class="board"', dotAll: true);
+
+    // Find the <ul> match in the input string
+    final ulMatch = ulPattern.firstMatch(html);
+
+    if (ulMatch == null) return null;
+
+    // Extract content within <ul> tag
+    String? ulContent = ulMatch.group(1);
+
+    final htmlDocument = html_parser.parse(ulContent);
+    final anchorElements = htmlDocument.querySelectorAll('a');
+    final smallElements = htmlDocument.querySelectorAll('small');
+
+    if (anchorElements.length != smallElements.length) return null;
+
+    final List<TagModel> tagList = [];
+    RegExp regexForBrackets = RegExp(r'\((.*?)\)');
+    for (var i = 0; i < anchorElements.length; i++) {
+      final href = anchorElements[i].attributes['href'];
+      final countInBrackets = smallElements[i].text;
+      final splittedHref = href?.split('/');
+      final name =
+          splittedHref?.isNotEmpty ?? false ? splittedHref?.last : null;
+      final count =
+          regexForBrackets.firstMatch(countInBrackets)?.group(1) ?? '';
+      tagList.add(TagModel(
+          name: Uri.decodeFull(name ?? ''), count: int.tryParse(count)));
+    }
+    return tagList;
+  }
 }
 
-Map<String, dynamic>? _analysisTags(
+Map<String, dynamic>? _analyseList(
     String raw, int page, Map<String, dynamic> pagination) {
-  final HTML = _getHTMLTrim(raw);
+  final html = _getHTMLTrim(raw);
 
   // -------------------- 分析HTML --------------------
   List? node;
   final tag = <Map<String, dynamic>>[];
-  var pageTotal = pagination['pageTotal'] ?? 0;
+  // var pageTotal = pagination['pageTotal'] ?? 0;
 
   // 条目
   final matchHTML = RegExp(
     r'<ul id="browserItemList" class="browserFull"><\/ul>\s*<div class="clearit">',
-  ).firstMatch(HTML);
+  ).firstMatch(html);
 
   if (matchHTML != null) {
     // 总页数
     if (page == 1) {
-      final pageHTML = RegExp(
-        r'<span class="p_edge">\(&nbsp;\d+&nbsp;/&nbsp;(\d+)&nbsp;\)<\/span>'
-        r'|<a href="\?.*page=\d+" class="p">(\d+)<\/a><a href="\?.*page=2" class="p">&rsaquo;&rsaquo;<\/a>',
-      ).firstMatch(HTML);
+      // final pageHTML = RegExp(
+      //   r'<span class="p_edge">\(&nbsp;\d+&nbsp;/&nbsp;(\d+)&nbsp;\)<\/span>'
+      //   r'|<a href="\?.*page=\d+" class="p">(\d+)<\/a><a href="\?.*page=2" class="p">&rsaquo;&rsaquo;<\/a>',
+      // ).firstMatch(html);
 
-      pageTotal = pageHTML != null
-          ? int.parse(pageHTML.group(1) ?? pageHTML.group(2)!)
-          : 1;
+      // pageTotal = pageHTML != null
+      // ? int.parse(pageHTML.group(1) ?? pageHTML.group(2)!)
+      // : 1;
     }
 
     final tree = _convertHTMLToTree(matchHTML.group(1)!);
@@ -447,7 +511,7 @@ TreeNode? _convertHTMLToTree(String html, {bool cmd = true}) {
   final tree = TreeNode('root', {}, [], []);
   if (cmd) tree.cmd = 'root';
 
-  TreeNode ref = tree;
+  // TreeNode ref = tree;
   final element = html_parser.parse(html).body;
   if (element == null) return null;
   final attrs = element.attributes;
