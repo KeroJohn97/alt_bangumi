@@ -91,7 +91,6 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
       rankedMusic: rankedMusic,
       rankedFilm: rankedFilm,
     );
-    // loadChannel();
   }
 
   void loadChannel() async {
@@ -179,14 +178,6 @@ class DiscoverViewStateNotifier extends StateNotifier<DiscoverViewState> {
         }
       }
     }
-
-    final sameAnime = state.rankedAnime == tempAnime;
-    final sameBook = state.rankedBook == tempBook;
-    final sameGame = state.rankedGame == tempGame;
-    final sameMusic = state.rankedMusic == tempMusic;
-    final sameFilm = state.rankedFilm == tempFilm;
-
-    if (sameAnime && sameBook && sameGame && sameMusic && sameFilm) return;
 
     StorageHelper.write(
       option: StorageHelperOption.homeAnimeList,
