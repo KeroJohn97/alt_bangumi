@@ -9,6 +9,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../screens/subject_detail_screen.dart';
+
 class RelationCard extends StatefulWidget {
   final RelationModel relation;
   final double height;
@@ -18,6 +20,7 @@ class RelationCard extends StatefulWidget {
   final ImageSizeGroup sizeGroup;
   final BoxFit boxFit;
   final double scale;
+  final bool isPop;
   const RelationCard({
     super.key,
     required this.relation,
@@ -28,6 +31,7 @@ class RelationCard extends StatefulWidget {
     required this.sizeGroup,
     this.boxFit = BoxFit.cover,
     this.scale = 1.0,
+    this.isPop = false,
   });
 
   @override
@@ -51,7 +55,7 @@ class _RelationCardState extends State<RelationCard> {
       case ScreenSubjectOption.game:
         // TODO: Handle this case.
         break;
-      case ScreenSubjectOption.real:
+      case ScreenSubjectOption.film:
         // TODO: Handle this case.
         break;
       case ScreenSubjectOption.character:
@@ -124,9 +128,17 @@ class _RelationCardState extends State<RelationCard> {
         );
         break;
       case SubjectRelationGroup.relation:
-        // TODO Handle this case
+        if (widget.relation.id == null) break;
+        context.push(
+          SubjectDetailScreen.route,
+          extra: {
+            SubjectDetailScreen.subjectIdKey: widget.relation.id,
+          },
+        );
         break;
     }
+    // ignore: use_build_context_synchronously
+    if (widget.isPop) context.pop();
   }
 
   @override

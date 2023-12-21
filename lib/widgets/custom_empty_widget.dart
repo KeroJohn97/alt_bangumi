@@ -15,6 +15,7 @@ class CustomEmptyWidget extends StatelessWidget {
     return SizedBox(
       height: 50.h,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Assets.images.musume.values[random].image(),
           Text(TextConstant.nothingThere.getString(context)),

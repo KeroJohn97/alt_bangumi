@@ -4,7 +4,6 @@ import 'package:alt_bangumi/repositories/person_repository.dart';
 import 'package:alt_bangumi/screens/person_detail_screen.dart';
 import 'package:alt_bangumi/screens/subject_detail_screen.dart';
 import 'package:alt_bangumi/widgets/custom_network_image_widget.dart';
-import 'package:alt_bangumi/widgets/custom_shimmer_widget.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -59,11 +58,13 @@ class _SubjectListCardState extends ConsumerState<SubjectListCard> {
     if (characterSubjects?.isEmpty ?? true) return const Text('EMpty');
     return ListView.builder(
         shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: characterSubjects!.length,
         itemBuilder: (context, index) {
           final characterPerson = characterPersons?.firstWhereOrNull(
               (element) => element.subjectId == characterSubjects[index].id);
           return GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () => _onSubject(
                 context: context, relatedSubject: characterSubjects[index]),
             child: Container(
@@ -82,6 +83,8 @@ class _SubjectListCardState extends ConsumerState<SubjectListCard> {
                       context: context,
                       relatedSubject: characterSubjects[index],
                     ),
+                    heroTag:
+                        '${characterSubjects[index].image}_${DateTime.now().millisecondsSinceEpoch}',
                   ),
                   const SizedBox(
                     width: 8.0,
@@ -121,24 +124,30 @@ class _SubjectListCardState extends ConsumerState<SubjectListCard> {
                                       radius: 4.0,
                                       imageUrl:
                                           '${characterPerson.images?.small}',
+                                      heroTag:
+                                          '${characterPerson.images?.small}_${DateTime.now().millisecondsSinceEpoch}',
                                     ),
                                     const SizedBox(width: 4.0),
-                                    Text.rich(
-                                      TextSpan(
-                                        text: '${characterPerson.name} ',
-                                        children: [
-                                          TextSpan(
-                                            text: characterPerson.type == 1
-                                                ? 'CV'
-                                                : '',
-                                            style: const TextStyle(
-                                                color: Colors.grey),
-                                          ),
-                                        ],
-                                      ),
-                                      style: const TextStyle(
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.bold,
+                                    Expanded(
+                                      child: Text.rich(
+                                        TextSpan(
+                                          text: '${characterPerson.name} ',
+                                          children: [
+                                            TextSpan(
+                                              text: characterPerson.type == 1
+                                                  ? 'CV'
+                                                  : '',
+                                              style: const TextStyle(
+                                                  color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -169,14 +178,5 @@ class _SubjectListCardState extends ConsumerState<SubjectListCard> {
             ),
           );
         });
-  }
-}
-
-class _Shimmer extends StatelessWidget {
-  const _Shimmer();
-
-  @override
-  Widget build(BuildContext context) {
-    return const CustomShimmerWidget(radius: null);
   }
 }

@@ -1,11 +1,19 @@
+import 'package:alt_bangumi/constants/enum_constant.dart';
+import 'package:alt_bangumi/screens/tag/single_tag_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../models/subject_model/tag_model.dart';
 import 'custom_tag_widget.dart';
 
 class SubjectDetailTagWidget extends StatelessWidget {
   final List<TagModel>? tags;
-  const SubjectDetailTagWidget({super.key, required this.tags});
+  final ScreenSubjectOption subjectOption;
+  const SubjectDetailTagWidget({
+    super.key,
+    required this.tags,
+    required this.subjectOption,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +25,13 @@ class SubjectDetailTagWidget extends StatelessWidget {
               .map(
                 (e) => CustomTagWidget(
                   onPressed: () {
-                    // TODO tag search
+                    context.push(
+                      SingleTagScreen.route,
+                      extra: {
+                        SingleTagScreen.tagKey: e.name,
+                        SingleTagScreen.subjectKey: subjectOption.toJson(),
+                      },
+                    );
                   },
                   tag: '${e.name}',
                   count: e.count,

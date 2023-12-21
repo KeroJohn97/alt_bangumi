@@ -1,16 +1,23 @@
-import 'package:alt_bangumi/widgets/subject/character_card.dart';
+import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/models/subject_model/subject_model.dart';
+import 'package:alt_bangumi/screens/subject_persons_screen.dart';
+import 'package:alt_bangumi/widgets/subject/relation_card.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:go_router/go_router.dart';
 
 import '../constants/enum_constant.dart';
 import '../constants/text_constant.dart';
 import '../models/relation_model/relation_model.dart';
 
 class SubjectDetailPersonWidget extends StatelessWidget {
+  final SubjectModel? subject;
   final List<RelationModel>? persons;
   final ScreenSubjectOption? subjectOption;
   const SubjectDetailPersonWidget({
     super.key,
+    required this.subject,
     required this.persons,
     required this.subjectOption,
   });
@@ -19,7 +26,7 @@ class SubjectDetailPersonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (persons != null) ...[
+        if (persons != null && persons!.isNotEmpty) ...[
           const SizedBox(height: 8.0),
           Row(
             children: [
@@ -32,7 +39,15 @@ class SubjectDetailPersonWidget extends StatelessWidget {
               ),
               const Spacer(),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.push(
+                    SubjectPersonsScreen.route,
+                    extra: {
+                      SubjectPersonsScreen.relationsKey: persons,
+                      SubjectPersonsScreen.subjectKey: subject,
+                    },
+                  );
+                },
                 child: Text(
                   '${TextConstant.more.getString(context)} >',
                   style: const TextStyle(color: Colors.grey),
@@ -41,31 +56,35 @@ class SubjectDetailPersonWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8.0),
-          SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            child: Builder(builder: (context) {
-              final set = <String>{};
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...persons!
-                      .where((element) => set.add('${element.id}'))
-                      .toList()
-                      .map(
-                        (e) => RelationCard(
-                          relation: e,
-                          height: 60,
-                          width: 60,
-                          group: SubjectRelationGroup.productionStaff,
-                          option: subjectOption,
-                          sizeGroup: ImageSizeGroup.small,
-                        ),
-                      )
-                      .toList(),
-                ],
-              );
-            }),
+          SizedBox(
+            width: 100.w - 24.0,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              child: Builder(builder: (context) {
+                final set = <String>{};
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...persons!
+                        .where((element) => set.add('${element.id}'))
+                        .toList()
+                        .whereIndexed((index, element) => index < 10)
+                        .map(
+                          (e) => RelationCard(
+                            relation: e,
+                            height: 60,
+                            width: 60,
+                            group: SubjectRelationGroup.productionStaff,
+                            option: subjectOption,
+                            sizeGroup: ImageSizeGroup.small,
+                          ),
+                        )
+                        .toList(),
+                  ],
+                );
+              }),
+            ),
           ),
         ],
       ],

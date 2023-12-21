@@ -17,7 +17,13 @@ class BannerWidget extends StatefulWidget {
 
 class _BannerWidgetState extends State<BannerWidget> {
   final _height = 150.0;
-  final _width = 100.w;
+  double? _width;
+
+  @override
+  void initState() {
+    super.initState();
+    _width = 100.w;
+  }
 
   @override
   Widget build(BuildContext context) {

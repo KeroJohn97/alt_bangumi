@@ -2,14 +2,11 @@ import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
-import 'package:alt_bangumi/widgets/custom_error_widget.dart';
 import 'package:alt_bangumi/widgets/discover/search/anime_loading_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../constants/text_constant.dart';
 import '../../providers/discover_view_provider.dart';
 import 'channel_anime_card.dart';
 
@@ -24,11 +21,6 @@ class HomeSubjectWidget extends StatelessWidget {
     required this.subjectOption,
   });
 
-  void _pushChannelScreen() {
-    // TODO add push channel
-    // context.push(CalendarScreen.route);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -41,10 +33,10 @@ class HomeSubjectWidget extends StatelessWidget {
                   const TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
             ),
             const Spacer(),
-            TextButton(
-              onPressed: _pushChannelScreen,
-              child: Text('${TextConstant.channel.getString(context)} >'),
-            ),
+            // TextButton(
+            //   onPressed: _pushChannelScreen,
+            //   child: Text('${TextConstant.channel.getString(context)} >'),
+            // ),
           ],
         ),
         const SizedBox(height: 10.0),
@@ -59,7 +51,7 @@ class HomeSubjectWidget extends StatelessWidget {
               case DiscoverViewStateEnum.failure:
                 return const Text('Failed');
               case DiscoverViewStateEnum.success:
-                final channel = state.channel;
+                // final channel = state.channel;
                 List<SubjectModel>? rankedSubject;
                 switch (subjectOption) {
                   case ScreenSubjectOption.anime:
@@ -74,14 +66,15 @@ class HomeSubjectWidget extends StatelessWidget {
                   case ScreenSubjectOption.game:
                     rankedSubject = state.rankedGame;
                     break;
-                  case ScreenSubjectOption.real:
-                    rankedSubject = state.rankedReal;
+                  case ScreenSubjectOption.film:
+                    rankedSubject = state.rankedFilm;
                     break;
                   default:
                     break;
                 }
+                // especially in presenting other loaded and ranked subjects
                 if (rankedSubject == null) {
-                  return const CustomErrorWidget();
+                  return const AnimeLoadingComponent();
                 }
                 return Column(
                   children: [

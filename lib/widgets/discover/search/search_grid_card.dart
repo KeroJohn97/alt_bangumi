@@ -20,10 +20,6 @@ class SearchGridCard extends StatelessWidget {
     this.disable = false,
   });
 
-  void _toggleFavorite() {
-    // TODO toggle favorite
-  }
-
   void _navigate(BuildContext context) =>
       context.push(SubjectDetailScreen.route, extra: {
         SubjectDetailScreen.subjectIdKey: info.id,

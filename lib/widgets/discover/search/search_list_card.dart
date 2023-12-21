@@ -5,10 +5,12 @@ import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/rating_model.dart';
 import 'package:alt_bangumi/screens/subject_detail_screen.dart';
 import 'package:alt_bangumi/widgets/custom_star_rating_widget.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../constants/enum_constant.dart';
 import '../../../models/search_model/search_info_model.dart';
 import '../../custom_network_image_widget.dart';
 
@@ -21,10 +23,6 @@ class SearchListCard extends StatelessWidget {
     this.disable = false,
   });
 
-  void _toggleFavorite() {
-    // TODO toggle favorite
-  }
-
   void _navigate(BuildContext context) =>
       context.push(SubjectDetailScreen.route, extra: {
         SubjectDetailScreen.subjectIdKey: info.id,
@@ -32,6 +30,8 @@ class SearchListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final nameCn =
+        '${(info.nameCn?.isEmpty ?? true) ? (info.name?.isEmpty ?? true) ? TextConstant.withoutAName.getString(context) : info.name : info.nameCn.showHTML()}';
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: GestureDetector(
@@ -62,10 +62,12 @@ class SearchListCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${(info.nameCn?.isEmpty ?? true) ? TextConstant.withoutAName.getString(context) : info.nameCn.showHTML()}',
+                                nameCn,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                               ),
                               Text(
                                 '${info.name.showHTML()}',
@@ -80,15 +82,28 @@ class SearchListCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        IconButton(
-                          onPressed: _toggleFavorite,
-                          icon: Icon(
-                            Icons.star_outline,
-                            color: Colors.grey[400],
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            border: Border.all(color: ColorConstant.themeColor),
+                            color: ColorConstant.themeColor.withOpacity(0.2),
                           ),
-                          padding: EdgeInsets.zero,
-                          visualDensity: VisualDensity.compact,
+                          child: Text(
+                            '${ScreenSubjectOption.values.firstWhereOrNull((element) => element.value == info.type)?.getString(context)}',
+                            style: const TextStyle(
+                                fontSize: 12.0, fontWeight: FontWeight.bold),
+                          ),
                         ),
+                        // IconButton(
+                        //   onPressed: _toggleFavorite,
+                        //   icon: Icon(
+                        //     Icons.star_outline,
+                        //     color: Colors.grey[400],
+                        //   ),
+                        //   padding: EdgeInsets.zero,
+                        //   visualDensity: VisualDensity.compact,
+                        // ),
                       ],
                     ),
                     const Spacer(),

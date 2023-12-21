@@ -1,153 +1,174 @@
+import 'package:alt_bangumi/helpers/extension_helper.dart';
+import 'package:alt_bangumi/helpers/loading_helper.dart';
+import 'package:alt_bangumi/models/episode_model/datum_model.dart';
 import 'package:alt_bangumi/models/episode_model/episode_model.dart';
+import 'package:alt_bangumi/providers/subject_detail_screen_provider.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants/color_constant.dart';
 import '../constants/text_constant.dart';
 
-class SubjectDetailEpisodeWidget extends StatelessWidget {
+class SubjectDetailEpisodeWidget extends ConsumerWidget {
+  final AutoDisposeStateNotifierProvider<SubjectDetailScreenNotifier,
+      SubjectDetailScreenState> provider;
   final EpisodeModel? episode;
   final PageController pageController;
   final int pageCount;
   final ValueNotifier pageIndex;
+  final bool isMusic;
   const SubjectDetailEpisodeWidget({
     super.key,
+    required this.provider,
     required this.episode,
     required this.pageController,
     required this.pageCount,
     required this.pageIndex,
+    this.isMusic = false,
   });
 
+  void _loadEpisodes({
+    required BuildContext context,
+    required WidgetRef ref,
+  }) async {
+    if (episode?.data == null) return;
+    LoadingHelper.instance().show(context: context);
+    await ref.read(provider.notifier).loadEpisodes();
+    LoadingHelper.instance().hide();
+    final state = ref.read(provider);
+    // ignore: use_build_context_synchronously
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return ListView.builder(
+              itemCount: state.episode!.data!.length,
+              itemBuilder: (context, index) {
+                // final name = isMusic
+                //     ? (state.episode?.data?[index].name)
+                //     : state.episode?.data?[index].nameCn;
+                // if (name?.isEmpty ?? true) {
+                //   return const SizedBox.shrink();
+                // }
+                return Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: _EpisodeRow(
+                    e: state.episode!.data![index],
+                    isMusic: isMusic,
+                  ),
+                );
+              });
+        });
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         if (episode?.total != null && episode!.total! > 0) ...[
           Row(
             children: [
               Text(
-                TextConstant.chapter.getString(context),
+                isMusic
+                    ? TextConstant.trackList.getString(context)
+                    : TextConstant.chapter.getString(context),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.0,
                 ),
               ),
               const Spacer(),
+              // IconButton(
+              //   onPressed: () {},
+              //   icon: const Icon(
+              //     Icons.tv_outlined,
+              //     color: Colors.grey,
+              //   ),
+              // ),
               IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.tv_outlined,
-                  color: Colors.grey,
+                onPressed: () {
+                  ref.read(provider.notifier).sortEpisodes();
+                },
+                icon: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      TextConstant.sort.getString(context),
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const Icon(
+                      Icons.sort_outlined,
+                      color: Colors.grey,
+                    ),
+                  ],
                 ),
               ),
+
               IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.list_outlined,
-                  color: Colors.grey,
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.sort_outlined,
-                  color: Colors.grey,
+                onPressed: () => _loadEpisodes(context: context, ref: ref),
+                icon: Text(
+                  '${TextConstant.more.getString(context)} >',
+                  style: const TextStyle(color: Colors.grey),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8.0),
-          Container(
-            transform: Matrix4.translationValues(-12.0, 0, 0.0),
-            height: 220.0,
-            child: PageView.builder(
-              controller: pageController,
-              itemCount: pageCount,
-              itemBuilder: (context, pageIndex) {
-                int itemCount;
-                if (pageCount == 1) {
-                  itemCount = episode!.total!;
-                } else if (pageCount == pageIndex + 1) {
-                  itemCount = episode!.total! % (32 * pageIndex);
-                } else {
-                  itemCount = 32;
-                }
-                return GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(left: 12.0),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 8,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.8,
+          if (episode?.data != null) ...[
+            ...episode!.data!
+                .whereIndexed((index, element) => index < 3)
+                .map(
+                  (e) => _EpisodeRow(e: e, isMusic: isMusic),
+                )
+                .toList(),
+            if (episode!.data!.length >= 4)
+              _EpisodeRow(
+                  e: episode!.data![3], color: Colors.grey, isMusic: isMusic)
+          ],
+        ],
+      ],
+    );
+  }
+}
+
+class _EpisodeRow extends StatelessWidget {
+  final DatumModel e;
+  final Color color;
+  final bool isMusic;
+  const _EpisodeRow({
+    required this.e,
+    this.color = Colors.black,
+    this.isMusic = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final name = isMusic ? e.name : e.nameCn;
+    return Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${e.ep}. ${name?.isEmpty ?? true ? TextConstant.upcoming.getString(context) : name.showHTML()}',
+                  style: TextStyle(color: color),
+                ),
+                Text(
+                  isMusic
+                      ? '${TextConstant.disc.getString(context)}${e.disc}'
+                      : '${TextConstant.premiere.getString(context)}: ${e.airdate} / ${TextConstant.duration.getString(context)}: ${e.duration}',
+                  style: const TextStyle(
+                    fontSize: 10.0,
+                    color: Colors.grey,
                   ),
-                  itemCount: itemCount,
-                  itemBuilder: (context, gridIndex) {
-                    final index = (pageIndex * 32) + gridIndex;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            width: 20.0,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(8.0),
-                                topRight: Radius.circular(8.0),
-                              ),
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              '${episode?.data?[index].ep}',
-                              // '${(pageIndex * 32) + (gridIndex + 1)}',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 4.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.0),
-                            color: ColorConstant.starColor,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
+                ),
+              ],
             ),
           ),
-          ValueListenableBuilder(
-              valueListenable: pageIndex,
-              builder: (context, value, child) {
-                return SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List<Widget>.generate(pageCount, (int index) {
-                      return Container(
-                        width: 10.0,
-                        height: 10.0,
-                        margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: pageIndex.value == index
-                              ? Colors.black
-                              : Colors.white,
-                          border: Border.all(),
-                        ),
-                      );
-                    }),
-                  ),
-                );
-              }),
-        ],
+        ),
       ],
     );
   }

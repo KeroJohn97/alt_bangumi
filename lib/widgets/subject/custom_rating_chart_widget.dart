@@ -67,7 +67,9 @@ class CustomRatingChartWidget extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   return SideTitleWidget(
                     axisSide: meta.axisSide,
-                    child: Text('${value.toInt()}'),
+                    child: value <= 0
+                        ? const SizedBox.shrink()
+                        : Text('${value.toInt()}'),
                   );
                 },
               ),

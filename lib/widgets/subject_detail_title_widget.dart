@@ -17,14 +17,15 @@ class SubjectDetailTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nameCn = subject?.nameCn ?? '';
+    final nameCn = subject?.nameCn?.isNotEmpty ?? false
+        ? subject?.nameCn
+        : subject?.name ?? '';
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.only(top: 8.0),
       child: Row(
         children: [
-          const SizedBox(width: 12.0),
-          SubjectDetailImageWidget(imageUrl: subject?.images?.medium),
+          SubjectDetailImageWidget(imageUrl: subject?.images?.large),
           const SizedBox(width: 8.0),
           Expanded(
             child: SizedBox(
@@ -33,7 +34,7 @@ class SubjectDetailTitleWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Spacer(),
-                  if (nameCn.isEmpty) ...[
+                  if (nameCn!.isEmpty) ...[
                     const CustomShimmerWidget(height: 20.0),
                     const SizedBox(height: 8.0),
                     const CustomShimmerWidget(height: 20.0),
@@ -64,23 +65,27 @@ class SubjectDetailTitleWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(subject?.name ?? ''),
-                    const Spacer(),
                     Text(
-                      '${subject?.rating?.score ?? ''}',
-                      style: const TextStyle(
-                        color: ColorConstant.themeColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
+                      subject?.name ?? '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    const Spacer(),
+                    if (subject?.rating?.score != null)
+                      Text(
+                        '${subject?.rating?.score} / 10.0',
+                        style: const TextStyle(
+                          color: ColorConstant.themeColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                        ),
+                      ),
                   ],
                   const Spacer(),
                 ],
               ),
             ),
           ),
-          const SizedBox(width: 12.0),
         ],
       ),
     );

@@ -201,27 +201,9 @@ class _ErrorWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius ?? 0.00),
         ),
-        child: Assets.images.default240.image(fit: BoxFit.cover),
-        // TODO remove comment below
-        // child: Column(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     Icon(
-        //       Icons.broken_image_outlined,
-        //       size: width / 2,
-        //       color: ColorConstant.themeColor,
-        //     ),
-        //     Text(
-        //       TextConstant.imageBroken.getString(context),
-        //       textAlign: TextAlign.center,
-        //       style: TextStyle(
-        //         color: ColorConstant.themeColor,
-        //         fontWeight: FontWeight.bold,
-        //         fontSize: width / 5,
-        //       ),
-        //     ),
-        //   ],
-        // ),
+        child: Assets.images.default240.image(
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
@@ -261,27 +243,11 @@ class _CustomPhotoViewState extends State<_CustomPhotoView> {
     super.dispose();
   }
 
-  // TODO remove unused code
   void _checkScaleEndDetails({
     required BuildContext context,
     required ScaleEndDetails details,
     required PhotoViewControllerValue controllerValue,
   }) {
-    // widget.photoViewController.scale =
-    //     (1.0 / details.velocity.pixelsPerSecond.dy / 100.h).clamp(0.2, 1.0);
-    // widget.photoViewController.position = Offset(
-    //   widget.photoViewController.position.dx,
-    //   widget.photoViewController.position.dy + 5.h,
-    // );
-    // setState(() {
-    //   updateScale(scale);
-    //   updatePosition(
-    //     Offset(
-    //       widget.photoViewController.position.dx,
-    //       widget.photoViewController.position.dy + 5.h,
-    //     ),
-    //   );
-    // });
     final isZoomedIn =
         _scaleStateController.scaleState == PhotoViewScaleState.zoomedIn;
     final otherPosition = controllerValue.position.dx >= 10.0 ||
@@ -291,9 +257,6 @@ class _CustomPhotoViewState extends State<_CustomPhotoView> {
     if (!isZoomedIn && otherPosition) {
       _photoViewController.position = const Offset(0, 0);
     }
-    // if (!isZoomedIn && controllerValue.position.dy >= 0) {
-    //   _photoViewController.scale = 0.95 * (_photoViewController.scale ?? 1.00);
-    // }
     final isMovingDown =
         details.velocity.pixelsPerSecond.dy.abs() > (isZoomedIn ? 1600 : 800);
     if (isMovingDown) context.pop(context);

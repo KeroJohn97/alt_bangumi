@@ -64,12 +64,12 @@ class _ViewImageDialogState extends State<ViewImageDialog> {
     });
   }
 
-  void _removeImg() async {
-    // if (_index != 0) _index = _index - 1;
-    widget.images.removeAt(_index);
-    setState(() {});
-    Navigator.pop(context, '');
-  }
+  // void _removeImg() async {
+  //   // if (_index != 0) _index = _index - 1;
+  //   widget.images.removeAt(_index);
+  //   setState(() {});
+  //   Navigator.pop(context, '');
+  // }
 
   @override
   Widget build(BuildContext context) {

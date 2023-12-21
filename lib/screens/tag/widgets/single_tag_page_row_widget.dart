@@ -1,20 +1,20 @@
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/providers/single_tag_screen_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../providers/ranking_screen_provider.dart';
-
-class PageRowWidget extends ConsumerWidget {
+class SingleTagPageRowWidget extends ConsumerWidget {
   final VoidCallback previousCallback;
   final VoidCallback nextCallback;
-  const PageRowWidget({super.key, 
+  const SingleTagPageRowWidget({
+    super.key,
     required this.previousCallback,
     required this.nextCallback,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(rankingScreenProvider);
+    final state = ref.watch(singleTagScreenProvider);
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
       child: SizedBox(

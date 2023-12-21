@@ -5,6 +5,7 @@ class CustomPopupMenuButton extends StatelessWidget {
   final List<PopupMenuEntry<dynamic>> menuItem;
   final Widget? iconWidget;
   const CustomPopupMenuButton({
+    super.key,
     required this.tag,
     required this.menuItem,
     this.iconWidget,
