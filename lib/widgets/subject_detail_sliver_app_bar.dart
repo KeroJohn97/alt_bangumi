@@ -61,9 +61,9 @@ class _SubjectDetailSliverAppBarState extends State<SubjectDetailSliverAppBar> {
     if (temp == null) return;
     temp.removeWhere((element) => element.name == 'TV');
     final tags = temp.getRange(0, temp.length >= 5 ? 5 : temp.length).toList();
-    final shortTag =
-        '${widget.person?.name} · ${tags.map((e) => e.name).toList().join(' · ')}';
-    log('message: $shortTag');
+    final person = widget.person == null ? '' : '${widget.person?.name} · ';
+    final shortTag = '$person${tags.map((e) => e.name).toList().join(' · ')}';
+
     context.push(
       SubjectSharingScreen.route,
       extra: {

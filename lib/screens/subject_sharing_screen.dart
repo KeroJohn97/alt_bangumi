@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -86,7 +88,11 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
         '${directory.path}/Screenshot_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.png');
     final result = await imgFile.writeAsBytes(pngBytes);
 
-    await Share.shareXFiles([XFile(result.path)]);
+    final box = context.findRenderObject() as RenderBox?;
+    await Share.shareXFiles(
+      [XFile(result.path)],
+      sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+    );
     if (!mounted) return _enable();
     CommonHelper.showSnackBar(
       context: context,
@@ -196,7 +202,7 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
                         ),
                         const SizedBox(height: 8.0),
                         Container(
-                          width: 100.w,
+                          // width: 100.w,
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: Text(
                             widget.shortTag,
