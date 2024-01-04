@@ -40,6 +40,12 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
   }
 
   @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Start the timer if it is null or not active
@@ -203,54 +209,61 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
         )
         .toList();
     return Center(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            const SizedBox(height: kToolbarHeight),
-            const BannerWidget(),
-            SizedBox(
-              height: kToolbarHeight + 24.0,
-              child: GridView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                physics: const NeverScrollableScrollPhysics(),
-                // shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                ),
-                itemCount: list.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return CustomIconButton(
-                    callback: () => _navigationCallback(list[index]),
-                    iconData: _setIconData(list[index]),
-                    navigationEnum: list[index],
-                  );
-                },
-              ),
-            ),
-            ...ScreenSubjectOption.values
-                .where(
-                  (element) => [
-                    ScreenSubjectOption.anime,
-                    ScreenSubjectOption.book,
-                    ScreenSubjectOption.game,
-                    ScreenSubjectOption.music,
-                    ScreenSubjectOption.film,
-                  ].contains(element),
-                )
-                .map(
-                  (e) => HomeSubjectWidget(
-                    mainAutoSizeGroup: _mainAutoSizeGroup,
-                    subAutoSizeGroup: _subAutoSizeGroup,
-                    subjectOption: e,
+      child: RefreshIndicator(
+        onRefresh: () async =>
+            ref.read(discoverViewProvider.notifier).loadChannel(),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: kToolbarHeight),
+                  const BannerWidget(),
+                  SizedBox(
+                    height: kToolbarHeight + 24.0,
+                    child: GridView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      physics: const NeverScrollableScrollPhysics(),
+                      // shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 5,
+                      ),
+                      itemCount: list.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return CustomIconButton(
+                          callback: () => _navigationCallback(list[index]),
+                          iconData: _setIconData(list[index]),
+                          navigationEnum: list[index],
+                        );
+                      },
+                    ),
                   ),
-                )
-                .toList(),
-            // const SizedBox(height: 10.0),
-            // const SizedBox(height: 10.0),
-            // const SizedBox(height: 10.0),
-          ]),
+                  ...ScreenSubjectOption.values
+                      .where(
+                        (element) => [
+                          ScreenSubjectOption.anime,
+                          ScreenSubjectOption.book,
+                          ScreenSubjectOption.game,
+                          ScreenSubjectOption.music,
+                          ScreenSubjectOption.film,
+                        ].contains(element),
+                      )
+                      .map(
+                        (e) => HomeSubjectWidget(
+                          mainAutoSizeGroup: _mainAutoSizeGroup,
+                          subAutoSizeGroup: _subAutoSizeGroup,
+                          subjectOption: e,
+                        ),
+                      )
+                      .toList(),
+                  // const SizedBox(height: 10.0),
+                  // const SizedBox(height: 10.0),
+                  // const SizedBox(height: 10.0),
+                ]),
+          ),
         ),
       ),
     );

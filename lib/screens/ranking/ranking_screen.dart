@@ -2,6 +2,7 @@ import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
+import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/images_model.dart';
 import 'package:alt_bangumi/models/rating_model.dart';
 import 'package:alt_bangumi/models/search_model/search_info_model.dart';
@@ -158,6 +159,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
           SliverPinnedHeader(
             child: Container(
               height: 40.0,
+              width: 100.w,
               color: Colors.white,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -2,7 +2,7 @@
 An alternative bangumi mobile application project written in Flutter.
 
 ## Use Build Runner
-flutter packages pub run build_runner build
+flutter packages pub run build_runner build --delete-conflicting-outputs
 
 ## Solve Shader Compilation Jank
 https://docs.flutter.dev/perf/shader

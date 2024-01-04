@@ -37,11 +37,15 @@ class $AssetsImagesGen {
   /// File path: assets/images/splash.png
   AssetGenImage get splash => const AssetGenImage('assets/images/splash.png');
 
+  /// File path: assets/images/splash_dark.png
+  AssetGenImage get splashDark =>
+      const AssetGenImage('assets/images/splash_dark.png');
+
   $AssetsImagesStaticGen get static => const $AssetsImagesStaticGen();
 
   /// List of all assets
   List<AssetGenImage> get values =>
-      [default240, foreground, icon, l, logo1024, splash];
+      [default240, foreground, icon, l, logo1024, splash, splashDark];
 }
 
 class $AssetsJsonGen {

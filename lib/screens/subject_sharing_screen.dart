@@ -47,6 +47,7 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
   late final GlobalKey _globalKey;
   late final ValueNotifier<bool> _disabledValue;
   late final ValueNotifier<bool> _darkThemeValue;
+  late final ValueNotifier<String> _summaryValue;
 
   @override
   void initState() {
@@ -54,6 +55,7 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
     _globalKey = GlobalKey();
     _disabledValue = ValueNotifier(false);
     _darkThemeValue = ValueNotifier(false);
+    _summaryValue = ValueNotifier(widget.summary);
   }
 
   _enable() => _disabledValue.value = false;
@@ -106,6 +108,21 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
   Widget build(BuildContext context) {
     return ScaffoldCustomed(
         leading: const BackButton(color: Colors.black),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final length =
+                widget.summary.length < 250 ? widget.summary.length : 250;
+            final result = await CommonHelper.translate(
+              context: context,
+              text: widget.summary.substring(0, length),
+              isRefresh: false,
+              showTranslation: false,
+            );
+            if (result == null) return;
+            _summaryValue.value = result;
+          },
+          child: const Icon(Icons.translate_outlined),
+        ),
         titleWidget: Text(
           TextConstant.subjectSharing.getString(context),
           style: const TextStyle(color: Colors.black, fontSize: 20.0),
@@ -191,14 +208,19 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
                         const SizedBox(height: 12.0),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Text(
-                            widget.summary,
-                            style: TextStyle(
-                              color: darkTheme ? Colors.white : Colors.black,
-                            ),
-                            maxLines: 10,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          child: ValueListenableBuilder(
+                              valueListenable: _summaryValue,
+                              builder: (context, summary, child) {
+                                return Text(
+                                  summary,
+                                  style: TextStyle(
+                                    color:
+                                        darkTheme ? Colors.white : Colors.black,
+                                  ),
+                                  maxLines: 10,
+                                  overflow: TextOverflow.ellipsis,
+                                );
+                              }),
                         ),
                         const SizedBox(height: 8.0),
                         Container(

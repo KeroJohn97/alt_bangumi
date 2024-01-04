@@ -11,6 +11,7 @@ import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/loading_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/helpers/storage_helper.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -94,6 +95,12 @@ class CommonHelper {
   }
 
   static Future<bool> getStoragePermission(BuildContext context) async {
+    if (Platform.isAndroid) {
+      try {
+        final info = await DeviceInfoPlugin().androidInfo;
+        if (info.version.sdkInt >= 33) return true;
+      } finally {}
+    }
     PermissionStatus storagePermission = await Permission.storage.status;
     if (storagePermission.isPermanentlyDenied) {
       await openAppSettings();
@@ -109,6 +116,7 @@ class CommonHelper {
     required String? text,
     required bool isRefresh,
     Locale? locale,
+    bool showTranslation = true,
   }) async {
     if (text == null) return text;
     Locale? result = locale;
@@ -154,10 +162,12 @@ class CommonHelper {
       if ((map[text] != null && map[text][result.languageCode] != null) &&
           !isRefresh) {
         final String json = map[text][result.languageCode];
-        list = json.split('\n');
+        list = splitStrings(json.split('\n'));
       } else {
-        list = text.split('\n');
+        list = splitStrings(text.split('\n'));
+        log('message length: ${list.length}');
         for (var i = 0; i < list.length; i++) {
+          if (list[i].isEmpty) continue;
           final dynamic response = await HttpHelper.translate(
             locale: result,
             body: jsonEncode([
@@ -185,6 +195,7 @@ class CommonHelper {
         option: StorageHelperOption.translationHistory,
         value: jsonEncode(map),
       );
+      if (!showTranslation) return list.join('\n');
       _showTranslation(
         context: context,
         text: text,
@@ -192,7 +203,7 @@ class CommonHelper {
         locale: result,
       );
     } on FormatException catch (e) {
-      log('FormatException: $e');
+      log('$e');
     } on SocketException {
       CommonHelper.showToast(
         TextConstant.noInternetConnection.getString(context),
@@ -265,5 +276,48 @@ class CommonHelper {
               );
             }) ??
         false;
+  }
+
+  static List<String> splitStrings(List<String> inputList) {
+    List<String> result = [];
+
+    for (String input in inputList) {
+      final maxLength = isEnglish(input) ? 5000 : 150;
+      if (input.length <= maxLength) {
+        result.add(input);
+      } else {
+        int startIndex = 0;
+        int endIndex = maxLength;
+
+        while (endIndex < input.length &&
+            !(input[endIndex] == '.' || input[endIndex] == '。')) {
+          endIndex++;
+        }
+
+        // Including the first full stop
+        if (endIndex < input.length - 1) endIndex = endIndex + 1;
+
+        result.add(input.substring(startIndex, endIndex));
+
+        while (endIndex < input.length) {
+          startIndex = endIndex;
+          endIndex = startIndex + maxLength;
+
+          while (endIndex < input.length &&
+              !(input[endIndex] == '.' || input[endIndex] == '。')) {
+            endIndex++;
+          }
+          ++endIndex;
+          result.add(input.substring(
+              startIndex, endIndex > input.length ? input.length : endIndex));
+        }
+      }
+    }
+    log('message: $result');
+    return result;
+  }
+
+  static bool isEnglish(String input) {
+    return RegExp(r'^[\x00-\x7F]+$').hasMatch(input);
   }
 }

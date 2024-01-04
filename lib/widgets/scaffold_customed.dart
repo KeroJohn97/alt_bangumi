@@ -15,6 +15,7 @@ class ScaffoldCustomed extends StatefulWidget {
   final Color? backgroundColor;
   final double? titleSpacing;
   final Widget? titleWidget;
+  final Widget? floatingActionButton;
   const ScaffoldCustomed({
     super.key,
     this.leading,
@@ -29,6 +30,7 @@ class ScaffoldCustomed extends StatefulWidget {
     this.backgroundColor,
     this.titleSpacing,
     this.titleWidget,
+    this.floatingActionButton,
   });
 
   @override
@@ -60,6 +62,7 @@ class _ScaffoldCustomedState extends State<ScaffoldCustomed> {
       body: widget.body,
       bottomNavigationBar: widget.bottomNavigationBar,
       backgroundColor: widget.backgroundColor,
+      floatingActionButton: widget.floatingActionButton,
     );
   }
 }
