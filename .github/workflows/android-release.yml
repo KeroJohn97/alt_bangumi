@@ -1,0 +1,143 @@
+name: Android Release
+
+on:
+  push:
+    branches: [ "release" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: CREATE Android Build
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+      - name: GET version.txt
+        uses: actions/download-artifact@v2
+        with: 
+          name: gitversion
+
+      - name: CREATE new file without newline char from version.txt
+        run: tr -d '\n' < version.txt > version1.txt
+
+      - name: READ version
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: version1.txt
+      
+      - name: UPDATE version in YAML
+        run: sed -i 's/99.99.99+99/${{ steps.version.outputs.content }}+${{ github.run_number }}/g' pubspec.yaml
+      
+      - name: DOWNLOAD Android keystore
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.0.3
+        with:
+          fileName: upload-keystore.jks
+          encodedString: ${{ secrets.KEYSTORE_BASE64 }}
+
+      - name: CREATE key.properties
+        run: |
+          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+
+      # - uses: actions/checkout@v3
+      
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: "12.x"
+          cache: gradle
+             
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.16.4"
+          channel: 'stable'
+          cache: true
+      
+      - name: GET dependencies
+        run: flutter pub get
+
+      # Runs a set of commands using the runners shell
+      - name: TEST the app
+        run: flutter test
+
+      - name: START android release apk build
+        run: flutter build apk --release --split-per-abi --obfuscate --split-debug-info build/app/outputs/symbols --suppress-analytics
+
+      - name: START android release app bundle build
+        run: flutter build appbundle --release --target-platform android-arm,android-arm64,android-x64 --obfuscate --split-debug-info build/app/outputs/bundlesymbols --suppress-analytics
+      
+      - name: UPLOAD android release app bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: android-release
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      - name: UPLOAD apk file
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.PAT_TOKEN}}
+        with:
+          upload_url: ${{github.event.release.upload_url}}
+          asset_path: ./app-release.apk
+          asset_name: app-release.apk
+          asset_content_type: application/vnd.android.package-archive
+      
+      - name: UPLOAD ipa file
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.PAT_TOKEN}}
+        with:
+          upload_url: ${{github.event.release.upload_url}}
+          asset_path: ./no-codesign-release.ipa
+          asset_name: no-codesign-release.ipa
+          asset_content_type: application/octet-stream
+
+  # deploy:
+  #   name: DEPLOY Android Build
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+
+  #     - name: GET Android Build from artifacts
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: android-release
+      
+  #     - name: RELEASE Build to internal track
+  #       uses: r0adkll/upload-google-play@v1
+  #       with:
+  #         serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
+  #         packageName: com.kerojohn.alt_bangumi
+  #         releaseFiles: app-release.aab
+  #         track: before-production
+  #         status: completed
+  
+  version:
+    name: CREATE version number
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: INSTALL GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: "5.x"
+
+      - name: USE GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+      
+      - name: CREATE version.txt with nuGetVersion
+        run: echo ${{ steps.gitversion.outputs.nuGetVersion  }} > version.txt
+      
+      - name: UPLOAD version.txt
+        uses: actions/upload-artifact@v2
+        with:
+          name: gitversion
+          path: version.txt
