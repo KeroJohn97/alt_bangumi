@@ -5,26 +5,65 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:alt_bangumi/helpers/router_helper.dart';
+import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/providers/discover_view_provider.dart';
+import 'package:alt_bangumi/screens/home/widgets/connectivity_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:alt_bangumi/main.dart';
+import 'package:mockito/mockito.dart';
+import 'package:patrol_finders/patrol_finders.dart';
+
+class MockDiscoverViewStateNotifier extends Notifier<DiscoverViewState>
+    with Mock
+    implements DiscoverViewStateNotifier {}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  late StateNotifierProvider<DiscoverViewStateNotifier, DiscoverViewState>
+      mockDiscoverViewProvider;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  setUpAll(() {
+    mockDiscoverViewProvider =
+        StateNotifierProvider<DiscoverViewStateNotifier, DiscoverViewState>(
+            (ref) {
+      return DiscoverViewStateNotifier();
+    });
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  patrolWidgetTest('Widget Testing...', ($) async {
+    final app = ProviderScope(
+      observers: const [],
+      overrides: [
+        discoverViewProvider.overrideWithProvider(mockDiscoverViewProvider),
+        // )
+        // .overrideWith((ref) => mockDiscoverViewStateNotifier),
+      ],
+      child: MaterialApp.router(
+        routerConfig: routerHelper,
+        // supportedLocales: mockFlutterLocalization.supportedLocales,
+        // localizationsDelegates: mockFlutterLocalization.localizationsDelegates,
+        builder: (context, child) {
+          SizingHelper.getSize(context);
+          return ConnectivityBuilder(
+            child: GestureDetector(
+              onTap: () {
+                FocusManager.instance.primaryFocus?.unfocus();
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                if (currentFocus.hasPrimaryFocus) return;
+                currentFocus.unfocus();
+                currentFocus.focusedChild?.unfocus();
+              },
+              child: child!,
+            ),
+          );
+        },
+      ),
+    );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await $.pumpWidget(app);
+    await $.pumpAndSettle();
   });
 }
