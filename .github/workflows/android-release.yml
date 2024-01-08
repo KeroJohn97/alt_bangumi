@@ -24,6 +24,9 @@ jobs:
         uses: juliangruber/read-file-action@v1
         with:
           path: version1.txt
+
+      - name: Check current directory
+        run: ls
       
       - name: UPDATE version in YAML
         run: sed -i 's/99.99.99+99/${{ steps.version.outputs.content }}+${{ github.run_number }}/g' ${{ github.workspace }}/pubspec.yaml
