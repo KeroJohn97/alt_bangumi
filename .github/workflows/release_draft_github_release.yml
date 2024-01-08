@@ -80,7 +80,7 @@ jobs:
         if: matrix.target == 'Android'
         uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93 # v4.0.0
         with:
-          java-version: "12.x"
+          java-version: "20.x"
           distribution: temurin
 
       - run: flutter doctor -v
@@ -111,6 +111,13 @@ jobs:
           KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEYSTORE_STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
         working-directory: android
+
+      # Add missing secret.json
+      - name: ADD secret.json before release
+        run: |
+          echo "{" > secret.json
+          echo "X-RapidAPI-Key=${{ secrets.RAPID_API_KEY }}" >> secret.json
+          echo "X-RapidAPI-Host=${{ secrets.RAPID_API_HOST }}" >> secret.json
 
       # Build the application.
       - run: flutter build -v ${{ matrix.build_target }} --release
