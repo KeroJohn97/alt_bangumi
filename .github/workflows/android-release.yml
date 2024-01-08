@@ -26,7 +26,7 @@ jobs:
           path: version1.txt
       
       - name: UPDATE version in YAML
-        run: sed -i 's/99.99.99+99/${{ steps.version.outputs.content }}+${{ github.run_number }}/g' ${{ env.GITHUB_WORKSPACE }}/pubspec.yaml
+        run: sed -i 's/99.99.99+99/${{ steps.version.outputs.content }}+${{ github.run_number }}/g' ${{ github.workspace }}/pubspec.yaml
       
       - name: DOWNLOAD Android keystore
         id: android_keystore
