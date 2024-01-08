@@ -23,7 +23,7 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
         env:
-          GITHUB_TOKEN: ${{ secrets.FLUTTERGALLERYRELEASEBOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version }}
           draft: true
@@ -84,25 +84,32 @@ jobs:
           distribution: temurin
 
       - run: flutter doctor -v
-      # Checkout gallery code, recreate missing files, and get packages.
-      - name: Checkout gallery code
+      # Checkout code, recreate missing files, and get packages.
+      - name: Checkout code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - run: flutter create .
       - run: flutter pub get
 
+      - name: DOWNLOAD Android keystore
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.0.3
+        with:
+          fileName: upload-keystore.jks
+          encodedString: ${{ secrets.KEYSTORE_BASE64 }}
+
       - name: Configure Keystore for Android
         if: matrix.target == 'Android'
         run: |
-          echo "$PLAY_STORE_UPLOAD_KEY" | base64 --decode > app/upload-keystore.jks
+          echo "$PLAY_STORE_UPLOAD_KEY" | base64 --decode > ${{ secrets.KEYSTORE_BASE64 }}
           echo "storeFile=upload-keystore.jks" >> key.properties
           echo "keyAlias=$KEYSTORE_KEY_ALIAS" >> key.properties
           echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> key.properties
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> key.properties
         env:
-          PLAY_STORE_UPLOAD_KEY: ${{ secrets.PLAY_STORE_UPLOAD_KEY }}
-          KEYSTORE_KEY_ALIAS: ${{ secrets.KEYSTORE_KEY_ALIAS }}
-          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
-          KEYSTORE_STORE_PASSWORD: ${{ secrets.KEYSTORE_STORE_PASSWORD }}
+          PLAY_STORE_UPLOAD_KEY: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
         working-directory: android
 
       # Build the application.
@@ -118,19 +125,19 @@ jobs:
         working-directory: ${{ matrix.build_path }}
       - name: Rename build for Android
         if: matrix.target == 'Android'
-        run: mv app-release.apk $GITHUB_WORKSPACE/flutter_gallery_${{ matrix.target }}.apk
+        run: mv app-release.apk $GITHUB_WORKSPACE/${{ matrix.target }}.apk
         working-directory: ${{ matrix.build_path }}
       - name: Compress build for Linux
         if: matrix.target == 'Linux'
-        run: tar czf $GITHUB_WORKSPACE/flutter_gallery_${{ matrix.target }}.tar.gz *
+        run: tar czf $GITHUB_WORKSPACE/${{ matrix.target }}.tar.gz *
         working-directory: ${{ matrix.build_path }}
       - name: Compress build for macOS
         if: matrix.target == 'macOS'
-        run: ditto -c -k --sequesterRsrc --keepParent Flutter\ Gallery.app $GITHUB_WORKSPACE/flutter_gallery_${{ matrix.target }}.zip
+        run: ditto -c -k --sequesterRsrc --keepParent Flutter\ "Alt Bangumi.app" $GITHUB_WORKSPACE/${{ matrix.target }}.zip
         working-directory: ${{ matrix.build_path }}
       - name: Compress build for Windows
         if: matrix.target == 'Windows'
-        run: compress-archive -Path * -DestinationPath ${env:GITHUB_WORKSPACE}\flutter_gallery_${{ matrix.target }}.zip
+        run: compress-archive -Path * -DestinationPath ${env:GITHUB_WORKSPACE}\${{ matrix.target }}.zip
         working-directory: ${{ matrix.build_path }}
 
       # Upload the build.
@@ -138,9 +145,9 @@ jobs:
         id: upload_release_asset
         uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5
         env:
-          GITHUB_TOKEN: ${{ secrets.FLUTTERGALLERYRELEASEBOT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.draft-release.outputs.upload_url }}
-          asset_path: ./flutter_gallery_${{ matrix.target }}${{ matrix.asset_extension }}
-          asset_name: flutter_gallery_${{ matrix.target }}${{ matrix.asset_extension }}
+          asset_path: ./${{ matrix.target }}${{ matrix.asset_extension }}
+          asset_name: ${{ matrix.target }}${{ matrix.asset_extension }}
           asset_content_type: ${{ matrix.asset_content_type }}
