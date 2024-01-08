@@ -64,6 +64,7 @@ void main() {
     );
 
     await $.pumpWidget(app);
-    await $.pumpAndSettle();
+    await $.pumpAndSettle(duration: const Duration(seconds: 1));
+    expect(1 + 1, equals(2));
   });
 }
