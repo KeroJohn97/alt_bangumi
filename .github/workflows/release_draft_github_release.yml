@@ -122,21 +122,20 @@ jobs:
       - run: flutter build -v ${{ matrix.build_target }} --release
 
       # Package the build.
-      - name: Copy VC redistributables to release directory for Windows
-        if: matrix.target == 'Windows'
-        run: |
-          try {
-            Write-Host "Copying VC redistributables..."
-            Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\msvcp140.dll') -Destination ${{ matrix.build_path }}
-            Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140.dll') -Destination ${{ matrix.build_path }}
-            Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140_1.dll') -Destination ${{ matrix.build_path }}
-            Write-Host "Copying completed successfully."
-          } catch {
-            Write-Host "Error during copying: $_"
-            exit 1
-          }
-        working-directory: ${{ matrix.build_path }}
-
+      # - name: Copy VC redistributables to release directory for Windows
+      #   if: matrix.target == 'Windows'
+      #   run: |
+      #     try {
+      #       Write-Host "Copying VC redistributables..."
+      #       Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\msvcp140.dll') -Destination ${{ matrix.build_path }}
+      #       Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140.dll') -Destination ${{ matrix.build_path }}
+      #       Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140_1.dll') -Destination ${{ matrix.build_path }}
+      #       Write-Host "Copying completed successfully."
+      #     } catch {
+      #       Write-Host "Error during copying: $_"
+      #       exit 1
+      #     }
+      #   working-directory: ${{ matrix.build_path }}
 
       - name: Rename build for Android
         if: matrix.target == 'Android'
@@ -148,7 +147,7 @@ jobs:
         working-directory: ${{ matrix.build_path }}
       - name: Compress build for macOS
         if: matrix.target == 'macOS'
-        run: ditto -c -k --sequesterRsrc --keepParent Flutter\ *.app $GITHUB_WORKSPACE/${{ matrix.target }}.zip
+        run: ditto -c -k --sequesterRsrc --keepParent Flutter\flutter_bangumi.app $GITHUB_WORKSPACE/${{ matrix.target }}.zip
         working-directory: ${{ matrix.build_path }}
       - name: Compress build for Windows
         if: matrix.target == 'Windows'
