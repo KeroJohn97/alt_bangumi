@@ -1,6 +1,6 @@
 {
-    "name": "flutter_bangumi",
-    "short_name": "flutter_bangumi",
+    "name": "alt_bangumi",
+    "short_name": "alt_bangumi",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#hexcode",

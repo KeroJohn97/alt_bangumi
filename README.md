@@ -1,4 +1,4 @@
-# flutter_bangumi
+# alt_bangumi
 An alternative bangumi mobile application project written in Flutter.
 
 ## Use Build Runner

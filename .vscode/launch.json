@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "flutter_bangumi",
+            "name": "alt_bangumi",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "flutter_bangumi (profile mode)",
+            "name": "alt_bangumi (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "flutter_bangumi (release mode)",
+            "name": "alt_bangumi (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
