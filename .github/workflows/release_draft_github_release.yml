@@ -118,6 +118,12 @@ jobs:
           echo "X-RapidAPI-Key=${{ secrets.RAPID_API_KEY }}" >> secret.json
           echo "X-RapidAPI-Host=${{ secrets.RAPID_API_HOST }}" >> secret.json
 
+      # Clean the project
+      - run: flutter clean
+
+      # Get dependencies
+      - run: flutter pub get
+
       # Build the application.
       - run: flutter build -v ${{ matrix.build_target }} --release
 
