@@ -100,8 +100,7 @@ jobs:
       - name: Configure Keystore for Android
         if: matrix.target == 'Android'
         run: |
-          echo "$PLAY_STORE_UPLOAD_KEY" | base64 --decode > ${{ secrets.KEYSTORE_BASE64 }}
-          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" >> key.properties
+          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > key.properties
           echo "keyAlias=$KEYSTORE_KEY_ALIAS" >> key.properties
           echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> key.properties
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> key.properties
@@ -126,10 +125,11 @@ jobs:
       - name: Copy VC redistributables to release directory for Windows
         if: matrix.target == 'Windows'
         run: |
-          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\msvcp140.dll') -Destination "${{ matrix.build_path }}"
-          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140.dll') -Destination "${{ matrix.build_path }}"
-          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140_1.dll') -Destination "${{ matrix.build_path }}"
+          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\msvcp140.dll') . -Recurse -Force
+          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140.dll') . -Recurse -Force
+          Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140_1.dll') . -Recurse -Force
         working-directory: ${{ matrix.build_path }}
+
       - name: Rename build for Android
         if: matrix.target == 'Android'
         run: mv app-release.apk $GITHUB_WORKSPACE/${{ matrix.target }}.apk
@@ -140,7 +140,7 @@ jobs:
         working-directory: ${{ matrix.build_path }}
       - name: Compress build for macOS
         if: matrix.target == 'macOS'
-        run: ditto -c -k --sequesterRsrc --keepParent Flutter "Alt Bangumi.app" $GITHUB_WORKSPACE/${{ matrix.target }}.zip
+        run: ditto -c -k --sequesterRsrc --keepParent Flutter\ release.app $GITHUB_WORKSPACE/${{ matrix.target }}.zip
         working-directory: ${{ matrix.build_path }}
       - name: Compress build for Windows
         if: matrix.target == 'Windows'
