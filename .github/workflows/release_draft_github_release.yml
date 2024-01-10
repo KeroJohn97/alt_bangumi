@@ -163,6 +163,11 @@ jobs:
         run: compress-archive -Path * -DestinationPath ${{ github.workspace }}\${{ matrix.target }}.zip
         # working-directory: ${{ matrix.build_path }}
 
+      - name: List contents of the asset directory
+        run: |
+          ls -R
+        working-directory: ${{ matrix.build_path }}
+
       # Upload the build.
       - name: Add packaged build to release draft
         id: upload_release_asset
