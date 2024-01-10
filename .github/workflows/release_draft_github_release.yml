@@ -163,10 +163,10 @@ jobs:
         run: compress-archive -Path * -DestinationPath ${{ github.workspace }}\${{ matrix.target }}.zip
         # working-directory: ${{ matrix.build_path }}
 
-      - name: List contents of the asset directory
-        run: |
-          ls -R
-        working-directory: ${{ matrix.build_path }}
+      # - name: List contents of the asset directory
+      #   run: |
+      #     ls -R
+      #   working-directory: ${{ matrix.build_path }}
 
       # Upload the build.
       - name: Add packaged build to release draft
@@ -176,6 +176,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.draft-release.outputs.upload_url }}
-          asset_path: ./${{ matrix.target }}${{ matrix.asset_extension }}
+          asset_path: ${{github.workspace}}/${{ matrix.target }}${{ matrix.asset_extension }}
           asset_name: ${{ matrix.target }}${{ matrix.asset_extension }}
           asset_content_type: ${{ matrix.asset_content_type }}
