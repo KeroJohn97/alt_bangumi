@@ -143,22 +143,22 @@ jobs:
       #     }
       #   working-directory: ${{ matrix.build_path }}
 
-      - name: Rename build for Android
+      - name: RENAME build for Android
         if: matrix.target == 'Android'
         run: mv app-release.apk ${{ github.workspace }}/${{ matrix.target }}.apk
         working-directory: ${{ matrix.build_path }}
 
-      - name: Compress build for Linux
+      - name: COMPRESS build for Linux
         if: matrix.target == 'Linux'
         run: tar czf ${{ github.workspace }}/${{ matrix.target }}.tar.gz *
         working-directory: ${{ matrix.build_path }}
 
-      - name: Compress build for macOS
+      - name: COMPRESS build for macOS
         if: matrix.target == 'macOS'
         run: ditto -c -k --sequesterRsrc --keepParent alt_bangumi.app ${{ github.workspace }}/${{ matrix.target }}.zip
         working-directory: ${{ matrix.build_path }}
 
-      - name: Compress build for Windows
+      - name: COMPRESS build for Windows
         if: matrix.target == 'Windows'
         run: compress-archive -Path * -DestinationPath ${{ github.workspace }}\${{ matrix.target }}.zip
         # working-directory: ${{ matrix.build_path }}
@@ -168,8 +168,15 @@ jobs:
       #     ls -R
       #   working-directory: ${{ matrix.build_path }}
 
-      # Upload the build.
-      - name: Add packaged build to release draft
+      - name: CHECK file existence (v2.0.0)
+        id: files_exists
+        uses: andstor/file-existence-action@20b4d2e596410855db8f9ca21e96fbe18e12930b
+        with:
+          files: ${{ matrix.target }}${{ matrix.asset_extension }}
+
+      # Upload the build if it's not exist
+      - name: ADD packaged build to release draft (v1.7.2)
+        if: !steps.files_exists.outputs.files_exists
         id: upload_release_asset
         uses: shogo82148/actions-upload-release-asset@dccd6d23e64fd6a746dce6814c0bde0a04886085
         # uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5
