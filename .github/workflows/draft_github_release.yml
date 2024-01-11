@@ -170,22 +170,22 @@ jobs:
 
       - name: RENAME build for Android
         if: matrix.target == 'Android'
-        run: mv app-release.apk ${{ github.workspace }}/${{ matrix.target }}.apk
+        run: mv app-release.apk ${{ github.workspace }}/Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
         working-directory: ${{ matrix.build_path }}
 
       - name: COMPRESS build for Linux
         if: matrix.target == 'Linux'
-        run: tar czf ${{ github.workspace }}/${{ matrix.target }}.tar.gz *
+        run: tar czf ${{ github.workspace }}/Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }} *
         working-directory: ${{ matrix.build_path }}
 
       - name: COMPRESS build for macOS
         if: matrix.target == 'macOS'
-        run: ditto -c -k --sequesterRsrc --keepParent alt_bangumi.app ${{ github.workspace }}/${{ matrix.target }}.zip
+        run: ditto -c -k --sequesterRsrc --keepParent alt_bangumi.app ${{ github.workspace }}/Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
         working-directory: ${{ matrix.build_path }}
 
       - name: COMPRESS build for Windows
         if: matrix.target == 'Windows'
-        run: compress-archive -Path * -DestinationPath ${{ github.workspace }}\${{ matrix.target }}.zip
+        run: compress-archive -Path * -DestinationPath ${{ github.workspace }}\Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
         working-directory: ${{ matrix.build_path }}
 
       # - name: List contents of the asset directory
