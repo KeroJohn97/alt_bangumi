@@ -21,23 +21,21 @@ class SubjectDetailTagWidget extends StatelessWidget {
       children: [
         if (tags == null) const SizedBox(height: 8.0),
         if (tags != null)
-          ...tags!
-              .map(
-                (e) => CustomTagWidget(
-                  onPressed: () {
-                    context.push(
-                      SingleTagScreen.route,
-                      extra: {
-                        SingleTagScreen.tagKey: e.name,
-                        SingleTagScreen.subjectKey: subjectOption.toJson(),
-                      },
-                    );
+          ...tags!.map(
+            (e) => CustomTagWidget(
+              onPressed: () {
+                context.push(
+                  SingleTagScreen.route,
+                  extra: {
+                    SingleTagScreen.tagKey: e.name,
+                    SingleTagScreen.subjectKey: subjectOption.toJson(),
                   },
-                  tag: '${e.name}',
-                  count: e.count,
-                ),
-              )
-              .toList(),
+                );
+              },
+              tag: '${e.name}',
+              count: e.count,
+            ),
+          ),
       ],
     );
   }

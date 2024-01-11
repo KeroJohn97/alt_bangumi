@@ -32,10 +32,10 @@ class ViewImageDialog extends StatefulWidget {
   final List<XFile> images;
   final int index;
   const ViewImageDialog({
-    Key? key,
+    super.key,
     required this.images,
     required this.index,
-  }) : super(key: key);
+  });
 
   @override
   State<ViewImageDialog> createState() => _ViewImageDialogState();
@@ -187,10 +187,9 @@ class _ArrowButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
   const _ArrowButton({
-    Key? key,
     required this.icon,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

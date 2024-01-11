@@ -122,7 +122,7 @@ class HomeSubjectWidget extends StatelessWidget {
                                 ],
                               );
                             },
-                          ).toList(),
+                          ),
                         ],
                       ),
                     ),

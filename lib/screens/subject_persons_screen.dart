@@ -189,7 +189,7 @@ class SubjectPersonsScreen extends ConsumerWidget {
                                           ),
                                         ),
                                       );
-                                    }).toList()
+                                    })
                                 ],
                               ),
                             ),

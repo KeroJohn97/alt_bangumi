@@ -115,12 +115,9 @@ class SubjectDetailEpisodeWidget extends ConsumerWidget {
           ),
           const SizedBox(height: 8.0),
           if (episode?.data != null) ...[
-            ...episode!.data!
-                .whereIndexed((index, element) => index < 3)
-                .map(
+            ...episode!.data!.whereIndexed((index, element) => index < 3).map(
                   (e) => _EpisodeRow(e: e, isMusic: isMusic),
-                )
-                .toList(),
+                ),
             if (episode!.data!.length >= 4)
               _EpisodeRow(
                   e: episode!.data![3], color: Colors.grey, isMusic: isMusic)

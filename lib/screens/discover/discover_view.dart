@@ -257,8 +257,7 @@ class _DiscoverViewState extends ConsumerState<DiscoverView> {
                           subAutoSizeGroup: _subAutoSizeGroup,
                           subjectOption: e,
                         ),
-                      )
-                      .toList(),
+                      ),
                   // const SizedBox(height: 10.0),
                   // const SizedBox(height: 10.0),
                   // const SizedBox(height: 10.0),

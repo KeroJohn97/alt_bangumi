@@ -163,7 +163,7 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
                               const SizedBox(height: 4.0),
                             ],
                           );
-                        }).toList()
+                        })
                       ],
                     );
                   }
@@ -175,7 +175,7 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
                       const SizedBox(height: 4.0),
                     ],
                   );
-                }).toList(),
+                }),
               ],
               if (widget.character.summary?.isNotEmpty ?? false) ...[
                 const SizedBox(height: 8.0),

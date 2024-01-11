@@ -100,8 +100,7 @@ class SubjectDetailRelationWidget extends StatelessWidget {
                           option: subjectOption,
                           sizeGroup: ImageSizeGroup.medium,
                         ),
-                      )
-                      .toList(),
+                      ),
                 ],
               ),
             ),

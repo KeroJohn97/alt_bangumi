@@ -188,8 +188,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                                 _search();
                               },
                             ),
-                          )
-                          .toList(),
+                          ),
                     ],
                   ),
                   Builder(builder: (context) {
@@ -204,21 +203,19 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                             currentYear - 1980 + 1,
                             (index) => currentYear - index,
                           )
-                        ]
-                            .map(
-                              (e) => PopupMenuItem(
-                                child: Text(
-                                  '${e ?? TextConstant.entire.getString(context)}',
-                                ),
-                                onTap: () {
-                                  ref
-                                      .read(rankingScreenProvider.notifier)
-                                      .selectYear(e);
-                                  _search();
-                                },
-                              ),
-                            )
-                            .toList(),
+                        ].map(
+                          (e) => PopupMenuItem(
+                            child: Text(
+                              '${e ?? TextConstant.entire.getString(context)}',
+                            ),
+                            onTap: () {
+                              ref
+                                  .read(rankingScreenProvider.notifier)
+                                  .selectYear(e);
+                              _search();
+                            },
+                          ),
+                        ),
                       ],
                     );
                   }),
@@ -232,20 +229,18 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                           12,
                           (index) => index + 1,
                         )
-                      ]
-                          .map(
-                            (e) => PopupMenuItem(
-                              child: Text(
-                                  '${e ?? TextConstant.entire.getString(context)}'),
-                              onTap: () {
-                                ref
-                                    .read(rankingScreenProvider.notifier)
-                                    .selectMonth(e);
-                                _search();
-                              },
-                            ),
-                          )
-                          .toList(),
+                      ].map(
+                        (e) => PopupMenuItem(
+                          child: Text(
+                              '${e ?? TextConstant.entire.getString(context)}'),
+                          onTap: () {
+                            ref
+                                .read(rankingScreenProvider.notifier)
+                                .selectMonth(e);
+                            _search();
+                          },
+                        ),
+                      ),
                     ],
                   ),
                   if (state.subjectOption != ScreenSubjectOption.music)
@@ -272,14 +267,12 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                           if (state.subjectOption == ScreenSubjectOption.game)
                             ...GameTypeOption.values
                                 .map((e) => e.getString(context)),
-                        ]
-                            .map(
-                              (e) => PopupMenuItem(
-                                child: Text(e),
-                                onTap: () => _selectTypeOption(selectedType: e),
-                              ),
-                            )
-                            .toList(),
+                        ].map(
+                          (e) => PopupMenuItem(
+                            child: Text(e),
+                            onTap: () => _selectTypeOption(selectedType: e),
+                          ),
+                        ),
                       ],
                     ),
                   ValueListenableBuilder(

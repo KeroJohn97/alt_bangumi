@@ -72,7 +72,7 @@ class CustomTagGrid extends StatelessWidget {
                 ),
               );
             },
-          ).toList(),
+          ),
       ],
     );
   }

@@ -20,15 +20,13 @@ class SubjectDetailInfoboxWidget extends StatelessWidget {
     return Column(
       children: [
         if (infobox != null)
-          ...infobox!
-              .map((e) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                      _handleInfoboxValue(e),
-                      textAlign: TextAlign.center,
-                    ),
-                  ))
-              .toList()
+          ...infobox!.map((e) => Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  _handleInfoboxValue(e),
+                  textAlign: TextAlign.center,
+                ),
+              ))
       ],
     );
   }

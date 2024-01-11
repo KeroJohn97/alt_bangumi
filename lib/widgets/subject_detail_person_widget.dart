@@ -79,8 +79,7 @@ class SubjectDetailPersonWidget extends StatelessWidget {
                             option: subjectOption,
                             sizeGroup: ImageSizeGroup.small,
                           ),
-                        )
-                        .toList(),
+                        ),
                   ],
                 );
               }),

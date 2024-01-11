@@ -177,7 +177,7 @@ class _PersonDetailScreenState extends ConsumerState<PersonDetailScreen> {
                                 const SizedBox(height: 4.0),
                               ],
                             );
-                          }).toList()
+                          })
                         ],
                       );
                     }
@@ -189,7 +189,7 @@ class _PersonDetailScreenState extends ConsumerState<PersonDetailScreen> {
                         const SizedBox(height: 4.0),
                       ],
                     );
-                  }).toList(),
+                  }),
                 ],
                 if (widget.person.summary?.isNotEmpty ?? false) ...[
                   const SizedBox(height: 8.0),

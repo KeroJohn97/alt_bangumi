@@ -132,19 +132,17 @@ class _SingleTagScreenState extends ConsumerState<SingleTagScreen>
                       size: 16.0,
                     ),
                     menuItem: [
-                      ...SortOption.values
-                          .map(
-                            (e) => PopupMenuItem(
-                              child: Text(e.getString(context)),
-                              onTap: () {
-                                ref
-                                    .read(singleTagScreenProvider.notifier)
-                                    .selectSort(e);
-                                _search();
-                              },
-                            ),
-                          )
-                          .toList(),
+                      ...SortOption.values.map(
+                        (e) => PopupMenuItem(
+                          child: Text(e.getString(context)),
+                          onTap: () {
+                            ref
+                                .read(singleTagScreenProvider.notifier)
+                                .selectSort(e);
+                            _search();
+                          },
+                        ),
+                      ),
                     ],
                   ),
                   Builder(builder: (context) {
@@ -159,21 +157,19 @@ class _SingleTagScreenState extends ConsumerState<SingleTagScreen>
                             currentYear - 1980 + 1,
                             (index) => currentYear - index,
                           )
-                        ]
-                            .map(
-                              (e) => PopupMenuItem(
-                                child: Text(
-                                  '${e ?? TextConstant.entire.getString(context)}',
-                                ),
-                                onTap: () {
-                                  ref
-                                      .read(singleTagScreenProvider.notifier)
-                                      .selectYear(e);
-                                  _search();
-                                },
-                              ),
-                            )
-                            .toList(),
+                        ].map(
+                          (e) => PopupMenuItem(
+                            child: Text(
+                              '${e ?? TextConstant.entire.getString(context)}',
+                            ),
+                            onTap: () {
+                              ref
+                                  .read(singleTagScreenProvider.notifier)
+                                  .selectYear(e);
+                              _search();
+                            },
+                          ),
+                        ),
                       ],
                     );
                   }),
@@ -187,20 +183,18 @@ class _SingleTagScreenState extends ConsumerState<SingleTagScreen>
                           12,
                           (index) => index + 1,
                         )
-                      ]
-                          .map(
-                            (e) => PopupMenuItem(
-                              child: Text(
-                                  '${e ?? TextConstant.entire.getString(context)}'),
-                              onTap: () {
-                                ref
-                                    .read(singleTagScreenProvider.notifier)
-                                    .selectMonth(e);
-                                _search();
-                              },
-                            ),
-                          )
-                          .toList(),
+                      ].map(
+                        (e) => PopupMenuItem(
+                          child: Text(
+                              '${e ?? TextConstant.entire.getString(context)}'),
+                          onTap: () {
+                            ref
+                                .read(singleTagScreenProvider.notifier)
+                                .selectMonth(e);
+                            _search();
+                          },
+                        ),
+                      ),
                     ],
                   ),
                   ValueListenableBuilder(

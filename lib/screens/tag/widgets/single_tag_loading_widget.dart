@@ -26,7 +26,7 @@ class SingleTagLoadingWidget extends StatelessWidget {
                   child: Container(
                     height: 18.h,
                     padding: const EdgeInsets.only(left: 12.0),
-                    child: Column(
+                    child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
@@ -34,7 +34,7 @@ class SingleTagLoadingWidget extends StatelessWidget {
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
+                                children: [
                                   CustomShimmerWidget(height: 20.0),
                                   SizedBox(height: 5.0),
                                   CustomShimmerWidget(height: 20.0),
@@ -43,13 +43,13 @@ class SingleTagLoadingWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const Spacer(),
-                        const Padding(
+                        Spacer(),
+                        Padding(
                           padding: EdgeInsets.only(right: 12.0),
                           child: CustomShimmerWidget(height: 45.0),
                         ),
-                        const Spacer(),
-                        const Padding(
+                        Spacer(),
+                        Padding(
                           padding: EdgeInsets.only(right: 48.0),
                           child: CustomShimmerWidget(height: 20.0),
                         ),

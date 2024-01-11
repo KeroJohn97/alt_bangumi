@@ -60,13 +60,10 @@ class SettingsScreen extends StatelessWidget {
                   const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
           ),
-          ...StorageHelperOption.values
-              .map((e) => ListTile(
-                    title: Text(e.getString(context)),
-                    onTap: () =>
-                        _confirmClearCache(context: context, option: e),
-                  ))
-              .toList(),
+          ...StorageHelperOption.values.map((e) => ListTile(
+                title: Text(e.getString(context)),
+                onTap: () => _confirmClearCache(context: context, option: e),
+              )),
           const Divider(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),

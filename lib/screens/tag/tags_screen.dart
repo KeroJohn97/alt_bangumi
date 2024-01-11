@@ -177,7 +177,7 @@ class _TagScreenState extends ConsumerState<TagsScreen>
             bottom: TabBar(
               controller: _tabController,
               tabs: [
-                ...list.map((e) => Tab(text: e.getString(context))).toList(),
+                ...list.map((e) => Tab(text: e.getString(context))),
               ],
             ),
             title: Text(
@@ -282,7 +282,7 @@ class _TagScreenState extends ConsumerState<TagsScreen>
                             default:
                               return Text('$e');
                           }
-                        }).toList(),
+                        }),
                       ],
                     );
                 }

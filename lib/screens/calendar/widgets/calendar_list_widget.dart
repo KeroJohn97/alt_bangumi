@@ -18,41 +18,39 @@ class CalendarListWidget extends StatelessWidget {
       controller: scrollController,
       child: Column(
         children: [
-          ...calendarList
-              .map(
-                (e) => CustomScrollView(
-                  controller: scrollController,
-                  shrinkWrap: true,
-                  slivers: [
-                    SliverAppBar(
-                      elevation: 0.0,
-                      backgroundColor: Colors.transparent,
-                      leading: const SizedBox.shrink(),
-                      title: Text(
-                        '${e.weekday?.cn}',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      leadingWidth: 0.0,
+          ...calendarList.map(
+            (e) => CustomScrollView(
+              controller: scrollController,
+              shrinkWrap: true,
+              slivers: [
+                SliverAppBar(
+                  elevation: 0.0,
+                  backgroundColor: Colors.transparent,
+                  leading: const SizedBox.shrink(),
+                  title: Text(
+                    '${e.weekday?.cn}',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                    SliverPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate(
-                          e.items!
-                              .map((calendarItem) =>
-                                  CalendarListCard(item: calendarItem))
-                              .toList(),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
+                  leadingWidth: 0.0,
                 ),
-              )
-              .toList(),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate(
+                      e.items!
+                          .map((calendarItem) =>
+                              CalendarListCard(item: calendarItem))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
