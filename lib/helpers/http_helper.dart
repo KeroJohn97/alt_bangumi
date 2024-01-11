@@ -15,7 +15,7 @@ class HttpHelper {
     headers?.addEntries({
       'Authorization': accessToken,
     } as Iterable<MapEntry<String, String>>);
-    headers ??= {'Authorization': accessToken};
+    headers ??= {'Authorization': '$accessToken'};
     final url = Uri.parse(endpoint);
     log('GET ${endpoint.hashCode}: $url');
     final response = await http.get(url, headers: headers);
@@ -53,8 +53,8 @@ class HttpHelper {
     final secret = await secretHelper;
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'X-RapidAPI-Key': secret.rapidAPIKey,
-      'X-RapidAPI-Host': secret.rapidAPIHost,
+      'X-RapidAPI-Key': '${secret.rapidAPIKey}',
+      'X-RapidAPI-Host': '${secret.rapidAPIHost}',
     };
     final url = Uri.parse(
       'https://microsoft-translator-text.p.rapidapi.com/translate'
@@ -90,7 +90,7 @@ class HttpHelper {
       Uri.parse(url),
       headers: headers ??
           {
-            'Authorization': accessToken,
+            'Authorization': '$accessToken',
             'Accept':
                 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
             'Accept-Encoding': 'gzip, deflate',

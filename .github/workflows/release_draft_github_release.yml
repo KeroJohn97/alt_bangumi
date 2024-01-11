@@ -2,20 +2,35 @@ name: Draft Github Release
 on:
   # Enable manual run
   workflow_dispatch:
-    inputs:
-      version:
-        description: "Tag to create (e.g. v2.10.0). Must include 'v' and must match pubspec"
-        required: true
-        default: "v"
-        type: string
+    # inputs:
+    #   version:
+    #     description: "Tag to create (e.g. v2.10.0). Must include 'v' and must match pubspec"
+    #     required: true
+    #     default: "v"
+    #     type: string
 
 # Declare default permissions as read only.
 permissions: write-all
 
 jobs:
-  draft-release:
+  build:
+    name: GET alt bangumi app version from pubspec.yaml
+    runs-on: ubuntu-latest
+    outputs: 
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: GET version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' app/pubspec.yaml)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+  draft_release:
     name: Draft Github release
     runs-on: ubuntu-latest
+    needs: build
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
@@ -25,7 +40,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.event.inputs.version }}
+          tag_name: ${{ needs.build.outputs.version }}
           draft: true
           prerelease: false
           generate_release_notes: true
@@ -33,6 +48,7 @@ jobs:
   create-build:
     name: Create ${{ matrix.target }} build
     runs-on: ${{ matrix.os }}
+    needs: build
     strategy:
       matrix:
         target: [macOS, Windows, Linux, Android]
@@ -43,27 +59,31 @@ jobs:
             build_path: build/macos/Build/Products/Release
             asset_extension: .zip
             asset_content_type: application/zip
+            asset_postfix: macos
           - os: windows-latest
             target: Windows
             build_target: windows
-            build_path: build\windows\runner\Release
+            build_path: build\windows\x64\runner\Release
             asset_extension: .zip
             asset_content_type: application/zip
+            asset_postfix: windows-x86-64
           - os: ubuntu-latest
             target: Linux
             build_target: linux
             build_path: build/linux/x64/release/bundle
             asset_extension: .tar.gz
             asset_content_type: application/gzip
+            asset_postfix: linux-arm-64
           - os: ubuntu-latest
             target: Android
             build_target: apk
             build_path: build/app/outputs/flutter-apk
             asset_extension: .apk
             asset_content_type: application/vnd.android.package-archive
+            asset_postfix: app-release
       # Disable fail-fast as we want results from all even if one fails.
       fail-fast: false
-    needs: draft-release
+    needs: draft_release
     steps:
       # Set up Flutter.
       - name: Clone Flutter repository (v2.11.0)
@@ -84,13 +104,15 @@ jobs:
         with:
           java-version: "11.0.18"
           distribution: temurin
-
+        
       - run: flutter doctor -v
+
       # Checkout code, recreate missing files, and get packages.
       - name: Checkout code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      - run: flutter create .
-      - run: flutter pub get
+      - run: |
+          flutter create .
+          flutter pub get
 
       - name: DOWNLOAD Android keystore
         id: android_keystore
@@ -113,12 +135,14 @@ jobs:
           KEYSTORE_STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
         working-directory: android
 
-      # Add missing secret.json
-      - name: ADD secret.json before release
+      # Add missing secrets.json
+      - name: ADD secrets.json before release
         run: |
-          echo "{" > secret.json
-          echo "X-RapidAPI-Key=${{ secrets.RAPID_API_KEY }}" >> secret.json
-          echo "X-RapidAPI-Host=${{ secrets.RAPID_API_HOST }}" >> secret.json
+          echo "{" > secrets.json
+          echo "Authorization=${{ secrets.BANGUMI_AUTHORIZATION }}" >> secrets.json
+          echo "X-RapidAPI-Key=${{ secrets.RAPID_API_KEY }}" >> secrets.json
+          echo "X-RapidAPI-Host=${{ secrets.RAPID_API_HOST }}" >> secrets.json
+          echo "}"
 
       # Clean the project
       - run: flutter clean
@@ -163,7 +187,7 @@ jobs:
       - name: COMPRESS build for Windows
         if: matrix.target == 'Windows'
         run: compress-archive -Path * -DestinationPath ${{ github.workspace }}\${{ matrix.target }}.zip
-        # working-directory: ${{ matrix.build_path }}
+        working-directory: ${{ matrix.build_path }}
 
       # - name: List contents of the asset directory
       #   run: |
@@ -185,7 +209,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.draft-release.outputs.upload_url }}
+          upload_url: ${{ needs.draft_release.outputs.upload_url }}
           asset_path: ${{github.workspace}}/${{ matrix.target }}${{ matrix.asset_extension }}
-          asset_name: ${{ matrix.target }}${{ matrix.asset_extension }}
+          asset_name: Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
           asset_content_type: ${{ matrix.asset_content_type }}

@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class SecretHelper {
-  final String authorization;
-  final String rapidAPIKey;
-  final String rapidAPIHost;
+  final String? authorization;
+  final String? rapidAPIKey;
+  final String? rapidAPIHost;
   SecretHelper({
     required this.authorization,
     required this.rapidAPIKey,
@@ -33,4 +33,4 @@ class SecretLoader {
 }
 
 Future<SecretHelper> secretHelper =
-    SecretLoader(secretPath: "secret.json").load();
+    SecretLoader(secretPath: "secrets.json").load();

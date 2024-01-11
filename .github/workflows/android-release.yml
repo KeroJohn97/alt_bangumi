@@ -64,9 +64,9 @@ jobs:
 
       - name: PREPARATION before testing
         run: |
-          echo "{" > secret.json
-          echo "X-RapidAPI-Key=${{ secrets.RAPID_API_KEY }}" >> secret.json
-          echo "X-RapidAPI-Host=${{ secrets.RAPID_API_HOST }}" >> secret.json
+          echo "{" > secrets.json
+          echo "X-RapidAPI-Key=${{ secrets.RAPID_API_KEY }}" >> secrets.json
+          echo "X-RapidAPI-Host=${{ secrets.RAPID_API_HOST }}" >> secrets.json
 
       - name: TEST the app
         run: flutter test

@@ -72,7 +72,7 @@ flutter:
     - assets/images/static/
     - assets/json/
     - assets/json/substrings/
-    - secret.json
+    - secrets.json
   # app_name: Alt Bangumi
   # localizations:
   #   - locale: en
