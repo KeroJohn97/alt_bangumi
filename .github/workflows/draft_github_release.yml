@@ -25,7 +25,7 @@ jobs:
         id: get_version
         run: |
           VERSION=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' ./pubspec.yaml)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
 
   draft_release:
     name: Draft Github release
@@ -209,6 +209,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.draft_release.outputs.upload_url }}
-          asset_path: ${{github.workspace}}/${{ matrix.target }}${{ matrix.asset_extension }}
+          asset_path: ${{github.workspace}}/Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
           asset_name: Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
           asset_content_type: ${{ matrix.asset_content_type }}
