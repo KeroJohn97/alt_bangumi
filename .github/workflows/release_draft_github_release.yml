@@ -101,7 +101,8 @@ jobs:
       - name: Configure Keystore for Android
         if: matrix.target == 'Android'
         run: |
-          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > key.properties
+          echo "$PLAY_STORE_UPLOAD_KEY" | base64 --decode > ${{ secrets.KEYSTORE_BASE64 }}
+          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" >> key.properties
           echo "keyAlias=$KEYSTORE_KEY_ALIAS" >> key.properties
           echo "storePassword=$KEYSTORE_STORE_PASSWORD" >> key.properties
           echo "keyPassword=$KEYSTORE_KEY_PASSWORD" >> key.properties
