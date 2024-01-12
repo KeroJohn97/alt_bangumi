@@ -1,4 +1,4 @@
-name: Draft Github Release
+name: DRAFT GITHUB RELEASE
 on:
   # Enable manual run
   workflow_dispatch:
@@ -28,13 +28,13 @@ jobs:
           echo "version=v$VERSION" >> $GITHUB_OUTPUT
 
   draft_release:
-    name: Draft Github release
+    name: DRAFT Github release
     runs-on: ubuntu-latest
     needs: build
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
-      - name: Draft release with release notes
+      - name: DRAFT release with release notes
         id: create_release
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
         env:
@@ -46,7 +46,7 @@ jobs:
           generate_release_notes: true
 
   create-build:
-    name: Create ${{ matrix.target }} build
+    name: CREATE ${{ matrix.target }} build
     runs-on: ${{ matrix.os }}
     needs: [build, draft_release]
     strategy:
@@ -92,20 +92,20 @@ jobs:
       fail-fast: false
     steps:
       # Set up Flutter.
-      - name: Clone Flutter repository (v2.11.0)
-        uses: subosito/flutter-action@cc97e1648fff6ca5cc647fa67f47e70f7895510b
+      - name: CLONE Flutter repository (v2.11.0)
+        uses: subosito/flutter-action@cc97e1648fff6ca5cc647fa67f47e70f7895510b # v2.11.0
         with:
           # channel: master
           flutter-version: '3.16.4'
           cache: true
 
-      - name: Install Linux dependencies
+      - name: INSTALL Linux dependencies
         if: matrix.target == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libx11-dev pkg-config cmake ninja-build libblkid-dev
           
-      - name: Install Android dependencies
+      - name: INSTALL Android dependencies
         if: matrix.target == 'Android'
         uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93 # v4.0.0
         with:
@@ -115,7 +115,7 @@ jobs:
       - run: flutter doctor -v
 
       # Checkout code, recreate missing files, and get packages.
-      - name: Checkout code
+      - name: CHECKOUT code
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - run: |
           flutter create .
@@ -123,12 +123,12 @@ jobs:
 
       - name: DOWNLOAD Android keystore
         id: android_keystore
-        uses: timheuer/base64-to-file@v1.0.3
+        uses: timheuer/base64-to-file@784a1a4a994315802b7d8e2084e116e783d157be # v1.2.4
         with:
           fileName: upload-keystore.jks
           encodedString: ${{ secrets.KEYSTORE_BASE64 }}
 
-      - name: Configure Keystore for Android
+      - name: CONFIGURE Keystore for Android
         if: matrix.target == 'Android'
         run: |
           echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > key.properties
@@ -157,7 +157,7 @@ jobs:
       # Get dependencies
       - run: flutter pub get
 
-      # Build the application.
+      # Build the application and ZIP Runner.app into Payload.ipa
       - run: flutter build ${{ matrix.build_target }} --release
         if: matrix.target != 'iOS'
       - run: |
@@ -195,9 +195,9 @@ jobs:
         working-directory: ${{ matrix.build_path }}
 
       # Upload the build & overwrite
-      - name: ADD packaged build to release draft (v1.7.2)
+      - name: ADD packaged build to release draft
         id: upload_release_asset
-        uses: shogo82148/actions-upload-release-asset@dccd6d23e64fd6a746dce6814c0bde0a04886085
+        uses: shogo82148/actions-upload-release-asset@dccd6d23e64fd6a746dce6814c0bde0a04886085 # v1.7.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

@@ -7,35 +7,29 @@ on:
 
 jobs:
   build:
-    name: CREATE Android Build
-    needs: version
+    name: GET alt bangumi app version from pubspec.yaml
     runs-on: ubuntu-latest
+    outputs: 
+      version: ${{ steps.get_version.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
-      - name: GET version.txt
-        uses: actions/download-artifact@v2
-        with: 
-          name: gitversion
-
-      - name: CREATE new file without newline char from version.txt
-        run: tr -d '\n' < version.txt > version1.txt
-
-      - name: READ version
-        id: version
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: version1.txt
-
-      - name: Check current directory
-        run: ls
-      
-      - name: UPDATE version in YAML
-        run: sed -i 's/99.99.99+99/${{ steps.version.outputs.content }}+${{ github.run_number }}/g' ${{ github.workspace }}/pubspec.yaml
+      - name: GET version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' ./pubspec.yaml)
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+  
+  android_build:
+    name: CREATE Android Build
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
       
       - name: DOWNLOAD Android keystore
         id: android_keystore
-        uses: timheuer/base64-to-file@v1.0.3
+        uses: timheuer/base64-to-file@784a1a4a994315802b7d8e2084e116e783d157be # v1.2.4
         with:
           fileName: upload-keystore.jks
           encodedString: ${{ secrets.KEYSTORE_BASE64 }}
@@ -47,16 +41,15 @@ jobs:
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
       
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93 # v4.0.0
         with:
-          distribution: 'zulu'
-          java-version: "12.x"
-          cache: gradle
+          java-version: "11.0.18"
+          distribution: temurin
              
-      - uses: subosito/flutter-action@v2
+      - name: Clone Flutter repository
+        uses: subosito/flutter-action@cc97e1648fff6ca5cc647fa67f47e70f7895510b # v2.11.0
         with:
-          flutter-version: "3.16.4"
-          channel: 'stable'
+          flutter-version: '3.16.4'
           cache: true
       
       - name: GET dependencies
@@ -65,14 +58,16 @@ jobs:
       - name: PREPARATION before testing
         run: |
           echo "{" > secrets.json
+          echo "Authorization=${{ secrets.BANGUMI_AUTHORIZATION }}" >> secrets.json
           echo "X-RapidAPI-Key=${{ secrets.RAPID_API_KEY }}" >> secrets.json
           echo "X-RapidAPI-Host=${{ secrets.RAPID_API_HOST }}" >> secrets.json
+          echo "}" >> secrets.json
 
       - name: TEST the app
         run: flutter test
 
-      - name: START android release apk build
-        run: flutter build apk --release --split-per-abi --obfuscate --split-debug-info build/app/outputs/symbols --suppress-analytics
+      # - name: START android release apk build
+      #   run: flutter build apk --release --split-per-abi --obfuscate --split-debug-info build/app/outputs/symbols --suppress-analytics
 
       - name: START android release app bundle build
         run: flutter build appbundle --release --target-platform android-arm,android-arm64,android-x64 --obfuscate --split-debug-info build/app/outputs/bundlesymbols --suppress-analytics
@@ -83,31 +78,11 @@ jobs:
           name: android-release
           path: build/app/outputs/bundle/release/app-release.aab
 
-      - name: UPLOAD apk file
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.PAT_TOKEN}}
-        with:
-          upload_url: ${{github.event.release.upload_url}}
-          asset_path: ./app-release.apk
-          asset_name: app-release.apk
-          asset_content_type: application/vnd.android.package-archive
-      
-      - name: UPLOAD ipa file
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{secrets.PAT_TOKEN}}
-        with:
-          upload_url: ${{github.event.release.upload_url}}
-          asset_path: ./no-codesign-release.ipa
-          asset_name: no-codesign-release.ipa
-          asset_content_type: application/octet-stream
-
-  # deploy:
-  #   name: DEPLOY Android Build
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
+  deploy:
+    name: DEPLOY Android Build
+    needs: android_build
+    runs-on: ubuntu-latest
+    steps:
   #     - uses: actions/checkout@v1
 
   #     - name: GET Android Build from artifacts
@@ -123,32 +98,16 @@ jobs:
   #         releaseFiles: app-release.aab
   #         track: before-production
   #         status: completed
+      - uses: r0adkll/upload-google-play@9cf8fd30c9e616ec761db3b9abb2b0f15842ce58 # v1.1.2
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: com.kerojohn.alt_bangumi
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          track: before-production
+          status: inProgress
+          inAppUpdatePriority: 2
+          userFraction: 0.33
+          whatsNewDirectory: distribution/whatsnew
+          mappingFile: app/build/outputs/mapping/release/mapping.txt
+          debugSymbols: app/intermediates/merged_native_libs/release/out/lib
   
-  version:
-    name: CREATE version number
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: FETCH complete history
-        run: git fetch --unshallow
-      
-      - name: INSTALL GitVersion
-        uses: gittools/actions/gitversion/setup@v0.9.7
-        with:
-          versionSpec: "5.x"
-
-      - name: USE GitVersion
-        id: gitversion
-        uses: gittools/actions/gitversion/execute@v0.9.7
-      
-      - name: CREATE version.txt with nuGetVersion
-        run: echo ${{ steps.gitversion.outputs.nuGetVersion  }} > version.txt
-      
-      - name: UPLOAD version.txt
-        uses: actions/upload-artifact@v2
-        with:
-          name: gitversion
-          path: version.txt
