@@ -84,7 +84,7 @@ jobs:
           - os: macos-latest
             target: iOS
             build_target: ipa
-            build_path: build/ios/iphoneos
+            build_path: build/ios/ipa
             asset_extension: .ipa
             asset_content_type: application/octet-stream
             asset_postfix: ios
