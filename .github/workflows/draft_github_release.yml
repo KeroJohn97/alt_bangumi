@@ -84,7 +84,7 @@ jobs:
           - os: macos-latest
             target: iOS
             build_target: ipa
-            build_path: build/ios/ipa
+            build_path: build/ios
             asset_extension: .ipa
             asset_content_type: application/octet-stream
             asset_postfix: ios
@@ -160,6 +160,12 @@ jobs:
       # Build the application.
       - run: flutter build ${{ matrix.build_target }} --release
         if: matrix.target != 'iOS'
+
+      - name: List contents of the asset directory
+        run: |
+          ls -R
+        working-directory: ${{ matrix.build_path }}
+        if: matrix.target == 'iOS'
 
       - run: flutter build ipa --no-codesign
         if: matrix.target == 'iOS'
