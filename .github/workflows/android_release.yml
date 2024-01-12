@@ -1,4 +1,4 @@
-name: Android Release
+name: ANDROID RELEASE
 
 on:
   push:
@@ -102,7 +102,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.kerojohn.alt_bangumi
-          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
           track: before-production
           status: inProgress
           inAppUpdatePriority: 2
