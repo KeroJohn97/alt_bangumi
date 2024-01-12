@@ -20,8 +20,8 @@ jobs:
           VERSION=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' ./pubspec.yaml)
           echo "version=v$VERSION" >> $GITHUB_OUTPUT
   
-  android_build:
-    name: CREATE Android Build
+  build_deploy:
+    name: CREATE Android Build & Deploy
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -66,43 +66,15 @@ jobs:
       - name: TEST the app
         run: flutter test
 
-      # - name: START android release apk build
-      #   run: flutter build apk --release --split-per-abi --obfuscate --split-debug-info build/app/outputs/symbols --suppress-analytics
-
       - name: START android release app bundle build
         run: flutter build appbundle --release --target-platform android-arm,android-arm64,android-x64 --obfuscate --split-debug-info build/app/outputs/bundlesymbols --suppress-analytics
       
-      - name: UPLOAD android release app bundle
-        uses: actions/upload-artifact@v2
-        with:
-          name: app-release.aab
-          path: build/app/outputs/bundle/release/app-release.aab
-
-  deploy:
-    name: DEPLOY Android Build
-    needs: android_build
-    runs-on: ubuntu-latest
-    steps:
-  #     - uses: actions/checkout@v1
-
-      - name: GET Android Build from artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: app-release.aab
-      
-  #     - name: RELEASE Build to internal track
-  #       uses: r0adkll/upload-google-play@v1
-  #       with:
-  #         serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
-  #         packageName: com.kerojohn.alt_bangumi
-  #         releaseFiles: app-release.aab
-  #         track: before-production
-  #         status: completed
-      - uses: r0adkll/upload-google-play@9cf8fd30c9e616ec761db3b9abb2b0f15842ce58 # v1.1.2
+      - name: DEPLOY app to the Google Play Store
+        uses: r0adkll/upload-google-play@9cf8fd30c9e616ec761db3b9abb2b0f15842ce58 # v1.1.2
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.kerojohn.alt_bangumi
-          releaseFiles: app-release.aab
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
           track: before-production
           status: inProgress
           inAppUpdatePriority: 2
