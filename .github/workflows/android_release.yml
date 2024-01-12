@@ -75,7 +75,7 @@ jobs:
       - name: UPLOAD android release app bundle
         uses: actions/upload-artifact@v2
         with:
-          name: android-release
+          name: app-release.aab
           path: build/app/outputs/bundle/release/app-release.aab
 
   deploy:
@@ -85,10 +85,10 @@ jobs:
     steps:
   #     - uses: actions/checkout@v1
 
-  #     - name: GET Android Build from artifacts
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: android-release
+      - name: GET Android Build from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: app-release.aab
       
   #     - name: RELEASE Build to internal track
   #       uses: r0adkll/upload-google-play@v1
@@ -102,7 +102,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.kerojohn.alt_bangumi
-          releaseFiles: build/app/outputs/bundle/release/app-release.aab
+          releaseFiles: app-release.aab
           track: before-production
           status: inProgress
           inAppUpdatePriority: 2
