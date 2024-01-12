@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.kerojohn" "\0"
-            VALUE "FileDescription", "alt_bangumi" "\0"
+            VALUE "CompanyName", "KeroJohn97" "\0"
+            VALUE "FileDescription", "Thanks for checking the file description haha" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "alt_bangumi" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.kerojohn. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2023 KeroJohn97. All rights reserved." "\0"
             VALUE "OriginalFilename", "alt_bangumi.exe" "\0"
-            VALUE "ProductName", "alt_bangumi" "\0"
+            VALUE "ProductName", "Alt Bangumi" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

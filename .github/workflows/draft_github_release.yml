@@ -51,7 +51,7 @@ jobs:
     needs: [build, draft_release]
     strategy:
       matrix:
-        target: [macOS, Windows, Linux, Android]
+        target: [macOS, Windows, Linux, Android, iOS]
         include:
           - os: macos-latest
             target: macOS
@@ -81,6 +81,13 @@ jobs:
             asset_extension: .apk
             asset_content_type: application/vnd.android.package-archive
             asset_postfix: app-release
+          - os: macos-latest
+            target: iOS
+            build_target: ipa
+            build_path: build/ios/ipa/iphoneos
+            asset_extension: .ipa
+            asset_content_type: application/octet-stream
+            asset_postfix: ios
       # Disable fail-fast as we want results from all even if one fails.
       fail-fast: false
     steps:
@@ -90,6 +97,7 @@ jobs:
         with:
           # channel: master
           flutter-version: '3.16.4'
+          cache: true
 
       - name: Install Linux dependencies
         if: matrix.target == 'Linux'
@@ -103,6 +111,7 @@ jobs:
         with:
           java-version: "11.0.18"
           distribution: temurin
+          cache: gradle
         
       - run: flutter doctor -v
 
@@ -151,10 +160,19 @@ jobs:
 
       # Build the application.
       - run: flutter build ${{ matrix.build_target }} --release
+        if: matrix.target != 'iOS'
+
+      - run: flutter build ipa --no-codesign
+        if: matrix.target == 'iOS'
 
       - name: RENAME build for Android
         if: matrix.target == 'Android'
         run: mv app-release.apk ${{ github.workspace }}/${{ matrix.target }}.apk
+        working-directory: ${{ matrix.build_path }}
+
+      - name: RENAME build for iOS
+        if: matrix.target == 'iOS'
+        run: mv release-no-codesign.ipa ${{ github.workspace }}/${{ matrix.target }}.ipa
         working-directory: ${{ matrix.build_path }}
 
       - name: COMPRESS build for Linux
@@ -180,7 +198,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.draft_release.outputs.upload_url }}
-          asset_path: ${{github.workspace}}/Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
-          asset_name: Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
+          asset_path: ${{github.workspace}}/${{ matrix.target }}${{ matrix.asset_extension }}
+          asset_name: Alt_Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
           asset_content_type: ${{ matrix.asset_content_type }}
           overwrite: true
