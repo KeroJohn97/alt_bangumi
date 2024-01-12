@@ -160,7 +160,7 @@ jobs:
       # Build the application.
       - run: flutter build ${{ matrix.build_target }} --release
         if: matrix.target != 'iOS'
-      - run: flutter build ipa --no-codesign
+      - run: flutter build ipa --release --no-codesign
         if: matrix.target == 'iOS'
 
       - name: List contents of the asset directory
