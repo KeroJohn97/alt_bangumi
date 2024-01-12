@@ -152,22 +152,6 @@ jobs:
       # Build the application.
       - run: flutter build ${{ matrix.build_target }} --release
 
-      # Package the build.
-      # - name: Copy VC redistributables to release directory for Windows
-      #   if: matrix.target == 'Windows'
-      #   run: |
-      #     try {
-      #       Write-Host "Copying VC redistributables..."
-      #       Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\msvcp140.dll') -Destination ${{ matrix.build_path }}
-      #       Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140.dll') -Destination ${{ matrix.build_path }}
-      #       Copy-Item (vswhere -latest -find 'VC\Redist\MSVC\*\x64\*\vcruntime140_1.dll') -Destination ${{ matrix.build_path }}
-      #       Write-Host "Copying completed successfully."
-      #     } catch {
-      #       Write-Host "Error during copying: $_"
-      #       exit 1
-      #     }
-      #   working-directory: ${{ matrix.build_path }}
-
       - name: RENAME build for Android
         if: matrix.target == 'Android'
         run: mv app-release.apk ${{ github.workspace }}/${{ matrix.target }}.apk
@@ -188,27 +172,15 @@ jobs:
         run: compress-archive -Path * -DestinationPath ${{ github.workspace }}\${{ matrix.target }}.zip
         working-directory: ${{ matrix.build_path }}
 
-      # - name: List contents of the asset directory
-      #   run: |
-      #     ls -R
-      #   working-directory: ${{ matrix.build_path }}
-
-      - name: CHECK file existence (v2.0.0)
-        id: files_exists
-        uses: andstor/file-existence-action@20b4d2e596410855db8f9ca21e96fbe18e12930b
-        with:
-          files: Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
-
-      # Upload the build if it's not exist
+      # Upload the build & overwrite
       - name: ADD packaged build to release draft (v1.7.2)
         id: upload_release_asset
-        # if: ${{ !steps.files_exists.outputs.files_exists }}
         uses: shogo82148/actions-upload-release-asset@dccd6d23e64fd6a746dce6814c0bde0a04886085
-        # uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.draft_release.outputs.upload_url }}
-          asset_path: ${{github.workspace}}/${{ matrix.target }}${{ matrix.asset_extension }}
+          asset_path: ${{github.workspace}}/Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
           asset_name: Alt Bangumi-${{ needs.build.outputs.version }}-${{ matrix.asset_postfix }}${{ matrix.asset_extension }}
           asset_content_type: ${{ matrix.asset_content_type }}
+          overwrite: true
