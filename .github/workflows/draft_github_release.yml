@@ -8,6 +8,9 @@ on:
     #     required: true
     #     default: "v"
     #     type: string
+  push:
+    branches:
+      - 'release-v*'
 
 # Declare default permissions as read only.
 permissions: write-all
@@ -36,7 +39,7 @@ jobs:
     steps:
       - name: DRAFT release with release notes
         id: create_release
-        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
