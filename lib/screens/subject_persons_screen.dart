@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/relation_model/relation_model.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
 import 'package:alt_bangumi/screens/person_detail_screen.dart';
@@ -8,14 +9,13 @@ import 'package:alt_bangumi/widgets/custom_network_image_widget.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/color_constant.dart';
 import '../constants/enum_constant.dart';
 import '../constants/http_constant.dart';
-import '../constants/text_constant.dart';
 import '../helpers/common_helper.dart';
 import '../helpers/loading_helper.dart';
 import '../repositories/person_repository.dart';
@@ -64,10 +64,7 @@ class SubjectPersonsScreen extends ConsumerWidget {
     final name =
         subject.nameCn?.isEmpty ?? true ? subject.name : subject.nameCn;
     return ScaffoldCustomed(
-      title: context.formatString(
-        TextConstant.productionStaffsBelong.getString(context),
-        [name],
-      ),
+      title: context.t.productionStaffsBelong(subject: name ?? ''),
       leading: const BackButton(color: Colors.black),
       trailing: PopupMenuButton(
         child: const Padding(
@@ -81,7 +78,7 @@ class SubjectPersonsScreen extends ConsumerWidget {
           return [
             PopupMenuItem(
               child: Text(
-                TextConstant.viewInBrowser.getString(context),
+                context.t.viewInBrowser,
               ),
               onTap: () {
                 final url =

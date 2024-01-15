@@ -1,11 +1,10 @@
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/widgets/subject/relation_card.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 
 import '../constants/enum_constant.dart';
-import '../constants/text_constant.dart';
 import '../models/relation_model/relation_model.dart';
 
 class SubjectDetailRelationWidget extends StatelessWidget {
@@ -27,7 +26,7 @@ class SubjectDetailRelationWidget extends StatelessWidget {
           Row(
             children: [
               Text(
-                TextConstant.associate.getString(context),
+                context.t.associate,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.0,
@@ -74,7 +73,7 @@ class SubjectDetailRelationWidget extends StatelessWidget {
                       });
                 },
                 icon: Text(
-                  '${TextConstant.more.getString(context)} >',
+                  '${t.more} >',
                   style: const TextStyle(color: Colors.grey),
                 ),
               ),

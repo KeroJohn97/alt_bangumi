@@ -1,11 +1,11 @@
 import 'package:alt_bangumi/constants/color_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/rating_model.dart';
 import 'package:alt_bangumi/screens/subject_detail_screen.dart';
 import 'package:alt_bangumi/widgets/custom_star_rating_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:go_router/go_router.dart';
 
 import '../../../models/search_model/search_info_model.dart';
@@ -48,7 +48,7 @@ class SearchGridCard extends StatelessWidget {
               alignment: Alignment.center,
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: Text(
-                '${(info.nameCn?.isEmpty ?? true) ? TextConstant.withoutAName.getString(context) : info.nameCn.showHTML()}',
+                '${(info.nameCn?.isEmpty ?? true) ? context.t.withoutAName : info.nameCn.showHTML()}',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -89,10 +89,7 @@ class RatingsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     if ((rating?.total ?? 0) < minimumRatings) {
       return Text(
-        context.formatString(
-          TextConstant.inputLessThanRatings.getString(context),
-          [minimumRatings],
-        ),
+        context.t.inputLessThanRatings(count: minimumRatings),
         style: TextStyle(color: Colors.grey[600], fontSize: 12.0),
       );
     }
@@ -129,10 +126,7 @@ class RatingsRow extends StatelessWidget {
         ),
         const SizedBox(width: 2.0),
         Text(
-          '${rating!.score} ${showTotal ? context.formatString(
-              TextConstant.inputPeopleRatings.getString(context),
-              [rating?.total],
-            ) : ''}',
+          '${rating!.score} ${showTotal ? context.t.inputPeopleRatings(count: rating?.total ?? '0') : ''}',
           style: const TextStyle(
             fontSize: 12.0,
             fontWeight: FontWeight.bold,

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:alt_bangumi/constants/enum_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/providers/subject_detail_screen_provider.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:alt_bangumi/widgets/subject_detail_character_widget.dart';
@@ -18,7 +18,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -171,7 +171,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 // Row(
                                 //   children: [
                                 //     Text(
-                                //       TextConstant.favourite.getString(context),
+                                //      context.t.favourite,
                                 //       style: const TextStyle(
                                 //         fontWeight: FontWeight.bold,
                                 //         fontSize: 18.0,
@@ -199,8 +199,8 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 //   mainAxisAlignment: MainAxisAlignment.center,
                                 //   children: [
                                 //     Text(
-                                //       TextConstant.notAddedToFavourites
-                                //           .getString(context),
+                                //      context.t.notAddedToFavourites
+                                //           ,
                                 //       style: const TextStyle(
                                 //         fontSize: 16.0,
                                 //         fontWeight: FontWeight.bold,
@@ -214,12 +214,12 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        '${subject?.collection?.wish ?? ''}${TextConstant.wished.getString(context)} / '
-                                        '${subject?.collection?.collect ?? ''}${TextConstant.watched.getString(context)} / '
-                                        '${subject?.collection?.doing ?? ''}${TextConstant.watching.getString(context)} / '
-                                        '${subject?.collection?.onHold ?? ''}${TextConstant.onHold.getString(context)} / '
-                                        '${subject?.collection?.dropped ?? ''}${TextConstant.dropped.getString(context)} / '
-                                        '${TextConstant.total.getString(context)}$total',
+                                        '${subject?.collection?.wish ?? ''}${t.wished} / '
+                                        '${subject?.collection?.collect ?? ''}${t.watched} / '
+                                        '${subject?.collection?.doing ?? ''}${t.watching} / '
+                                        '${subject?.collection?.onHold ?? ''}${t.onHold} / '
+                                        '${subject?.collection?.dropped ?? ''}${t.dropped} / '
+                                        '${t.total}$total',
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 14.0,
@@ -245,7 +245,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                   ),
                                 const SizedBox(height: 8.0),
                                 Text(
-                                  TextConstant.tag.getString(context),
+                                  context.t.tag,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18.0,
@@ -262,7 +262,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 Row(
                                   children: [
                                     Text(
-                                      TextConstant.summary.getString(context),
+                                      context.t.summary,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18.0,
@@ -291,7 +291,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 // Row(
                                 //   children: [
                                 //     Text(
-                                //       TextConstant.preview.getString(context),
+                                //      context.t.preview,
                                 //       style: const TextStyle(
                                 //         fontWeight: FontWeight.bold,
                                 //         fontSize: 18.0,
@@ -301,7 +301,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 //     TextButton(
                                 //       onPressed: () {},
                                 //       child: Text(
-                                //         '${TextConstant.more.getString(context)} >',
+                                //         '${t.more} >',
                                 //         style:
                                 //             const TextStyle(color: Colors.grey),
                                 //       ),
@@ -312,7 +312,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 Row(
                                   children: [
                                     Text(
-                                      TextConstant.details.getString(context),
+                                      context.t.details,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18.0,
@@ -322,7 +322,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                     // TextButton(
                                     //   onPressed: () {},
                                     //   child: Text(
-                                    //     '${TextConstant.revise.getString(context)} >',
+                                    //     '${t.revise} >',
                                     //     style:
                                     //         const TextStyle(color: Colors.grey),
                                     //   ),
@@ -354,7 +354,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 // Row(
                                 //   children: [
                                 //     Text(
-                                //       TextConstant.catalog.getString(context),
+                                //      context.t.catalog,
                                 //       style: const TextStyle(
                                 //         fontWeight: FontWeight.bold,
                                 //         fontSize: 18.0,
@@ -364,7 +364,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 //     TextButton(
                                 //       onPressed: () {},
                                 //       child: Text(
-                                //         '${TextConstant.more.getString(context)} >',
+                                //         '${t.more} >',
                                 //         style:
                                 //             const TextStyle(color: Colors.grey),
                                 //       ),
@@ -376,7 +376,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 // Row(
                                 //   children: [
                                 //     Text(
-                                //       TextConstant.log.getString(context),
+                                //      context.t.log,
                                 //       style: const TextStyle(
                                 //         fontWeight: FontWeight.bold,
                                 //         fontSize: 18.0,
@@ -386,7 +386,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 //     TextButton(
                                 //       onPressed: () {},
                                 //       child: Text(
-                                //         '${TextConstant.more.getString(context)} >',
+                                //         '${t.more} >',
                                 //         style:
                                 //             const TextStyle(color: Colors.grey),
                                 //       ),
@@ -398,7 +398,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 // Row(
                                 //   children: [
                                 //     Text(
-                                //       TextConstant.post.getString(context),
+                                //      context.t.post,
                                 //       style: const TextStyle(
                                 //         fontWeight: FontWeight.bold,
                                 //         fontSize: 18.0,
@@ -408,7 +408,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 //     TextButton(
                                 //       onPressed: () {},
                                 //       child: Text(
-                                //         '${TextConstant.more.getString(context)} >',
+                                //         '${t.more} >',
                                 //         style:
                                 //             const TextStyle(color: Colors.grey),
                                 //       ),
@@ -420,7 +420,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 // Row(
                                 //   children: [
                                 //     Text(
-                                //       TextConstant.comment.getString(context),
+                                //      context.t.comment,
                                 //       style: const TextStyle(
                                 //         fontWeight: FontWeight.bold,
                                 //         fontSize: 18.0,
@@ -430,7 +430,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                 //     TextButton(
                                 //       onPressed: () {},
                                 //       child: Text(
-                                //         '${TextConstant.more.getString(context)} >',
+                                //         '${t.more} >',
                                 //         style:
                                 //             const TextStyle(color: Colors.grey),
                                 //       ),

@@ -1,12 +1,12 @@
 import 'package:alt_bangumi/constants/color_constant.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/screens/subject_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/calendar_model/calendar_item.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:go_router/go_router.dart';
 
-import '../../../constants/text_constant.dart';
 import '../../../widgets/custom_network_image_widget.dart';
 
 class CalendarGridCard extends StatelessWidget {
@@ -36,7 +36,7 @@ class CalendarGridCard extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8.0),
             child: Text(
               (item.nameCn?.isEmpty ?? true)
-                  ? TextConstant.withoutAName.getString(context)
+                  ? context.t.withoutAName
                   : '${item.nameCn}',
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

@@ -1,13 +1,13 @@
 import 'package:alt_bangumi/constants/color_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/rating_model.dart';
 import 'package:alt_bangumi/screens/subject_detail_screen.dart';
 import 'package:alt_bangumi/widgets/custom_star_rating_widget.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:go_router/go_router.dart';
 
 import '../../../constants/enum_constant.dart';
@@ -31,7 +31,7 @@ class SearchListCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nameCn =
-        '${(info.nameCn?.isEmpty ?? true) ? (info.name?.isEmpty ?? true) ? TextConstant.withoutAName.getString(context) : info.name : info.nameCn.showHTML()}';
+        '${(info.nameCn?.isEmpty ?? true) ? (info.name?.isEmpty ?? true) ? context.t.withoutAName : info.name : info.nameCn.showHTML()}';
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: GestureDetector(
@@ -151,10 +151,7 @@ class RatingsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     if ((rating?.total ?? 0) < minimumRatings) {
       return Text(
-        context.formatString(
-          TextConstant.inputLessThanRatings.getString(context),
-          [minimumRatings],
-        ),
+        context.t.inputLessThanRatings(count: minimumRatings),
         style: TextStyle(color: Colors.grey[600], fontSize: 12.0),
       );
     }
@@ -190,10 +187,7 @@ class RatingsRow extends StatelessWidget {
         ),
         const SizedBox(width: 2.0),
         Text(
-          '${rating!.score} ${context.formatString(
-            TextConstant.inputPeopleRatings.getString(context),
-            [rating?.total],
-          )}',
+          '${rating!.score} ${t.inputPeopleRatings(count: rating?.total ?? '0')}',
           style: const TextStyle(
             fontSize: 12.0,
             fontWeight: FontWeight.bold,

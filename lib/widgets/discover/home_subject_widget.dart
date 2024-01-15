@@ -35,7 +35,7 @@ class HomeSubjectWidget extends StatelessWidget {
             const Spacer(),
             // TextButton(
             //   onPressed: _pushChannelScreen,
-            //   child: Text('${TextConstant.channel.getString(context)} >'),
+            //   child: Text('${t.channel.getString(context)} >'),
             // ),
           ],
         ),

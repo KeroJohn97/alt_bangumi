@@ -22,7 +22,8 @@ dependencies:
   fl_chart: ^0.62.0
   flutter:
     sdk: flutter
-  flutter_localization: ^0.2.0
+  flutter_localizations:
+    sdk: flutter
   flutter_native_splash: ^2.2.19
   flutter_riverpod: ^2.3.4
   flutter_secure_storage: ^8.1.0
@@ -41,6 +42,8 @@ dependencies:
   qr_flutter: ^4.1.0
   share_plus: ^7.2.1
   shimmer: ^3.0.0
+  slang: ^3.25.0
+  slang_flutter: ^3.25.0
   sliver_tools: ^0.2.12
   url_launcher: ^6.1.11
   webview_flutter: ^4.4.2
@@ -55,6 +58,7 @@ dev_dependencies:
   mockito: ^5.4.4
   patrol: ^3.4.0
   patrol_finders: ^2.0.1+1
+  slang_build_runner: ^3.25.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

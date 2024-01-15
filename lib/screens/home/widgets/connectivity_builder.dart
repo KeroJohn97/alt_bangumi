@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ConnectivityBuilder extends ConsumerStatefulWidget {
@@ -55,8 +55,7 @@ class _ConnectivityHelperState extends ConsumerState<ConnectivityBuilder> {
   Future<void> _handleConnectivity() async {
     if (_connectivityResult == ConnectivityResult.none) {
       CommonHelper.showSnackBar(
-          context: context,
-          text: TextConstant.noInternetConnection.getString(context));
+          context: context, text: context.t.noInternetConnection);
     } else if (_connectivityResult == ConnectivityResult.wifi ||
         _connectivityResult == ConnectivityResult.mobile) {
       if (mounted) ScaffoldMessenger.of(context).hideCurrentSnackBar();

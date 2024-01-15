@@ -1,10 +1,9 @@
 import 'dart:math';
 
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import '../gen/assets.gen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 
 class CustomErrorWidget extends StatelessWidget {
   const CustomErrorWidget({super.key});
@@ -18,7 +17,7 @@ class CustomErrorWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Assets.images.musume.values[random].image(),
-          Text(TextConstant.unknownError.getString(context)),
+          Text(t.unknownError),
         ],
       ),
     );

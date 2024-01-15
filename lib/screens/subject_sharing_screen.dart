@@ -4,15 +4,15 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:alt_bangumi/constants/http_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/file_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/widgets/custom_network_image_widget.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -68,14 +68,14 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
       if (!mounted) return _enable();
       CommonHelper.showSnackBar(
         context: context,
-        text: TextConstant.pleaseGrantStoragePermission.getString(context),
+        text: context.t.pleaseGrantStoragePermission,
       );
       return _enable();
     }
     if (!mounted) return _enable();
     CommonHelper.showSnackBar(
       context: context,
-      text: TextConstant.fileIsBeingSaved.getString(context),
+      text: context.t.fileIsBeingSaved,
     );
     RenderObject? boundary = _globalKey.currentContext?.findRenderObject();
     if (boundary == null || boundary is! RenderRepaintBoundary) {
@@ -98,8 +98,7 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
     if (!mounted) return _enable();
     CommonHelper.showSnackBar(
       context: context,
-      text: context.formatString(
-          TextConstant.theFileSaved.getString(context), [result.path]),
+      text: context.t.theFileSaved(path: result.path),
     );
     return _enable();
   }
@@ -124,7 +123,7 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
           child: const Icon(Icons.translate_outlined),
         ),
         titleWidget: Text(
-          TextConstant.subjectSharing.getString(context),
+          context.t.subjectSharing,
           style: const TextStyle(color: Colors.black, fontSize: 20.0),
         ),
         trailing: Row(

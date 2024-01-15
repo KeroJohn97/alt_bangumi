@@ -56,7 +56,6 @@ mixin TextConstant {
   static const comment = 'Comment';
   static const searchEntry = 'Search Entry';
   static const indexing = 'Indexing';
-  static const catalogue = 'Catalogue';
   static const today = 'Today';
   static const journal = 'Journal';
   static const ongoing = 'Ongoing';

@@ -1,7 +1,7 @@
 import 'package:alt_bangumi/constants/enum_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/images_model.dart';
 import 'package:alt_bangumi/models/rating_model.dart';
 import 'package:alt_bangumi/models/search_model/search_info_model.dart';
@@ -12,7 +12,7 @@ import 'package:alt_bangumi/widgets/discover/search/search_grid_card.dart';
 import 'package:alt_bangumi/widgets/discover/search/search_list_card.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -105,7 +105,7 @@ class _SingleTagScreenState extends ConsumerState<SingleTagScreen>
             return [
               PopupMenuItem(
                 onTap: _viewInBrowser,
-                child: Text(TextConstant.viewInBrowser.getString(context)),
+                child: Text(t.viewInBrowser),
               ),
             ];
           },
@@ -148,8 +148,7 @@ class _SingleTagScreenState extends ConsumerState<SingleTagScreen>
                   Builder(builder: (context) {
                     final currentYear = DateTime.now().year;
                     return CustomPopupMenuButton(
-                      tag:
-                          '${state.year ?? TextConstant.year.getString(context)}',
+                      tag: '${state.year ?? context.t.year}',
                       menuItem: [
                         ...[
                           null,
@@ -160,7 +159,7 @@ class _SingleTagScreenState extends ConsumerState<SingleTagScreen>
                         ].map(
                           (e) => PopupMenuItem(
                             child: Text(
-                              '${e ?? TextConstant.entire.getString(context)}',
+                              '${e ?? context.t.entire}',
                             ),
                             onTap: () {
                               ref
@@ -174,8 +173,7 @@ class _SingleTagScreenState extends ConsumerState<SingleTagScreen>
                     );
                   }),
                   CustomPopupMenuButton(
-                    tag:
-                        '${state.month ?? TextConstant.month.getString(context)}',
+                    tag: '${state.month ?? context.t.month}',
                     menuItem: [
                       ...[
                         null,
@@ -185,8 +183,7 @@ class _SingleTagScreenState extends ConsumerState<SingleTagScreen>
                         )
                       ].map(
                         (e) => PopupMenuItem(
-                          child: Text(
-                              '${e ?? TextConstant.entire.getString(context)}'),
+                          child: Text('${e ?? context.t.entire}'),
                           onTap: () {
                             ref
                                 .read(singleTagScreenProvider.notifier)

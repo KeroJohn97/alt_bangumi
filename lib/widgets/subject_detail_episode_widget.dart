@@ -1,14 +1,13 @@
 import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/loading_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/episode_model/datum_model.dart';
 import 'package:alt_bangumi/models/episode_model/episode_model.dart';
 import 'package:alt_bangumi/providers/subject_detail_screen_provider.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../constants/text_constant.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SubjectDetailEpisodeWidget extends ConsumerWidget {
   final AutoDisposeStateNotifierProvider<SubjectDetailScreenNotifier,
@@ -69,9 +68,7 @@ class SubjectDetailEpisodeWidget extends ConsumerWidget {
           Row(
             children: [
               Text(
-                isMusic
-                    ? TextConstant.trackList.getString(context)
-                    : TextConstant.chapter.getString(context),
+                isMusic ? context.t.trackList : context.t.chapter,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.0,
@@ -93,7 +90,7 @@ class SubjectDetailEpisodeWidget extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      TextConstant.sort.getString(context),
+                      context.t.sort,
                       style: const TextStyle(color: Colors.grey),
                     ),
                     const Icon(
@@ -107,7 +104,7 @@ class SubjectDetailEpisodeWidget extends ConsumerWidget {
               IconButton(
                 onPressed: () => _loadEpisodes(context: context, ref: ref),
                 icon: Text(
-                  '${TextConstant.more.getString(context)} >',
+                  '${t.more} >',
                   style: const TextStyle(color: Colors.grey),
                 ),
               ),
@@ -150,13 +147,13 @@ class _EpisodeRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${e.ep}. ${name?.isEmpty ?? true ? TextConstant.upcoming.getString(context) : name.showHTML()}',
+                  '${e.ep}. ${name?.isEmpty ?? true ? context.t.upcoming : name.showHTML()}',
                   style: TextStyle(color: color),
                 ),
                 Text(
                   isMusic
-                      ? '${TextConstant.disc.getString(context)}${e.disc}'
-                      : '${TextConstant.premiere.getString(context)}: ${e.airdate} / ${TextConstant.duration.getString(context)}: ${e.duration}',
+                      ? '${t.disc}${e.disc}'
+                      : '${t.premiere}: ${e.airdate} / ${t.duration}: ${e.duration}',
                   style: const TextStyle(
                     fontSize: 10.0,
                     color: Colors.grey,

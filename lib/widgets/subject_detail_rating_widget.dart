@@ -1,11 +1,10 @@
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/rating_model.dart';
 import 'package:alt_bangumi/widgets/subject/custom_rating_chart_widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 
 import '../constants/color_constant.dart';
-import '../constants/text_constant.dart';
 import '../helpers/common_helper.dart';
 import '../models/count_model.dart';
 
@@ -57,7 +56,7 @@ class _SubjectDetailRatingWidgetState extends State<SubjectDetailRatingWidget> {
             children: [
               Text.rich(
                 TextSpan(
-                  text: TextConstant.rating.getString(context),
+                  text: context.t.rating,
                   children: [
                     TextSpan(
                       text: ' ${widget.rating?.score}',
@@ -95,8 +94,7 @@ class _SubjectDetailRatingWidgetState extends State<SubjectDetailRatingWidget> {
               TextButton(
                 onPressed: () {
                   if (widget.subjectId == null) {
-                    CommonHelper.showToast(
-                        TextConstant.invalidURL.getString(context));
+                    CommonHelper.showToast(t.invalidURL);
                     return;
                   }
                   final url = 'https://netaba.re/subject/${widget.subjectId}';
@@ -105,7 +103,7 @@ class _SubjectDetailRatingWidgetState extends State<SubjectDetailRatingWidget> {
                 child: Row(
                   children: [
                     AutoSizeText(
-                      TextConstant.trend.getString(context),
+                      context.t.trend,
                       group: _autoSizeGroup,
                       style:
                           const TextStyle(color: Colors.grey, fontSize: 14.0),
@@ -123,8 +121,7 @@ class _SubjectDetailRatingWidgetState extends State<SubjectDetailRatingWidget> {
               TextButton(
                 onPressed: () {
                   if (widget.subjectId == null) {
-                    CommonHelper.showToast(
-                        TextConstant.invalidURL.getString(context));
+                    CommonHelper.showToast(t.invalidURL);
                     return;
                   }
                   final url =
@@ -134,7 +131,7 @@ class _SubjectDetailRatingWidgetState extends State<SubjectDetailRatingWidget> {
                 child: Row(
                   children: [
                     AutoSizeText(
-                      TextConstant.perspective.getString(context),
+                      context.t.perspective,
                       group: _autoSizeGroup,
                       style:
                           const TextStyle(color: Colors.grey, fontSize: 14.0),
@@ -154,7 +151,7 @@ class _SubjectDetailRatingWidgetState extends State<SubjectDetailRatingWidget> {
           Align(
             alignment: Alignment.centerRight,
             child: Text(
-              '${widget.rating?.total} ${TextConstant.rating.getString(context)}',
+              '${widget.rating?.total} ${t.rating}',
               style: const TextStyle(color: Colors.grey, fontSize: 12.0),
             ),
           ),
@@ -164,7 +161,7 @@ class _SubjectDetailRatingWidgetState extends State<SubjectDetailRatingWidget> {
               // TextButton(
               //   onPressed: () {},
               //   child: Text(
-              //     '${TextConstant.userRating.getString(context)} >',
+              //     '${t.userRating} >',
               //     style: const TextStyle(
               //       color: Colors.grey,
               //       fontSize: 12.0,
@@ -179,8 +176,7 @@ class _SubjectDetailRatingWidgetState extends State<SubjectDetailRatingWidget> {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text.rich(
                         TextSpan(
-                          text:
-                              TextConstant.standardDeviation.getString(context),
+                          text: context.t.standardDeviation,
                           children: [
                             TextSpan(
                               text:

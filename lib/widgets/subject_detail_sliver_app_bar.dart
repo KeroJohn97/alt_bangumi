@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:alt_bangumi/constants/http_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/relation_model/relation_model.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
 import 'package:alt_bangumi/screens/subject_sharing_screen.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:go_router/go_router.dart';
 
 import 'custom_network_image_widget.dart';
@@ -204,10 +204,8 @@ class _SubjectDetailSliverAppBarState extends State<SubjectDetailSliverAppBar> {
                     child: Visibility(
                       visible: widget.subject?.apiDate != null,
                       child: AutoSizeText(
-                        context.formatString(
-                          TextConstant.somethingUpdatedAt.getString(context),
-                          [widget.subject?.apiDate],
-                        ),
+                        context.t.somethingUpdatedAt(
+                            date: widget.subject?.apiDate ?? ''),
                         style: const TextStyle(fontWeight: FontWeight.bold),
                         maxFontSize: 14.0,
                         maxLines: 1,

@@ -6,15 +6,15 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/loading_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/helpers/storage_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -87,7 +87,7 @@ class CommonHelper {
     if (context.mounted && !isValid) {
       showSnackBar(
         context: context,
-        text: TextConstant.invalidURL.getString(context),
+        text: context.t.invalidURL,
       );
       return false;
     }
@@ -129,18 +129,19 @@ class CommonHelper {
               child: Column(
                 children: [
                   ListTile(
-                    title:
-                        Text(TextConstant.chooseALanguage.getString(context)),
+                    title: Text(t.chooseALanguage),
                   ),
                   SizedBox(
                     height: 50.h,
                     child: ListView.builder(
-                        itemCount: window.locales.length,
+                        itemCount: PlatformDispatcher.instance.locales.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            title: Text('${window.locales[index]}'),
+                            title: Text(
+                                '${PlatformDispatcher.instance.locales[index]}'),
                             onTap: () {
-                              context.pop(window.locales[index]);
+                              context.pop(
+                                  PlatformDispatcher.instance.locales[index]);
                             },
                           );
                         }),
@@ -206,7 +207,7 @@ class CommonHelper {
       log('$e');
     } on SocketException {
       CommonHelper.showToast(
-        TextConstant.noInternetConnection.getString(context),
+        context.t.noInternetConnection,
       );
     } finally {
       LoadingHelper.instance().hide();
@@ -227,7 +228,7 @@ class CommonHelper {
           scrollable: true,
           title: Row(
             children: [
-              Text(TextConstant.translation.getString(dialogContext)),
+              Text(t.translation),
               const Spacer(),
               IconButton(
                 onPressed: () {
@@ -248,7 +249,7 @@ class CommonHelper {
               Clipboard.setData(
                 ClipboardData(text: translation),
               );
-              CommonHelper.showToast(TextConstant.copied.getString(context));
+              CommonHelper.showToast(t.copied);
             },
             child: Text(translation),
           ),
@@ -262,15 +263,15 @@ class CommonHelper {
             context: context,
             builder: (context) {
               return AlertDialog(
-                title: Text(TextConstant.areYouSureContinue.getString(context)),
+                title: Text(t.areYouSureContinue),
                 actions: [
                   TextButton(
                     onPressed: () => context.pop(false),
-                    child: Text(TextConstant.no.getString(context)),
+                    child: Text(t.no),
                   ),
                   TextButton(
                     onPressed: () => context.pop(true),
-                    child: Text(TextConstant.yes.getString(context)),
+                    child: Text(t.yes),
                   ),
                 ],
               );

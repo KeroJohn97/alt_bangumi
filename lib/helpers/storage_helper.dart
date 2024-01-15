@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:alt_bangumi/constants/text_constant.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 enum StorageHelperOption {
@@ -23,17 +23,17 @@ extension StorageHelperOptionExtension on StorageHelperOption {
   String getString(BuildContext context) {
     switch (this) {
       case StorageHelperOption.searchHistory:
-        return TextConstant.searchHistory.getString(context);
+        return context.t.searchHistory;
       case StorageHelperOption.searchResultHistory:
-        return TextConstant.searchResultHistory.getString(context);
+        return context.t.searchResultHistory;
       case StorageHelperOption.defaultSearchSubjectOption:
-        return TextConstant.defaultSearchSubjectOption.getString(context);
+        return context.t.defaultSearchSubjectOption;
       case StorageHelperOption.homeAnimeList:
-        return TextConstant.homeAnimeList.getString(context);
+        return context.t.homeAnimeList;
       case StorageHelperOption.translationHistory:
-        return TextConstant.translationHistory.getString(context);
+        return context.t.translationHistory;
       case StorageHelperOption.subjectDetailList:
-        return TextConstant.subjectDetailList.getString(context);
+        return context.t.subjectDetailList;
     }
   }
 }

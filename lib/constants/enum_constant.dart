@@ -1,6 +1,5 @@
-import 'package:alt_bangumi/constants/text_constant.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 
 enum HomeIndexEnum {
   discover,
@@ -14,15 +13,15 @@ extension HomeIndexEnumExtension on HomeIndexEnum {
   String display(BuildContext context) {
     switch (this) {
       case HomeIndexEnum.discover:
-        return TextConstant.discover.getString(context);
+        return context.t.discover;
       case HomeIndexEnum.timeCapsules:
-        return TextConstant.timeCapsules.getString(context);
+        return context.t.timeCapsules;
       case HomeIndexEnum.favourite:
-        return TextConstant.favourite.getString(context);
+        return context.t.favourite;
       case HomeIndexEnum.superUnfolded:
-        return TextConstant.superUnfolded.getString(context);
+        return context.t.superUnfolded;
       case HomeIndexEnum.timeMachine:
-        return TextConstant.timeMachine.getString(context);
+        return context.t.timeMachine;
     }
   }
 }
@@ -33,11 +32,11 @@ extension LanguageEnumExtension on LanguageEnum {
   String getString(BuildContext context) {
     switch (this) {
       case LanguageEnum.english:
-        return TextConstant.english.getString(context);
+        return context.t.english;
       case LanguageEnum.simplifiedChinese:
-        return TextConstant.simplifiedChinese.getString(context);
+        return context.t.simplifiedChinese;
       case LanguageEnum.traditionalChinese:
-        return TextConstant.traditionalChinese.getString(context);
+        return context.t.traditionalChinese;
     }
   }
 
@@ -46,9 +45,20 @@ extension LanguageEnumExtension on LanguageEnum {
       case LanguageEnum.english:
         return 'en';
       case LanguageEnum.simplifiedChinese:
-        return 'zh-cn';
+        return 'zh';
       case LanguageEnum.traditionalChinese:
-        return 'zh-tw';
+        return 'zh';
+    }
+  }
+
+  String countryCode() {
+    switch (this) {
+      case LanguageEnum.english:
+        return '';
+      case LanguageEnum.simplifiedChinese:
+        return 'CN';
+      case LanguageEnum.traditionalChinese:
+        return 'TW';
     }
   }
 }
@@ -84,53 +94,53 @@ extension NavigationEnumExtension on NavigationEnum {
   String getString(BuildContext context) {
     switch (this) {
       case NavigationEnum.ranking:
-        return TextConstant.ranking.getString(context);
+        return context.t.ranking;
       case NavigationEnum.searchEntry:
-        return TextConstant.searchEntry.getString(context);
+        return context.t.searchEntry;
       case NavigationEnum.indexing:
-        return TextConstant.indexing.getString(context);
+        return context.t.indexing;
       case NavigationEnum.catalog:
-        return TextConstant.catalog.getString(context);
+        return context.t.catalog;
       case NavigationEnum.today:
-        return TextConstant.today.getString(context);
+        return context.t.today;
       case NavigationEnum.journal:
-        return TextConstant.journal.getString(context);
+        return context.t.journal;
       case NavigationEnum.tag:
-        return TextConstant.tag.getString(context);
+        return context.t.tag;
       case NavigationEnum.ongoing:
-        return TextConstant.ongoing.getString(context);
+        return context.t.ongoing;
       case NavigationEnum.info:
-        return TextConstant.info.getString(context);
+        return context.t.info;
       case NavigationEnum.search:
-        return TextConstant.search.getString(context);
+        return context.t.search;
       case NavigationEnum.stock:
-        return TextConstant.stock.getString(context);
+        return context.t.stock;
       case NavigationEnum.wiki:
-        return TextConstant.wiki.getString(context);
+        return context.t.wiki;
       case NavigationEnum.almanac:
-        return TextConstant.almanac.getString(context);
+        return context.t.almanac;
       case NavigationEnum.timeline:
-        return TextConstant.timeline.getString(context);
+        return context.t.timeline;
       case NavigationEnum.netabare:
-        return TextConstant.netabare.getString(context);
+        return context.t.netabare;
       case NavigationEnum.localSMB:
-        return TextConstant.localSMB.getString(context);
+        return context.t.localSMB;
       case NavigationEnum.bilibiliSync:
-        return TextConstant.bilibiliSync.getString(context);
+        return context.t.bilibiliSync;
       case NavigationEnum.doubanSync:
-        return TextConstant.doubanSync.getString(context);
+        return context.t.doubanSync;
       case NavigationEnum.associate:
-        return TextConstant.associate.getString(context);
+        return context.t.associate;
       case NavigationEnum.backupCSV:
-        return TextConstant.backupCSV.getString(context);
+        return context.t.backupCSV;
       case NavigationEnum.myCharacter:
-        return TextConstant.myCharacter.getString(context);
+        return context.t.myCharacter;
       case NavigationEnum.myCatalogue:
-        return TextConstant.myCatalogue.getString(context);
+        return context.t.myCatalogue;
       case NavigationEnum.clipboard:
-        return TextConstant.clipboard.getString(context);
+        return context.t.clipboard;
       case NavigationEnum.settings:
-        return TextConstant.settings.getString(context);
+        return context.t.settings;
     }
   }
 }
@@ -144,9 +154,9 @@ extension CalendarScreenOptionExtension on CalendarScreenFilterOption {
   String getString(BuildContext context) {
     switch (this) {
       case CalendarScreenFilterOption.all:
-        return TextConstant.entire.getString(context);
+        return context.t.entire;
       case CalendarScreenFilterOption.collection:
-        return TextConstant.favourite.getString(context);
+        return context.t.favourite;
     }
   }
 }
@@ -179,21 +189,21 @@ extension SubjectOptionExtension on ScreenSubjectOption {
   String getString(BuildContext context) {
     switch (this) {
       case ScreenSubjectOption.entry:
-        return TextConstant.entry.getString(context);
+        return context.t.entry;
       case ScreenSubjectOption.anime:
-        return TextConstant.anime.getString(context);
+        return context.t.anime;
       case ScreenSubjectOption.book:
-        return TextConstant.book.getString(context);
+        return context.t.book;
       case ScreenSubjectOption.music:
-        return TextConstant.music.getString(context);
+        return context.t.music;
       case ScreenSubjectOption.game:
-        return TextConstant.game.getString(context);
+        return context.t.game;
       case ScreenSubjectOption.film:
-        return TextConstant.film.getString(context);
+        return context.t.film;
       case ScreenSubjectOption.character:
-        return TextConstant.character.getString(context);
+        return context.t.character;
       case ScreenSubjectOption.user:
-        return TextConstant.user.getString(context);
+        return context.t.user;
     }
   }
 
@@ -277,19 +287,19 @@ extension CareerGroupExtension on CareerGroup {
   String getString(BuildContext context) {
     switch (this) {
       case CareerGroup.producer:
-        return TextConstant.producer.getString(context);
+        return context.t.producer;
       case CareerGroup.mangaka:
-        return TextConstant.mangaka.getString(context);
+        return context.t.mangaka;
       case CareerGroup.artist:
-        return TextConstant.artist.getString(context);
+        return context.t.artist;
       case CareerGroup.seiyu:
-        return TextConstant.seiyu.getString(context);
+        return context.t.seiyu;
       case CareerGroup.writer:
-        return TextConstant.writer.getString(context);
+        return context.t.writer;
       case CareerGroup.illustrator:
-        return TextConstant.illustrator.getString(context);
+        return context.t.illustrator;
       case CareerGroup.actor:
-        return TextConstant.actor.getString(context);
+        return context.t.actor;
     }
   }
 }
@@ -302,13 +312,13 @@ extension SortOptionExtension on SortOption {
   String getString(BuildContext context) {
     switch (this) {
       case SortOption.collects:
-        return TextConstant.numberOfAnnotations.getString(context);
+        return context.t.numberOfAnnotations;
       case SortOption.title:
-        return TextConstant.name.getString(context);
+        return context.t.name;
       case SortOption.date:
-        return TextConstant.date.getString(context);
+        return context.t.date;
       case SortOption.rank:
-        return TextConstant.ranking.getString(context);
+        return context.t.ranking;
     }
   }
 }
@@ -319,17 +329,17 @@ extension AnimeTypeOptionExtension on AnimeTypeOption {
   String getString(BuildContext context) {
     switch (this) {
       case AnimeTypeOption.all:
-        return TextConstant.entire.getString(context);
+        return context.t.entire;
       case AnimeTypeOption.tv:
-        return TextConstant.tv.getString(context);
+        return context.t.tv;
       case AnimeTypeOption.web:
-        return TextConstant.web.getString(context);
+        return context.t.web;
       case AnimeTypeOption.ova:
-        return TextConstant.ova.getString(context);
+        return context.t.ova;
       case AnimeTypeOption.movie:
-        return TextConstant.movie.getString(context);
+        return context.t.movie;
       case AnimeTypeOption.others:
-        return TextConstant.others.getString(context);
+        return context.t.others;
     }
   }
 
@@ -357,15 +367,15 @@ extension BookTypeOptionExtension on BookTypeOption {
   String getString(BuildContext context) {
     switch (this) {
       case BookTypeOption.all:
-        return TextConstant.entire.getString(context);
+        return context.t.entire;
       case BookTypeOption.comic:
-        return TextConstant.comic.getString(context);
+        return context.t.comic;
       case BookTypeOption.novel:
-        return TextConstant.novel.getString(context);
+        return context.t.novel;
       case BookTypeOption.illustration:
-        return TextConstant.illustration.getString(context);
+        return context.t.illustration;
       case BookTypeOption.others:
-        return TextConstant.others.getString(context);
+        return context.t.others;
     }
   }
 
@@ -391,15 +401,15 @@ extension RealTypeOptionExtension on RealTypeOption {
   String getString(BuildContext context) {
     switch (this) {
       case RealTypeOption.all:
-        return TextConstant.entire.getString(context);
+        return context.t.entire;
       case RealTypeOption.japan:
-        return TextConstant.japaneseDrama.getString(context);
+        return context.t.japaneseDrama;
       case RealTypeOption.europe:
-        return TextConstant.europeanNAmericanDramas.getString(context);
+        return context.t.europeanNAmericanDramas;
       case RealTypeOption.china:
-        return TextConstant.chineseDrama.getString(context);
+        return context.t.chineseDrama;
       case RealTypeOption.others:
-        return TextConstant.others.getString(context);
+        return context.t.others;
     }
   }
 
@@ -448,49 +458,49 @@ extension GameTypeOptionExtension on GameTypeOption {
   String getString(BuildContext context) {
     switch (this) {
       case GameTypeOption.all:
-        return TextConstant.entire.getString(context);
+        return context.t.entire;
       case GameTypeOption.pc:
-        return TextConstant.pc.getString(context);
+        return context.t.pc;
       case GameTypeOption.ns:
-        return TextConstant.ns.getString(context);
+        return context.t.ns;
       case GameTypeOption.ps5:
-        return TextConstant.ps5.getString(context);
+        return context.t.ps5;
       case GameTypeOption.ps4:
-        return TextConstant.ps4.getString(context);
+        return context.t.ps4;
       case GameTypeOption.psv:
-        return TextConstant.psv.getString(context);
+        return context.t.psv;
       case GameTypeOption.xboxSeries:
-        return TextConstant.xboxSeries.getString(context);
+        return context.t.xboxSeries;
       case GameTypeOption.xboxOne:
-        return TextConstant.xboxOne.getString(context);
+        return context.t.xboxOne;
       case GameTypeOption.wiiU:
-        return TextConstant.wiiU.getString(context);
+        return context.t.wiiU;
       case GameTypeOption.ps3:
-        return TextConstant.ps3.getString(context);
+        return context.t.ps3;
       case GameTypeOption.xbox360:
-        return TextConstant.xbox360.getString(context);
+        return context.t.xbox360;
       case GameTypeOption.threeDS:
-        return TextConstant.threeDS.getString(context);
+        return context.t.threeDS;
       case GameTypeOption.psp:
-        return TextConstant.psp.getString(context);
+        return context.t.psp;
       case GameTypeOption.wii:
-        return TextConstant.wii.getString(context);
+        return context.t.wii;
       case GameTypeOption.nds:
-        return TextConstant.nds.getString(context);
+        return context.t.nds;
       case GameTypeOption.ps2:
-        return TextConstant.ps2.getString(context);
+        return context.t.ps2;
       case GameTypeOption.xbox:
-        return TextConstant.xbox.getString(context);
+        return context.t.xbox;
       case GameTypeOption.mac:
-        return TextConstant.mac.getString(context);
+        return context.t.mac;
       case GameTypeOption.ps:
-        return TextConstant.ps.getString(context);
+        return context.t.ps;
       case GameTypeOption.gba:
-        return TextConstant.gba.getString(context);
+        return context.t.gba;
       case GameTypeOption.gb:
-        return TextConstant.gb.getString(context);
+        return context.t.gb;
       case GameTypeOption.fc:
-        return TextConstant.fc.getString(context);
+        return context.t.fc;
     }
   }
 

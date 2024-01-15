@@ -1,8 +1,7 @@
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/widgets/custom_shimmer_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 
 class CustomGifWidget extends StatefulWidget {
   final String directoryPath;
@@ -67,7 +66,7 @@ class _CustomGifWidgetState extends State<CustomGifWidget>
                 const SizedBox(height: 8.0),
                 CustomShimmerWidget(
                   child: Text(
-                    TextConstant.loadingWithDots.getString(context),
+                    context.t.loadingWithDots,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,

@@ -1,25 +1,20 @@
-import 'dart:ui';
-
 import 'package:alt_bangumi/constants/enum_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/screens/home/widgets/connectivity_builder.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:alt_bangumi/constants/color_constant.dart';
 import 'package:alt_bangumi/helpers/router_helper.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localization/flutter_localization.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'helpers/sizing_helper.dart';
 
-final FlutterLocalization localization = FlutterLocalization.instance;
-
 void main() {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  runApp(const ProviderScope(child: MyApp()));
+  WidgetsFlutterBinding.ensureInitialized();
+  LocaleSettings.useDeviceLocale();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  runApp(TranslationProvider(child: const ProviderScope(child: MyApp())));
 }
 
 class MyApp extends StatefulWidget {
@@ -31,35 +26,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int languageIndex = LanguageEnum.english.index;
-
-  @override
-  void initState() {
-    super.initState();
-    localization.init(
-      mapLocales: [
-        MapLocale(LanguageEnum.english.languageCode(), TextConstant.EN),
-        MapLocale(
-            LanguageEnum.simplifiedChinese.languageCode(), TextConstant.ZH_CN),
-        MapLocale(
-            LanguageEnum.traditionalChinese.languageCode(), TextConstant.ZH_TW),
-        // TODO: locale ja.
-        // const MapLocale('ja', TextConstant.JA),
-      ],
-      initLanguageCode: window.locale.languageCode,
-    );
-    localization.onTranslatedLanguage = _onTranslatedLanguage;
-  }
-
-  // the setState function here is a must to add
-  void _onTranslatedLanguage(Locale? locale) {
-    final languageEnum = LanguageEnum.values.firstWhereOrNull(
-        (element) => element.languageCode() == locale?.languageCode);
-    setState(() {
-      if (languageEnum != null) languageIndex = languageEnum.index;
-      // whenever your initialization is completed, remove the splash screen
-      FlutterNativeSplash.remove();
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,8 +81,9 @@ class _MyAppState extends State<MyApp> {
         );
       },
       routerConfig: routerHelper,
-      supportedLocales: localization.supportedLocales,
-      localizationsDelegates: localization.localizationsDelegates,
+      locale: TranslationProvider.of(context).flutterLocale,
+      supportedLocales: AppLocaleUtils.supportedLocales,
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
     );
   }
 }

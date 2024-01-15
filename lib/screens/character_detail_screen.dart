@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/providers/character_detail_screen_provider.dart';
 import 'package:alt_bangumi/widgets/character/character_subject_list_card.dart';
 import 'package:alt_bangumi/widgets/custom_network_image_widget.dart';
@@ -9,7 +9,7 @@ import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -52,10 +52,8 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
             .loadCharacter(widget.character);
       } catch (e) {
         CommonHelper.showToast(
-          context.formatString(
-            TextConstant.somethingDoesNotExist,
-            [widget.character],
-          ),
+          // ignore: use_build_context_synchronously
+          context.t.somethingDoesNotExist(something: widget.character),
         );
       }
     });
@@ -82,7 +80,7 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
               return [
                 PopupMenuItem(
                   child: Text(
-                    TextConstant.viewInBrowser.getString(context),
+                    context.t.viewInBrowser,
                   ),
                   onTap: () => CommonHelper.showInBrowser(
                     context: context,
@@ -92,7 +90,7 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
                 ),
                 PopupMenuItem(
                   child: Text(
-                    TextConstant.copyLink.getString(context),
+                    context.t.copyLink,
                   ),
                   onTap: () => Clipboard.setData(
                     ClipboardData(
@@ -103,7 +101,7 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
                 ),
                 PopupMenuItem(
                   child: Text(
-                    TextConstant.copyShare.getString(context),
+                    context.t.copyShare,
                   ),
                   onTap: () => Share.shareUri(
                     Uri.parse(
@@ -201,7 +199,7 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
               Row(
                 children: [
                   Text(
-                    TextConstant.performance.getString(context),
+                    context.t.performance,
                     style: const TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
@@ -211,7 +209,7 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
                   // TextButton(
                   //   onPressed: () {},
                   //   child: Text(
-                  //     '${TextConstant.moreWorks.getString(context)} >',
+                  //     '${t.moreWorks} >',
                   //     style: const TextStyle(color: Colors.grey),
                   //   ),
                   // ),

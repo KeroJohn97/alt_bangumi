@@ -1,13 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:alt_bangumi/constants/enum_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/storage_helper.dart';
-import 'package:alt_bangumi/main.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -20,12 +19,7 @@ class SettingsScreen extends StatelessWidget {
     if (!result) return;
     final isDeleted = await StorageHelper.delete(option);
     if (isDeleted) {
-      CommonHelper.showToast(
-        context.formatString(
-          TextConstant.somethingCleared.getString(context),
-          [option.getString(context)],
-        ),
-      );
+      CommonHelper.showToast(t.somethingCleared(something: option));
     }
   }
 
@@ -35,7 +29,13 @@ class SettingsScreen extends StatelessWidget {
   }) async {
     final result = await CommonHelper.showConfirmation(context);
     if (!result) return;
-    localization.translate(languageEnum.languageCode());
+    final appLocale = AppLocale.values.firstWhereOrNull(
+      (element) =>
+          element.languageCode == languageEnum.languageCode() &&
+          (element.countryCode ?? '') == languageEnum.countryCode(),
+    );
+    if (appLocale == null) return;
+    LocaleSettings.setLocale(appLocale);
   }
 
   static const route = '/settings';
@@ -44,9 +44,9 @@ class SettingsScreen extends StatelessWidget {
     return ScaffoldCustomed(
       leading: const BackButton(color: Colors.black),
       // trailing: const SizedBox.shrink(),
-      title: TextConstant.settings.getString(context),
+      title: context.t.settings,
       titleWidget: Text(
-        TextConstant.settings.getString(context),
+        context.t.settings,
         style: const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
       ),
       body: ListView(
@@ -55,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              TextConstant.clearCache.getString(context),
+              context.t.clearCache,
               style:
                   const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),
@@ -68,7 +68,7 @@ class SettingsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              TextConstant.applicationLanguage.getString(context),
+              context.t.applicationLanguage,
               style:
                   const TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
             ),

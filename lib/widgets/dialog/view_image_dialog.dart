@@ -172,7 +172,7 @@ class _ViewImageDialogState extends State<ViewImageDialog> {
         // Padding(
         //   padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
         //   child: RectangularButton(
-        //     label: TextConstant.removeImg,
+        //     label:context.t.removeImg,
         //     onPressed: _removeImg,
         //     buttonColor: Colors.white,
         //     textColor: primaryColor,

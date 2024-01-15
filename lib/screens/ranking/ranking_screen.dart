@@ -1,8 +1,8 @@
 import 'package:alt_bangumi/constants/enum_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/images_model.dart';
 import 'package:alt_bangumi/models/rating_model.dart';
 import 'package:alt_bangumi/models/search_model/search_info_model.dart';
@@ -15,7 +15,7 @@ import 'package:alt_bangumi/widgets/discover/search/search_list_card.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
@@ -143,7 +143,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
             return [
               PopupMenuItem(
                 onTap: _viewInBrowser,
-                child: Text(TextConstant.viewInBrowser.getString(context)),
+                child: Text(t.viewInBrowser),
               ),
             ];
           },
@@ -153,7 +153,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
           ),
         ),
       ),
-      title: TextConstant.ranking.getString(context),
+      title: context.t.ranking,
       body: CustomScrollView(
         slivers: [
           SliverPinnedHeader(
@@ -194,8 +194,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                   Builder(builder: (context) {
                     final currentYear = DateTime.now().year;
                     return CustomPopupMenuButton(
-                      tag:
-                          '${state.year ?? TextConstant.year.getString(context)}',
+                      tag: '${state.year ?? context.t.year}',
                       menuItem: [
                         ...[
                           null,
@@ -206,7 +205,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                         ].map(
                           (e) => PopupMenuItem(
                             child: Text(
-                              '${e ?? TextConstant.entire.getString(context)}',
+                              '${e ?? context.t.entire}',
                             ),
                             onTap: () {
                               ref
@@ -220,8 +219,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                     );
                   }),
                   CustomPopupMenuButton(
-                    tag:
-                        '${state.month ?? TextConstant.month.getString(context)}',
+                    tag: '${state.month ?? context.t.month}',
                     menuItem: [
                       ...[
                         null,
@@ -231,8 +229,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                         )
                       ].map(
                         (e) => PopupMenuItem(
-                          child: Text(
-                              '${e ?? TextConstant.entire.getString(context)}'),
+                          child: Text('${e ?? context.t.entire}'),
                           onTap: () {
                             ref
                                 .read(rankingScreenProvider.notifier)
@@ -252,7 +249,7 @@ class _RankingScreenState extends ConsumerState<RankingScreen>
                             gameTypeOption: state.gameTypeOption,
                             realTypeOption: state.filmTypeOption,
                           ) ??
-                          TextConstant.type.getString(context),
+                          context.t.type,
                       menuItem: [
                         ...[
                           if (state.subjectOption == ScreenSubjectOption.anime)

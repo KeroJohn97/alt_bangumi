@@ -1,11 +1,11 @@
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:flutter/material.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/calendar_model/calendar_item.dart';
 import 'package:alt_bangumi/widgets/custom_network_image_widget.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:go_router/go_router.dart';
 
-import '../../../constants/text_constant.dart';
 import '../../subject_detail_screen.dart';
 
 class CalendarListCard extends StatelessWidget {
@@ -53,7 +53,7 @@ class CalendarListCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             (item.nameCn?.isEmpty ?? true)
-                                ? TextConstant.withoutAName.getString(context)
+                                ? context.t.withoutAName
                                 : '${item.nameCn}',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),

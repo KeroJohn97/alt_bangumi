@@ -4,15 +4,15 @@ import 'dart:developer';
 import 'package:alt_bangumi/constants/color_constant.dart';
 import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/constants/http_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/providers/tag_screen_provider.dart';
 import 'package:alt_bangumi/screens/tag/widgets/custom_tag_grid.dart';
 import 'package:alt_bangumi/screens/tag/widgets/tag_loading_widget.dart';
 import 'package:alt_bangumi/widgets/custom_error_widget.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TagsScreen extends ConsumerStatefulWidget {
@@ -181,7 +181,7 @@ class _TagScreenState extends ConsumerState<TagsScreen>
               ],
             ),
             title: Text(
-              TextConstant.tag.getString(context),
+              context.t.tag,
               style: const TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
@@ -202,8 +202,7 @@ class _TagScreenState extends ConsumerState<TagsScreen>
                         '?page=${state.page}';
                     return [
                       PopupMenuItem(
-                        child:
-                            Text(TextConstant.viewInBrowser.getString(context)),
+                        child: Text(t.viewInBrowser),
                         onTap: () => CommonHelper.showInBrowser(
                             context: context, url: url),
                       ),
@@ -225,7 +224,7 @@ class _TagScreenState extends ConsumerState<TagsScreen>
                     borderSide:
                         BorderSide(color: ColorConstant.themeColor, width: 2.0),
                   ),
-                  hintText: TextConstant.search.getString(context),
+                  hintText: context.t.search,
                   isDense: true,
                 ),
                 onChanged: _searchTags,

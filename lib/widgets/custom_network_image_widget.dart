@@ -1,13 +1,13 @@
 import 'package:alt_bangumi/gen/assets.gen.dart';
 import 'package:alt_bangumi/helpers/file_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/widgets/custom_shimmer_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:photo_view/photo_view.dart';
 
-import '../constants/text_constant.dart';
 import '../helpers/common_helper.dart';
 
 class CustomNetworkImageWidget extends StatefulWidget {
@@ -301,8 +301,7 @@ class _CustomPhotoViewState extends State<_CustomPhotoView> {
                     if (storagePermission == false) {
                       if (!mounted) return _enable();
                       CommonHelper.showToast(
-                        TextConstant.pleaseGrantStoragePermission
-                            .getString(context),
+                        context.t.pleaseGrantStoragePermission,
                       );
                       return _enable();
                     }
@@ -310,15 +309,11 @@ class _CustomPhotoViewState extends State<_CustomPhotoView> {
                         widget.imageProvider);
                     if (!mounted) return _enable();
                     if (file != null) {
-                      CommonHelper.showToast(
-                        context.formatString(
-                          TextConstant.theFileSaved.getString(context),
-                          [file.path],
-                        ),
-                      ).then((value) => _enable());
+                      CommonHelper.showToast(t.theFileSaved(path: file.path))
+                          .then((value) => _enable());
                     } else {
                       CommonHelper.showToast(
-                        TextConstant.fileSaveTimeout.getString(context),
+                        context.t.fileSaveTimeout,
                       ).then((value) => _enable());
                     }
                   },

@@ -1,10 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:alt_bangumi/constants/color_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/loading_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/relation_model/actor_model.dart';
 import 'package:alt_bangumi/models/relation_model/relation_model.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
@@ -12,7 +12,7 @@ import 'package:alt_bangumi/screens/person_detail_screen.dart';
 import 'package:alt_bangumi/widgets/custom_network_image_widget.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -70,10 +70,7 @@ class SubjectCharactersScreen extends ConsumerWidget {
         subject.nameCn?.isEmpty ?? true ? subject.name : subject.nameCn;
 
     return ScaffoldCustomed(
-      title: context.formatString(
-        TextConstant.charactersBelong.getString(context),
-        [name],
-      ),
+      title: context.t.charactersBelong(subject: name ?? ''),
       leading: const BackButton(color: Colors.black),
       trailing: PopupMenuButton(
         child: const Padding(
@@ -87,7 +84,7 @@ class SubjectCharactersScreen extends ConsumerWidget {
           return [
             PopupMenuItem(
               child: Text(
-                TextConstant.viewInBrowser.getString(context),
+                context.t.viewInBrowser,
               ),
               onTap: () {
                 final url =

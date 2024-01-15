@@ -4,13 +4,13 @@ import 'dart:convert';
 import 'package:alt_bangumi/constants/color_constant.dart';
 import 'package:alt_bangumi/constants/enum_constant.dart';
 import 'package:alt_bangumi/constants/http_constant.dart';
-import 'package:alt_bangumi/constants/text_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
 import 'package:alt_bangumi/helpers/debouncer_helper.dart';
 import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/helpers/storage_helper.dart';
 import 'package:alt_bangumi/helpers/substring_helper.dart';
+import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/search_model/search_model.dart';
 import 'package:alt_bangumi/providers/search_screen_provider.dart';
 import 'package:alt_bangumi/screens/ranking/widgets/ranking_loading_widget.dart';
@@ -21,7 +21,7 @@ import 'package:alt_bangumi/widgets/custom_empty_widget.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -244,7 +244,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return ScaffoldCustomed(
       leading: const BackButton(color: Colors.black),
       showDrawer: false,
-      title: TextConstant.search.getString(context),
+      title: context.t.search,
       trailing: Padding(
         padding: const EdgeInsets.all(16.0),
         child: PopupMenuButton(
@@ -252,7 +252,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             return [
               PopupMenuItem(
                 value: 0,
-                child: Text(TextConstant.viewInBrowser.getString(context)),
+                child: Text(t.viewInBrowser),
                 onTap: () {
                   final state = ref.read(searchScreenProvider);
                   final keyword = _searchController.text.trim();
@@ -316,9 +316,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                     value: e,
                                     alignment: AlignmentDirectional.center,
                                     child: Text(
-                                      e.name
-                                          .capitalizeFirst()
-                                          .getString(context),
+                                      e.name.capitalizeFirst(),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.grey[800],
@@ -352,8 +350,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           focusedBorder: _inputBorder,
                           focusColor: ColorConstant.themeColor,
                           hoverColor: ColorConstant.themeColor,
-                          hintText:
-                              TextConstant.enterKeywords.getString(context),
+                          hintText: context.t.enterKeywords,
                           hintStyle: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 12.0,
@@ -385,7 +382,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         ),
                         onPressed: () => _search(onSubmitted: true),
                         child: Text(
-                          TextConstant.enquiry.getString(context),
+                          context.t.enquiry,
                           style: TextStyle(
                             color: Colors.grey[800],
                             fontSize: 12.0,
@@ -442,8 +439,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                   }
                                   return ListTile(
                                     title: Text(
-                                      TextConstant.clearHistory
-                                          .getString(context),
+                                      context.t.clearHistory,
                                     ),
                                     onTap: _clearSearchHistory,
                                   );
