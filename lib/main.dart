@@ -13,7 +13,6 @@ import 'helpers/sizing_helper.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   LocaleSettings.useDeviceLocale();
-  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(TranslationProvider(child: const ProviderScope(child: MyApp())));
 }
 
