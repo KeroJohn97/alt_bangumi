@@ -1,4 +1,5 @@
 import 'package:alt_bangumi/constants/color_constant.dart';
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/models/related_subject_model.dart';
 import 'package:alt_bangumi/repositories/person_repository.dart';
 import 'package:alt_bangumi/screens/person_detail_screen.dart';
@@ -55,7 +56,8 @@ class _SubjectListCardState extends ConsumerState<SubjectListCard> {
   Widget build(BuildContext context) {
     final characterPersons = widget.characterPersons;
     final characterSubjects = widget.subjects;
-    if (characterSubjects?.isEmpty ?? true) return const Text('EMpty');
+    // TODO translation for Empty
+    if (characterSubjects?.isEmpty ?? true) return const Text('Empty');
     return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -94,13 +96,13 @@ class _SubjectListCardState extends ConsumerState<SubjectListCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${characterSubjects[index].nameCn}',
+                          characterSubjects[index].nameCn.decode() ?? '',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          '${characterSubjects[index].name}',
+                          characterSubjects[index].name.decode() ?? '',
                           style: const TextStyle(
                             fontSize: 12.0,
                             // fontWeight: FontWeight.bold,
@@ -131,7 +133,8 @@ class _SubjectListCardState extends ConsumerState<SubjectListCard> {
                                     Expanded(
                                       child: Text.rich(
                                         TextSpan(
-                                          text: '${characterPerson.name} ',
+                                          text:
+                                              '${characterPerson.name.decode() ?? ''} ',
                                           children: [
                                             TextSpan(
                                               text: characterPerson.type == 1
@@ -168,7 +171,7 @@ class _SubjectListCardState extends ConsumerState<SubjectListCard> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Text(
-                      '${characterSubjects[index].staff}',
+                      '${characterSubjects[index].staff.decode()}',
                       style: const TextStyle(fontSize: 8.0),
                     ),
                   ),

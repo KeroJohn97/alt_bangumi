@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/relation_model/relation_model.dart';
@@ -126,7 +127,7 @@ class SubjectPersonsScreen extends ConsumerWidget {
                             child: Row(
                               children: [
                                 Text(
-                                  '${relations[index].name}',
+                                  relations[index].name.decode() ?? '',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -149,7 +150,7 @@ class SubjectPersonsScreen extends ConsumerWidget {
                                           .withOpacity(0.5),
                                     ),
                                     child: Text(
-                                      '${relations[index].relation}',
+                                      relations[index].relation.decode() ?? '',
                                       style: const TextStyle(
                                         fontSize: 12.0,
                                         fontWeight: FontWeight.bold,

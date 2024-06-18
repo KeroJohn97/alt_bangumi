@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/models/relation_model/relation_model.dart';
@@ -129,8 +130,8 @@ class _SubjectDetailSliverAppBarState extends State<SubjectDetailSliverAppBar> {
                   children: [
                     Text(
                       (widget.subject?.nameCn?.isNotEmpty ?? false)
-                          ? '${widget.subject?.nameCn}'
-                          : widget.subject?.name ?? '',
+                          ? widget.subject?.nameCn?.decode() ?? ''
+                          : widget.subject?.name?.decode() ?? '',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),

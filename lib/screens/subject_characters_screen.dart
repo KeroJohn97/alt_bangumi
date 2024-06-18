@@ -2,6 +2,7 @@
 
 import 'package:alt_bangumi/constants/color_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/loading_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/i18n/strings.g.dart';
@@ -133,7 +134,7 @@ class SubjectCharactersScreen extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${relations[index].name}',
+                                relations[index].name.decode() ?? '',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold),
                               ),
@@ -193,7 +194,7 @@ class SubjectCharactersScreen extends ConsumerWidget {
                                             ),
                                             const SizedBox(width: 4.0),
                                             Text(
-                                              '${e.name}',
+                                              e.name.decode() ?? '',
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                               ),

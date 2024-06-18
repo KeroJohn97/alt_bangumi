@@ -1,4 +1,5 @@
 import 'package:alt_bangumi/constants/enum_constant.dart';
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/screens/tag/single_tag_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -32,7 +33,7 @@ class SubjectDetailTagWidget extends StatelessWidget {
                   },
                 );
               },
-              tag: '${e.name}',
+              tag: '${e.name.decode()}',
               count: e.count,
             ),
           ),

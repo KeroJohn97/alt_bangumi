@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:alt_bangumi/constants/enum_constant.dart';
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/providers/subject_detail_screen_provider.dart';
 import 'package:alt_bangumi/widgets/scaffold_customed.dart';
@@ -154,10 +155,6 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                   ? persons?.first
                                   : null,
                             ),
-                            // SliverPositioned.fill(
-                            //   top: 200.0,
-                            //   child: Container(),
-                            // ),
                           ],
                         ),
                         SliverPadding(
@@ -214,12 +211,12 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        '${subject?.collection?.wish ?? ''}${t.wished} / '
-                                        '${subject?.collection?.collect ?? ''}${t.watched} / '
-                                        '${subject?.collection?.doing ?? ''}${t.watching} / '
-                                        '${subject?.collection?.onHold ?? ''}${t.onHold} / '
-                                        '${subject?.collection?.dropped ?? ''}${t.dropped} / '
-                                        '${t.total}$total',
+                                        '${subject?.collection?.wish ?? ''} ${t.wished} / '
+                                        '${subject?.collection?.collect ?? ''} ${t.watched} / '
+                                        '${subject?.collection?.doing ?? ''} ${t.watching} / '
+                                        '${subject?.collection?.onHold ?? ''} ${t.onHold} / '
+                                        '${subject?.collection?.dropped ?? ''} ${t.dropped} / '
+                                        '${t.total} $total',
                                         style: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 14.0,
@@ -285,7 +282,7 @@ class _SubjectDetailScreenState extends ConsumerState<SubjectDetailScreen> {
 
                                 if (subject?.summary != null) ...[
                                   const SizedBox(height: 8.0),
-                                  Text(subject?.summary ?? ''),
+                                  Text(subject?.summary?.decode() ?? ''),
                                 ],
                                 // const SizedBox(height: 8.0),
                                 // Row(

@@ -1,3 +1,4 @@
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/models/subject_model/subject_model.dart';
 import 'package:alt_bangumi/widgets/custom_shimmer_widget.dart';
@@ -18,8 +19,8 @@ class SubjectDetailTitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nameCn = subject?.nameCn?.isNotEmpty ?? false
-        ? subject?.nameCn
-        : subject?.name ?? '';
+        ? subject?.nameCn?.decode()
+        : subject?.name?.decode() ?? '';
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.only(top: 8.0),
@@ -66,7 +67,7 @@ class SubjectDetailTitleWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      subject?.name ?? '',
+                      subject?.name?.decode() ?? '',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),

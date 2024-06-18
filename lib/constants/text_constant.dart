@@ -52,7 +52,7 @@ mixin TextConstant {
   static const catalog = 'Catalog';
   static const log = 'Log';
   static const post = 'Post';
-  static const dynamic = 'Dynamic';
+  static const dynamicString = 'Dynamic';
   static const comment = 'Comment';
   static const searchEntry = 'Search Entry';
   static const indexing = 'Indexing';
@@ -92,6 +92,7 @@ mixin TextConstant {
   static const fileIsBeingSaved = 'File is being saved';
   static const subjectSharing = 'Subject Sharing';
   static const invalidURL = 'Uh-oh! It looks like the URL is invalid';
+  static const unknown = 'Unknown';
   static const unknownError =
       'Oops! It seems like there might be a small hiccup';
   static const fileSaveTimeout = 'File save timeout';
@@ -224,7 +225,7 @@ mixin TextConstant {
     catalog: catalog,
     log: log,
     post: post,
-    dynamic: dynamic,
+    dynamicString: dynamic,
     comment: comment,
     searchEntry: searchEntry,
     indexing: indexing,
@@ -395,7 +396,7 @@ mixin TextConstant {
     catalog: '目录',
     log: '日志',
     post: '帖子',
-    dynamic: '动态',
+    dynamicString: '动态',
     comment: '评论',
     searchEntry: '找条目',
     indexing: '索引',
@@ -566,7 +567,7 @@ mixin TextConstant {
     catalog: '目錄',
     log: '日誌',
     post: '帖子',
-    dynamic: '動態',
+    dynamicString: '動態',
     comment: '評論',
     searchEntry: '找條目',
     indexing: '索引',

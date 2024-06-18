@@ -147,7 +147,7 @@ class _EpisodeRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${e.ep}. ${name?.isEmpty ?? true ? context.t.upcoming : name.showHTML()}',
+                  '${e.ep}. ${name?.isEmpty ?? true ? context.t.upcoming : name.showHTML().decode()}',
                   style: TextStyle(color: color),
                 ),
                 Text(

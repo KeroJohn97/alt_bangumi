@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/providers/person_detail_screen_provider.dart';
@@ -116,11 +117,11 @@ class _PersonDetailScreenState extends ConsumerState<PersonDetailScreen> {
               children: [
                 Text.rich(
                   TextSpan(
-                    text: '${widget.person.name} ',
+                    text: '${widget.person.name.decode()} ',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                     children: [
                       TextSpan(
-                        text: '${widget.person.name}',
+                        text: widget.person.name.decode() ?? '',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 10.0,
@@ -168,7 +169,8 @@ class _PersonDetailScreenState extends ConsumerState<PersonDetailScreen> {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('${key ?? infobox.key} : $value'),
+                                Text(
+                                    '${key.decode() ?? infobox.key?.decode() ?? ''} : ${value.toString().decode() ?? ''}'),
                                 const SizedBox(height: 4.0),
                               ],
                             );
@@ -180,7 +182,8 @@ class _PersonDetailScreenState extends ConsumerState<PersonDetailScreen> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('$key : $value'),
+                        Text(
+                            '${key.decode() ?? ''} : ${value.toString().decode() ?? ''}'),
                         const SizedBox(height: 4.0),
                       ],
                     );
@@ -202,7 +205,7 @@ class _PersonDetailScreenState extends ConsumerState<PersonDetailScreen> {
                       ),
                     ),
                   ),
-                  Text('${widget.person.summary}'),
+                  Text('${widget.person.summary.decode()}'),
                 ],
                 const SizedBox(height: 8.0),
                 const Divider(),

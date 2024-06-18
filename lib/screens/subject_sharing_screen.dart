@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:alt_bangumi/constants/http_constant.dart';
 import 'package:alt_bangumi/helpers/common_helper.dart';
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/file_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/i18n/strings.g.dart';
@@ -196,7 +197,7 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
                         ),
                         const SizedBox(height: 12.0),
                         Text(
-                          widget.name,
+                          widget.name.decode() ?? '',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
@@ -211,7 +212,7 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
                               valueListenable: _summaryValue,
                               builder: (context, summary, child) {
                                 return Text(
-                                  summary,
+                                  summary.decode() ?? '',
                                   style: TextStyle(
                                     color:
                                         darkTheme ? Colors.white : Colors.black,
@@ -226,7 +227,7 @@ class _SubjectSharingScreenState extends State<SubjectSharingScreen> {
                           // width: 100.w,
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
                           child: Text(
-                            widget.shortTag,
+                            widget.shortTag.decode() ?? '',
                             style: TextStyle(
                               fontSize: 10.0,
                               color: darkTheme ? Colors.white : Colors.black,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/helpers/sizing_helper.dart';
 import 'package:alt_bangumi/i18n/strings.g.dart';
 import 'package:alt_bangumi/providers/character_detail_screen_provider.dart';
@@ -120,11 +121,11 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
             children: [
               Text.rich(
                 TextSpan(
-                  text: '${widget.character.name} ',
+                  text: '${widget.character.name.decode()} ',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                   children: [
                     TextSpan(
-                      text: '${widget.character.name}',
+                      text: '${widget.character.name.decode()}',
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 10.0,
@@ -157,7 +158,8 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${key ?? infobox.key} : $value'),
+                              Text(
+                                  '${key.decode() ?? infobox.key?.decode() ?? ''} : ${value.toString().decode() ?? ''}'),
                               const SizedBox(height: 4.0),
                             ],
                           );
@@ -169,7 +171,8 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('$key : $value'),
+                      Text(
+                          '${key.decode() ?? ''} : ${value.toString().decode() ?? ''}'),
                       const SizedBox(height: 4.0),
                     ],
                   );
@@ -191,7 +194,7 @@ class _CharacterDetailScreenState extends ConsumerState<CharacterDetailScreen> {
                     ),
                   ),
                 ),
-                Text('${widget.character.summary}'),
+                Text('${widget.character.summary.decode()}'),
               ],
               const SizedBox(height: 8.0),
               const Divider(),

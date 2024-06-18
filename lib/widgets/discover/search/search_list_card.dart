@@ -32,6 +32,9 @@ class SearchListCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final nameCn =
         '${(info.nameCn?.isEmpty ?? true) ? (info.name?.isEmpty ?? true) ? context.t.withoutAName : info.name : info.nameCn.showHTML()}';
+    final subjectOption = ScreenSubjectOption.values
+        .firstWhereOrNull((element) => element.value == info.type)
+        ?.getString(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: GestureDetector(
@@ -82,17 +85,22 @@ class SearchListCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.0),
-                            border: Border.all(color: ColorConstant.themeColor),
-                            color: ColorConstant.themeColor.withOpacity(0.2),
-                          ),
-                          child: Text(
-                            '${ScreenSubjectOption.values.firstWhereOrNull((element) => element.value == info.type)?.getString(context)}',
-                            style: const TextStyle(
-                                fontSize: 12.0, fontWeight: FontWeight.bold),
+                        Visibility(
+                          visible: subjectOption != null,
+                          child: Container(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              border:
+                                  Border.all(color: ColorConstant.themeColor),
+                              color: ColorConstant.themeColor.withOpacity(0.2),
+                            ),
+                            child: Text(
+                              '$subjectOption',
+                              style: const TextStyle(
+                                  fontSize: 12.0, fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                         // IconButton(

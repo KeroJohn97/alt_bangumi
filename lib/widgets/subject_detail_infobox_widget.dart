@@ -1,3 +1,4 @@
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/models/subject_model/infobox_model.dart';
 import 'package:flutter/material.dart';
 
@@ -10,9 +11,11 @@ class SubjectDetailInfoboxWidget extends StatelessWidget {
       final List<dynamic> infoboxList = infobox.value;
       final List<String> value = infoboxList.map((e) => '${e['v']}').toList();
       if (value.isEmpty) return '';
-      return '${infobox.key}: ${value.join(', ')}';
+      return '${infobox.key.decode()}: ${value.join(', ').decode()}';
     }
-    return '${infobox.key}: ${infobox.value}';
+    final key = infobox.key.decode();
+    if (key == null) return '';
+    return '$key: ${infobox.value.toString().decode() ?? ''}';
   }
 
   @override

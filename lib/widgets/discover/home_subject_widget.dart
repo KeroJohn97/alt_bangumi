@@ -82,8 +82,9 @@ class HomeSubjectWidget extends StatelessWidget {
                       Builder(builder: (context) {
                         return ChannelAnimeCard(
                           imageUrl: '${rankedSubject?.first.images?.large}',
-                          followers: '${rankedSubject?.first.follow?.decode()}',
-                          title: '${rankedSubject?.first.name}',
+                          followers:
+                              rankedSubject?.first.follow?.decode() ?? '',
+                          title: rankedSubject?.first.name.decode() ?? '',
                           id: rankedSubject?.first.id,
                           height: 500.0,
                           width: 100.w,
@@ -110,7 +111,7 @@ class HomeSubjectWidget extends StatelessWidget {
                                   ChannelAnimeCard(
                                     imageUrl: '${e.images?.small}',
                                     followers: e.follow?.decode() ?? '',
-                                    title: '${e.name}',
+                                    title: e.name.decode() ?? '',
                                     id: e.id,
                                     height: 150.0,
                                     width: 30.w,

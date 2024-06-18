@@ -1,4 +1,5 @@
 import 'package:alt_bangumi/constants/enum_constant.dart';
+import 'package:alt_bangumi/helpers/extension_helper.dart';
 import 'package:alt_bangumi/models/relation_model/relation_model.dart';
 import 'package:alt_bangumi/repositories/character_repository.dart';
 import 'package:alt_bangumi/repositories/person_repository.dart';
@@ -170,7 +171,7 @@ class _RelationCardState extends State<RelationCard> {
             SizedBox(
               width: widget.width,
               child: Text(
-                title,
+                title.decode() ?? '',
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -181,7 +182,7 @@ class _RelationCardState extends State<RelationCard> {
             SizedBox(
               width: widget.width,
               child: Text(
-                '${_getSubtitle()}',
+                '${_getSubtitle().toString().decode()}',
                 style: const TextStyle(
                   fontSize: 10.0,
                   color: Colors.grey,
