@@ -50,11 +50,11 @@ class HttpHelper {
     required Locale locale,
     required String body,
   }) async {
-    final secret = await secretHelper;
+    final secrets = await secretHelper;
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'X-RapidAPI-Key': '${secret.rapidAPIKey}',
-      'X-RapidAPI-Host': '${secret.rapidAPIHost}',
+      'X-RapidAPI-Key': '${secrets.rapidAPIKey}',
+      'X-RapidAPI-Host': '${secrets.rapidAPIHost}',
     };
     final url = Uri.parse(
       'https://microsoft-translator-text.p.rapidapi.com/translate'
